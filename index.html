@@ -605,11 +605,11 @@
 <div id="setup-overlay">
   <div class="setup-card">
     <h2>⚙️ Configuration initiale</h2>
-    <p><strong>CapNews</strong> utilise <strong>JSONBin.io</strong> comme base de données. Configurez votre clé API pour commencer.</p>
+    <p><strong>CapNews</strong> utilise <strong>JSONBin.io</strong> comme base de données partagée. Cette étape ne se fait <strong>qu'une seule fois</strong> — vous recevrez ensuite deux valeurs à coller dans le fichier HTML avant de le mettre sur GitHub.</p>
     <div class="setup-steps">
-      <div class="step"><span class="step-num">1</span> Créez un compte gratuit sur jsonbin.io</div>
-      <div class="step"><span class="step-num">2</span> Copiez votre clé API depuis le tableau de bord</div>
-      <div class="step"><span class="step-num">3</span> Collez-la ci-dessous et lancez</div>
+      <div class="step"><span class="step-num">1</span> Créez un compte gratuit sur jsonbin.io et copiez votre clé API</div>
+      <div class="step"><span class="step-num">2</span> Remplissez le formulaire ci-dessous et cliquez sur Initialiser</div>
+      <div class="step"><span class="step-num">3</span> Copiez les 2 valeurs affichées dans le fichier HTML, puis commitez sur GitHub</div>
     </div>
     <label>Clé API JSONBin (X-Master-Key)</label>
     <input type="text" id="setup-api-key" placeholder="$2a$10$...">
@@ -618,7 +618,7 @@
     <br>
     <button class="btn-primary" onclick="initSetup()">Initialiser le site →</button>
     <div id="setup-error" class="admin-error"></div>
-    <p class="setup-help">Les données seront stockées dans un bin JSONBin privé. <a href="https://jsonbin.io" target="_blank">Créer un compte gratuit</a></p>
+    <p class="setup-help">Les données seront dans un bin JSONBin public (lisible par tous, modifiable uniquement avec votre clé). <a href="https://jsonbin.io" target="_blank">Créer un compte gratuit</a></p>
   </div>
 </div>
 
@@ -908,10 +908,15 @@
 </footer>
 
 <script>
-const CONFIG_KEY = 'lejournaldusoir_cfg';
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIGURATION — à remplir après le premier setup, puis commit sur GitHub
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const JSONBIN_API_KEY = '';   // ← coller ici votre clé JSONBin (X-Master-Key)
+const JSONBIN_BIN_ID  = '';   // ← coller ici l'ID du bin (créé au premier setup)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
 let cfg = null;
 let db = { journals: [], comments: [], settings: {}, reactions: {} };
-let binId = null;
 let isAdmin = false;
 let currentJournalId = null;
 let commentRating = 0;
@@ -923,15 +928,17 @@ let activeFilter = 'all';
 window.onload = async () => {
   updateDateDisplay();
   startCountdown();
-  const saved = localStorage.getItem(CONFIG_KEY);
-  if (saved) {
-    try {
-      cfg = JSON.parse(saved);
-      document.getElementById('setup-overlay').classList.add('hidden');
-      await loadDB();
-      renderHome();
-    } catch(e) { showSetup(); }
-  } else { showSetup(); }
+  // Si les credentials sont codés en dur → on les utilise directement
+  if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
+    cfg = { apiKey: JSONBIN_API_KEY, binId: JSONBIN_BIN_ID };
+    document.getElementById('setup-overlay').classList.add('hidden');
+    await loadDB();
+    applyBranding();
+    renderHome();
+  } else {
+    // Premier lancement : afficher l'écran de setup
+    showSetup();
+  }
 };
 
 function showSetup() {
@@ -951,14 +958,22 @@ async function initSetup() {
     };
     const res = await fetch('https://api.jsonbin.io/v3/b', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'journal-du-soir', 'X-Bin-Private': 'true' },
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'capnews', 'X-Bin-Private': 'false' },
       body: JSON.stringify(initData)
     });
     if (!res.ok) throw new Error('Clé API invalide ou erreur réseau');
     const data = await res.json();
-    cfg = { apiKey: key, binId: data.metadata.id };
-    localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
-    document.getElementById('setup-overlay').classList.add('hidden');
+    const binId = data.metadata.id;
+    // Afficher les credentials à copier dans le fichier HTML
+    err.style.color = 'var(--gold)';
+    err.innerHTML = `
+      <strong style="color:var(--ink);display:block;margin-bottom:0.5rem;">✅ Base créée ! Copiez ces valeurs dans votre fichier HTML :</strong>
+      <code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;margin-bottom:0.4rem;word-break:break-all;">JSONBIN_API_KEY = '<b>${key}</b>'</code>
+      <code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;word-break:break-all;">JSONBIN_BIN_ID = '<b>${binId}</b>'</code>
+      <span style="display:block;margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Ouvrez le fichier HTML, remplacez les deux constantes en haut du script, puis commitez sur GitHub.</span>
+    `;
+    // On utilise aussi en local le temps que le fichier soit commité
+    cfg = { apiKey: key, binId };
     await loadDB();
     applyBranding();
     renderHome();
