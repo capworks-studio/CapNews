@@ -46,7 +46,7 @@
   #setup-overlay {
     position: fixed; inset: 0;
     background: rgba(26,18,9,0.92);
-    display: fx; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     z-index: 9999;
     backdrop-filter: blur(6px);
   }
@@ -93,26 +93,26 @@
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
     font-weight: 600;
-    tter-spacing: 0.01em;
+    letter-spacing: 0.01em;
   }
   .btn-primary:hover { background: var(--ink-light); }
-  .btn-primary:active { transform: sca(0.98); }
-  .setup-steps { display: fx; gap: 0.75rem; margin-bottom: 1.5rem; }
-  .step { fx: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+  .btn-primary:active { transform: scale(0.98); }
+  .setup-steps { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .step { flex: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
   .step-num { display: inline-block; background: var(--gold); color: white; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; font-size: 0.75rem; font-weight: 700; margin-right: 4px; }
   .setup-help { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
   .setup-help a { color: var(--gold); }
 
   /* MASTHEAD */
   .masthead {
-    border-bottom: 3px doub var(--border-strong);
+    border-bottom: 3px double var(--border-strong);
     padding: 1.5rem 0 0;
     text-align: center;
     background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment));
     position: relative;
   }
   .masthead-top {
-    display: fx; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 0 2rem 0.75rem;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.75rem;
@@ -123,7 +123,7 @@
     font-size: clamp(2.2rem, 6vw, 4rem);
     font-weight: 900;
     color: var(--ink);
-    tter-spacing: -0.02em;
+    letter-spacing: -0.02em;
     line-height: 1;
     text-decoration: none;
     cursor: pointer;
@@ -133,16 +133,16 @@
     font-size: 0.78rem;
     font-family: var(--font-mono);
     color: var(--muted);
-    tter-spacing: 0.18em;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
     margin-top: 0.25rem;
     margin-bottom: 0.75rem;
   }
-  .masthead-ru { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
+  .masthead-rule { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
 
   /* NAV */
   nav {
-    display: fx; align-items: center; justify-content: center; gap: 0;
+    display: flex; align-items: center; justify-content: center; gap: 0;
     padding: 0;
     border-bottom: 2px solid var(--ink);
     background: var(--ink);
@@ -153,18 +153,18 @@
     text-decoration: none;
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    tter-spacing: 0.1em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.65rem 1.2rem;
     border: none; background: none;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
-    display: fx; align-items: center; gap: 6px;
+    display: flex; align-items: center; gap: 6px;
   }
   nav a:hover, nav button:hover { background: rgba(255,255,255,0.1); color: var(--gold-light); }
   nav a.active { background: rgba(255,255,255,0.12); color: var(--gold-light); }
   .nav-sep { color: rgba(255,255,255,0.2); pointer-events: none; padding: 0 2px; }
-  .nav-admin-btn { margin-ft: auto; color: var(--gold-light) !important; }
+  .nav-admin-btn { margin-left: auto; color: var(--gold-light) !important; }
   .nav-admin-btn:hover { background: rgba(212,168,67,0.15) !important; }
 
   /* COUNTDOWN BANNER */
@@ -176,7 +176,7 @@
     font-family: var(--font-mono);
     font-size: 0.82rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    tter-spacing: 0.05em;
+    letter-spacing: 0.05em;
   }
   #countdown-banner.published {
     background: linear-gradient(90deg, #1a3a1a, #2a4a2a, #1a3a1a);
@@ -205,34 +205,34 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--muted);
-    tter-spacing: 0.15em;
+    letter-spacing: 0.15em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
-    display: fx; align-items: center; gap: 8px;
+    display: flex; align-items: center; gap: 8px;
   }
-  .journal-date-label::after { content: ''; fx: 1; height: 1px; background: var(--border); }
-  .journal-tit {
+  .journal-date-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .journal-title {
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 900;
     line-height: 1.1;
     color: var(--ink);
     margin-bottom: 1rem;
-    font-sty: italic;
+    font-style: italic;
   }
   .journal-excerpt {
     font-size: 1.05rem;
     color: var(--ink-light);
     line-height: 1.8;
-    font-sty: italic;
-    border-ft: 3px solid var(--gold);
-    padding-ft: 1.2rem;
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 1.2rem;
     margin-bottom: 1.2rem;
   }
   .journal-body { font-size: 1rem; color: var(--ink); line-height: 1.85; white-space: pre-wrap; }
   .journal-body p { margin-bottom: 1rem; }
   .journal-meta-chips {
-    display: fx; gap: 0.5rem; fx-wrap: wrap;
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
     margin-bottom: 1rem;
   }
   .chip {
@@ -605,7 +605,7 @@
 <div id="setup-overlay">
   <div class="setup-card">
     <h2>⚙️ Configuration initiale</h2>
-    <p>Ce site utilise <strong>JSONBin.io</strong> comme base de données. Configurez votre clé API pour commencer.</p>
+    <p><strong>CapNews</strong> utilise <strong>JSONBin.io</strong> comme base de données. Configurez votre clé API pour commencer.</p>
     <div class="setup-steps">
       <div class="step"><span class="step-num">1</span> Créez un compte gratuit sur jsonbin.io</div>
       <div class="step"><span class="step-num">2</span> Copiez votre clé API depuis le tableau de bord</div>
@@ -626,10 +626,10 @@
 <header class="masthead">
   <div class="masthead-top">
     <div class="masthead-meta" id="date-display">—</div>
-    <div class="masthead-meta">Publication quotidienne · 18h00</div>
+    <div class="masthead-meta" id="site-pub-meta">Publication quotidienne · 18h00</div>
   </div>
-  <div class="masthead-logo" onclick="showPage('home')"<span>Cap</span>News</div>
-  <div class="masthead-tagline">Réflexions du quotidien · Édition numérique</div>
+  <div class="masthead-logo" onclick="showPage('home')" id="site-logo">Cap<span>News</span></div>
+  <div class="masthead-tagline" id="site-tagline">Réflexions du quotidien · Édition numérique</div>
   <hr class="masthead-rule">
 </header>
 
@@ -654,8 +654,8 @@
     <div id="home-loading" class="text-center mt-2"><div class="loading-spinner"></div></div>
     <div id="home-locked" class="locked-overlay" style="display:none;">
       <div class="locked-icon">🕰️</div>
-      <h2>Le journal du jour n'est pas encore publié</h2>
-      <p>La publication a lieu chaque soir à 18h00. Revenez ce soir !</p>
+      <h2 id="locked-title">Le journal du jour n'est pas encore publié</h2>
+      <p id="locked-subtitle">La publication a lieu chaque soir à 18h00. Revenez ce soir !</p>
       <div class="locked-time" id="locked-countdown"></div>
     </div>
     <div id="home-content" style="display:none;">
@@ -750,12 +750,12 @@
   <!-- ABOUT -->
   <section class="page-section" id="page-about">
     <div style="max-width:680px;margin:2rem auto;">
-      <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;font-style:italic;margin-bottom:1.5rem;">À propos du Journal du Soir</h1>
+      <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;font-style:italic;margin-bottom:1.5rem;" id="about-title">À propos de CapNews</h1>
       <div style="font-size:1.05rem;line-height:1.85;color:var(--ink-light);">
-        <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);">
+        <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);" id="about-tagline-quote">
           Chaque soir à 18h00, un nouveau regard sur le monde.
         </p>
-        <p style="margin-bottom:1rem;">CapNews est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
+        <p style="margin-bottom:1rem;" id="about-desc">CapNews est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
         <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à 18h00, heure locale. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
         <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
         <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
@@ -864,7 +864,7 @@
           <div id="atab-body-settings" style="display:none;">
             <div class="form-group">
               <label class="form-label">Nom du site</label>
-              <input type="text" class="form-input" id="setting-sitename" placeholder="CapNews">
+              <input type="text" class="form-input" id="setting-sitename" placeholder="Le Journal du Soir">
             </div>
             <div class="form-group">
               <label class="form-label">Tagline / sous-titre</label>
@@ -904,7 +904,7 @@
 <div class="toast" id="toast"></div>
 
 <footer>
-  <strong>CapNews</strong> · Publication quotidienne à 18h00 · Propulsé par JSONBin.io
+  <strong id="footer-name">CapNews</strong> · <span id="footer-tagline">Publication quotidienne à 18h00</span> · Propulsé par JSONBin.io
 </footer>
 
 <script>
@@ -960,6 +960,7 @@ async function initSetup() {
     localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
     document.getElementById('setup-overlay').classList.add('hidden');
     await loadDB();
+    applyBranding();
     renderHome();
   } catch(e) { err.textContent = '❌ ' + e.message; }
 }
@@ -1430,6 +1431,37 @@ async function deleteCommentAdmin(id) {
   showToast('Avis supprimé.');
 }
 
+function applyBranding() {
+  const name = db.settings.siteName || 'CapNews';
+  const tagline = db.settings.tagline || 'Réflexions du quotidien';
+  const hour = db.settings.pubHour ?? 18;
+  document.title = name;
+  const logo = document.getElementById('site-logo');
+  if (logo) {
+    const first = name.slice(0, Math.ceil(name.length / 2));
+    const second = name.slice(Math.ceil(name.length / 2));
+    logo.innerHTML = `${escHtml(first)}<span>${escHtml(second)}</span>`;
+  }
+  const tgl = document.getElementById('site-tagline');
+  if (tgl) tgl.textContent = tagline + ' · Édition numérique';
+  const pubMeta = document.getElementById('site-pub-meta');
+  if (pubMeta) pubMeta.textContent = `Publication quotidienne · ${String(hour).padStart(2,'0')}h00`;
+  const footerName = document.getElementById('footer-name');
+  if (footerName) footerName.textContent = name;
+  const footerTag = document.getElementById('footer-tagline');
+  if (footerTag) footerTag.textContent = `Publication quotidienne à ${String(hour).padStart(2,'0')}h00`;
+  const aboutTitle = document.getElementById('about-title');
+  if (aboutTitle) aboutTitle.textContent = `À propos de ${name}`;
+  const aboutDesc = document.getElementById('about-desc');
+  if (aboutDesc) aboutDesc.textContent = `${name} est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.`;
+  const aboutTagQ = document.getElementById('about-tagline-quote');
+  if (aboutTagQ) aboutTagQ.textContent = tagline;
+  const lockedSub = document.getElementById('locked-subtitle');
+  if (lockedSub) lockedSub.textContent = `La publication a lieu chaque soir à ${String(hour).padStart(2,'0')}h00. Revenez ce soir !`;
+  const lockedTitle = document.getElementById('locked-title');
+  if (lockedTitle) lockedTitle.textContent = `L'édition de ce jour n'est pas encore publiée`;
+}
+
 function loadSettings() {
   document.getElementById('setting-sitename').value = db.settings.siteName || 'CapNews';
   document.getElementById('setting-tagline').value = db.settings.tagline || 'Réflexions du quotidien';
@@ -1444,6 +1476,7 @@ async function saveSettings() {
   if (newpw) db.settings.adminPwHash = simpleHash(newpw);
   try {
     await saveDB();
+    applyBranding();
     showToast('Paramètres sauvegardés !', 'success');
     document.getElementById('setting-newpw').value = '';
   } catch(e) { showToast('Erreur de sauvegarde.', 'error'); }
