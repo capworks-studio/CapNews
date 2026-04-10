@@ -1,0 +1,1542 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CapNews</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1209;
+    --ink-light: #3d2f1a;
+    --parchment: #f7f3eb;
+    --parchment-dark: #ede8dc;
+    --parchment-mid: #f0ead9;
+    --gold: #b8860b;
+    --gold-light: #d4a843;
+    --red: #8b1a1a;
+    --red-light: #c0392b;
+    --muted: #7a6a52;
+    --border: rgba(90,60,20,0.18);
+    --border-strong: rgba(90,60,20,0.38);
+    --shadow: 0 2px 24px rgba(30,15,0,0.12);
+    --shadow-strong: 0 8px 48px rgba(30,15,0,0.22);
+    --radius: 3px;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Serif 4', Georgia, serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--parchment);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse at 10% 20%, rgba(184,134,11,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse at 90% 80%, rgba(139,26,26,0.04) 0%, transparent 60%);
+  }
+
+  /* SETUP OVERLAY */
+  #setup-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,18,9,0.92);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(6px);
+  }
+  #setup-overlay.hidden { display: none; }
+  .setup-card {
+    background: var(--parchment);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 2.5rem;
+    max-width: 480px;
+    width: 90%;
+    box-shadow: var(--shadow-strong);
+  }
+  .setup-card h2 {
+    font-family: var(--font-display);
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    color: var(--ink);
+  }
+  .setup-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.5rem; line-height: 1.5; }
+  .setup-card label { font-size: 0.85rem; font-weight: 500; color: var(--ink-light); display: block; margin-bottom: 0.3rem; font-family: var(--font-mono); }
+  .setup-card input {
+    width: 100%; padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: white;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .setup-card input:focus { border-color: var(--gold); }
+  .btn-primary {
+    background: var(--ink);
+    color: var(--parchment);
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 4px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .btn-primary:hover { background: var(--ink-light); }
+  .btn-primary:active { transform: scale(0.98); }
+  .setup-steps { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .step { flex: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+  .step-num { display: inline-block; background: var(--gold); color: white; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; font-size: 0.75rem; font-weight: 700; margin-right: 4px; }
+  .setup-help { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+  .setup-help a { color: var(--gold); }
+
+  /* MASTHEAD */
+  .masthead {
+    border-bottom: 3px double var(--border-strong);
+    padding: 1.5rem 0 0;
+    text-align: center;
+    background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment));
+    position: relative;
+  }
+  .masthead-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem 0.75rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+  }
+  .masthead-meta { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); }
+  .masthead-logo {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .masthead-logo span { color: var(--gold); }
+  .masthead-tagline {
+    font-size: 0.78rem;
+    font-family: var(--font-mono);
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .masthead-rule { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
+
+  /* NAV */
+  nav {
+    display: flex; align-items: center; justify-content: center; gap: 0;
+    padding: 0;
+    border-bottom: 2px solid var(--ink);
+    background: var(--ink);
+    position: sticky; top: 0; z-index: 100;
+  }
+  nav a, nav button {
+    color: var(--parchment-dark);
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.65rem 1.2rem;
+    border: none; background: none;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  nav a:hover, nav button:hover { background: rgba(255,255,255,0.1); color: var(--gold-light); }
+  nav a.active { background: rgba(255,255,255,0.12); color: var(--gold-light); }
+  .nav-sep { color: rgba(255,255,255,0.2); pointer-events: none; padding: 0 2px; }
+  .nav-admin-btn { margin-left: auto; color: var(--gold-light) !important; }
+  .nav-admin-btn:hover { background: rgba(212,168,67,0.15) !important; }
+
+  /* COUNTDOWN BANNER */
+  #countdown-banner {
+    background: var(--ink);
+    color: var(--parchment);
+    text-align: center;
+    padding: 0.55rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    letter-spacing: 0.05em;
+  }
+  #countdown-banner.published {
+    background: linear-gradient(90deg, #1a3a1a, #2a4a2a, #1a3a1a);
+    color: #a8e6a3;
+  }
+  #countdown-timer { font-weight: 500; color: var(--gold-light); }
+
+  /* MAIN LAYOUT */
+  main { max-width: 1120px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+  /* PAGE SECTIONS */
+  .page-section { display: none; }
+  .page-section.active { display: block; }
+
+  /* TODAY'S JOURNAL */
+  .journal-hero {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+  @media (max-width: 768px) {
+    .journal-hero { grid-template-columns: 1fr; }
+  }
+  .journal-date-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .journal-date-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .journal-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 1rem;
+    font-style: italic;
+  }
+  .journal-excerpt {
+    font-size: 1.05rem;
+    color: var(--ink-light);
+    line-height: 1.8;
+    font-style: italic;
+    border-left: 3px solid var(--gold);
+    padding-left: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+  .journal-body { font-size: 1rem; color: var(--ink); line-height: 1.85; white-space: pre-wrap; }
+  .journal-body p { margin-bottom: 1rem; }
+  .journal-meta-chips {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    padding: 0.2rem 0.65rem;
+    border-radius: 2px;
+    border: 1px solid var(--border-strong);
+    color: var(--muted);
+    background: var(--parchment-mid);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .chip.cat { background: var(--ink); color: var(--parchment-dark); border-color: var(--ink); }
+  .chip.mood-good { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+  .chip.mood-neutral { background: #fff8e1; color: #f57f17; border-color: #ffcc80; }
+  .chip.mood-bad { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
+
+  /* SIDEBAR */
+  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .sidebar-box {
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--parchment-mid);
+    padding: 1.2rem;
+  }
+  .sidebar-box h3 {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* RATINGS */
+  .ratings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .rating-stat { text-align: center; }
+  .rating-big { font-size: 2rem; font-family: var(--font-display); font-weight: 900; color: var(--ink); line-height: 1; }
+  .rating-label { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
+  .stars-display { display: flex; gap: 3px; justify-content: center; margin-top: 4px; }
+  .star { font-size: 1.1rem; color: #ddd; }
+  .star.filled { color: var(--gold); }
+
+  .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+  .vote-emoji { font-size: 1.2rem; }
+  .vote-bar-bg { flex: 1; height: 6px; background: var(--parchment-dark); border-radius: 3px; overflow: hidden; }
+  .vote-bar { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .vote-bar.positive { background: #4caf50; }
+  .vote-bar.neutral { background: var(--gold); }
+  .vote-bar.negative { background: var(--red-light); }
+  .vote-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); min-width: 22px; text-align: right; }
+
+  .user-vote-btns { display: flex; gap: 0.4rem; margin-top: 0.75rem; }
+  .vote-btn {
+    flex: 1; padding: 0.45rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    background: white;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .vote-btn span { font-size: 0.75rem; font-family: var(--font-mono); color: var(--muted); }
+  .vote-btn:hover { border-color: var(--gold); background: rgba(184,134,11,0.06); }
+  .vote-btn.active { border-color: var(--gold); background: rgba(184,134,11,0.12); }
+  .vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* COMMENTS */
+  .comments-section { margin-top: 2rem; }
+  .comments-section h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.7rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .comment-form { margin-bottom: 1.5rem; }
+  .comment-form-row { display: flex; gap: 0.75rem; margin-bottom: 0.6rem; }
+  .comment-form-row input, .comment-form textarea, .comment-form select {
+    width: 100%; padding: 0.6rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: white;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    resize: none;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .comment-form-row input { flex: 1; }
+  .comment-form-row input:focus, .comment-form textarea:focus { border-color: var(--gold); }
+  .star-picker { display: flex; gap: 4px; align-items: center; margin-bottom: 0.6rem; }
+  .star-picker label { font-size: 0.82rem; color: var(--muted); font-family: var(--font-mono); margin-right: 6px; }
+  .star-pick { font-size: 1.5rem; cursor: pointer; color: #ccc; transition: color 0.12s; }
+  .star-pick.active { color: var(--gold); }
+  .star-pick:hover { color: var(--gold-light); }
+  .comment-submit { background: var(--ink); color: var(--parchment); border: none; padding: 0.6rem 1.4rem; border-radius: 3px; font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .comment-submit:hover { background: var(--ink-light); }
+
+  .comment-list { display: flex; flex-direction: column; gap: 1rem; }
+  .comment-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.2rem;
+    background: white;
+    position: relative;
+    animation: fadeIn 0.35s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+  .comment-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--ink); color: var(--parchment);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .comment-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
+  .comment-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+  .comment-stars { display: flex; gap: 2px; }
+  .comment-star { font-size: 0.85rem; color: #ddd; }
+  .comment-star.filled { color: var(--gold); }
+  .comment-text { font-size: 0.95rem; color: var(--ink-light); line-height: 1.6; }
+  .comment-delete { position: absolute; top: 0.75rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.75rem; font-family: var(--font-mono); opacity: 0; transition: opacity 0.15s; }
+  .comment-card:hover .comment-delete { opacity: 1; }
+  .comment-delete:hover { color: var(--red); }
+
+  /* LOCKED STATE */
+  .locked-overlay {
+    text-align: center; padding: 3rem 1rem;
+    border: 1px dashed var(--border-strong);
+    border-radius: 8px;
+    background: var(--parchment-mid);
+    margin: 2rem 0;
+  }
+  .locked-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+  .locked-overlay h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .locked-overlay p { color: var(--muted); font-size: 0.92rem; }
+  .locked-time { font-family: var(--font-mono); font-size: 1.1rem; color: var(--gold); margin-top: 0.5rem; font-weight: 500; }
+
+  /* HISTORY */
+  .history-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  .history-card {
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: white;
+    padding: 1.2rem;
+    cursor: pointer;
+    transition: all 0.18s;
+    position: relative;
+    overflow: hidden;
+  }
+  .history-card::before {
+    content: '';
+    position: absolute; left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform 0.18s;
+  }
+  .history-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--gold); }
+  .history-card:hover::before { transform: scaleY(1); }
+  .history-card-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
+  .history-card-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; font-style: italic; line-height: 1.3; }
+  .history-card-excerpt { font-size: 0.88rem; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .history-card-footer { display: flex; align-items: center; gap: 8px; margin-top: 0.85rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
+  .history-card-rating { font-family: var(--font-mono); font-size: 0.78rem; color: var(--gold); font-weight: 500; }
+  .history-card-comments { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); margin-left: auto; }
+  .history-card-cat { font-family: var(--font-mono); font-size: 0.7rem; color: var(--parchment); background: var(--ink); padding: 2px 8px; border-radius: 2px; }
+
+  /* MODAL JOURNAL VIEW */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(26,18,9,0.7);
+    z-index: 500;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    backdrop-filter: blur(4px);
+  }
+  .modal-bg.hidden { display: none; }
+  .modal-content {
+    background: var(--parchment);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    max-width: 780px;
+    width: 100%;
+    position: relative;
+    box-shadow: var(--shadow-strong);
+    margin-top: 1rem;
+  }
+  .modal-close {
+    position: absolute; top: 1.2rem; right: 1.4rem;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.3rem; color: var(--muted); line-height: 1;
+    font-family: var(--font-mono);
+    transition: color 0.15s;
+  }
+  .modal-close:hover { color: var(--ink); }
+
+  /* ADMIN PANEL */
+  .admin-panel {
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: var(--parchment-mid);
+  }
+  .admin-tabs { display: flex; border-bottom: 1px solid var(--border-strong); }
+  .admin-tab {
+    padding: 0.75rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: all 0.15s;
+  }
+  .admin-tab.active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
+  .admin-body { padding: 1.5rem; }
+  .form-group { margin-bottom: 1.2rem; }
+  .form-label { display: block; font-size: 0.82rem; font-family: var(--font-mono); color: var(--ink-light); margin-bottom: 0.4rem; letter-spacing: 0.05em; }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    padding: 0.6rem 0.9rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    background: white;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
+  .form-textarea { resize: vertical; min-height: 180px; line-height: 1.65; }
+  .form-row { display: flex; gap: 1rem; }
+  .form-row .form-group { flex: 1; }
+  .btn-danger { background: var(--red); color: white; border: none; padding: 0.55rem 1.1rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer; }
+  .btn-danger:hover { background: var(--red-light); }
+  .admin-list { list-style: none; }
+  .admin-list li { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .admin-list li:last-child { border: none; }
+  .admin-list-title { font-family: var(--font-display); font-style: italic; font-weight: 700; }
+  .admin-list-date { font-family: var(--font-mono); font-size: 0.73rem; color: var(--muted); }
+  .admin-list-actions { display: flex; gap: 6px; }
+  .toast {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--ink); color: var(--parchment);
+    padding: 0.75rem 1.4rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    z-index: 9999;
+    transform: translateY(20px); opacity: 0;
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+    max-width: 320px;
+  }
+  .toast.show { opacity: 1; transform: none; }
+  .toast.success { border-left: 3px solid #4caf50; }
+  .toast.error { border-left: 3px solid var(--red); }
+
+  /* SEARCH */
+  .search-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    background: white;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+  }
+  .search-bar input {
+    flex: 1; border: none; background: none;
+    font-family: var(--font-body); font-size: 0.95rem; color: var(--ink);
+    outline: none;
+  }
+  .search-bar-icon { color: var(--muted); font-size: 0.9rem; }
+  .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn {
+    padding: 0.3rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    background: white;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.13s;
+  }
+  .filter-btn.active { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+  .filter-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { border: 1px solid var(--border); border-radius: 4px; padding: 1rem; background: white; text-align: center; }
+  .stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; color: var(--ink); line-height: 1; }
+  .stat-lbl { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* AUTH */
+  .admin-login {
+    max-width: 420px; margin: 3rem auto;
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    background: var(--parchment-mid);
+    box-shadow: var(--shadow);
+  }
+  .admin-login h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .admin-error { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; font-family: var(--font-mono); }
+
+  /* NO CONTENT */
+  .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
+  .empty-state p { font-family: var(--font-mono); font-size: 0.85rem; }
+
+  /* FOOTER */
+  footer {
+    border-top: 2px solid var(--ink);
+    margin-top: 3rem;
+    padding: 1.5rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    background: var(--parchment-dark);
+  }
+  footer strong { color: var(--ink); font-weight: 500; }
+
+  .loading-spinner {
+    display: inline-block; width: 18px; height: 18px;
+    border: 2px solid var(--border-strong);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .text-center { text-align: center; }
+  .mt-2 { margin-top: 2rem; }
+
+  /* HIGHLIGHT animation for published */
+  @keyframes goldPulse {
+    0% { box-shadow: 0 0 0 0 rgba(184,134,11,0.4); }
+    70% { box-shadow: 0 0 0 12px rgba(184,134,11,0); }
+    100% { box-shadow: 0 0 0 0 rgba(184,134,11,0); }
+  }
+  .just-published { animation: goldPulse 1.5s ease; }
+</style>
+</head>
+<body>
+
+<!-- SETUP OVERLAY -->
+<div id="setup-overlay">
+  <div class="setup-card">
+    <h2>⚙️ Configuration initiale</h2>
+    <p>Ce site utilise <strong>JSONBin.io</strong> comme base de données. Configurez votre clé API pour commencer.</p>
+    <div class="setup-steps">
+      <div class="step"><span class="step-num">1</span> Créez un compte gratuit sur jsonbin.io</div>
+      <div class="step"><span class="step-num">2</span> Copiez votre clé API depuis le tableau de bord</div>
+      <div class="step"><span class="step-num">3</span> Collez-la ci-dessous et lancez</div>
+    </div>
+    <label>Clé API JSONBin (X-Master-Key)</label>
+    <input type="text" id="setup-api-key" placeholder="$2a$10$...">
+    <label>Mot de passe admin</label>
+    <input type="password" id="setup-admin-pw" placeholder="Choisissez un mot de passe sécurisé">
+    <br>
+    <button class="btn-primary" onclick="initSetup()">Initialiser le site →</button>
+    <div id="setup-error" class="admin-error"></div>
+    <p class="setup-help">Les données seront stockées dans un bin JSONBin privé. <a href="https://jsonbin.io" target="_blank">Créer un compte gratuit</a></p>
+  </div>
+</div>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-meta" id="date-display">—</div>
+    <div class="masthead-meta">Publication quotidienne · 18h00</div>
+  </div>
+  <div class="masthead-logo" onclick="showPage('home')">Le <span>Journal</span> du Soir</div>
+  <div class="masthead-tagline">Réflexions du quotidien · Édition numérique</div>
+  <hr class="masthead-rule">
+</header>
+
+<!-- NAV -->
+<nav>
+  <a href="#" onclick="showPage('home')" id="nav-home" class="active">Accueil</a>
+  <span class="nav-sep">·</span>
+  <a href="#" onclick="showPage('history')" id="nav-history">Archives</a>
+  <span class="nav-sep">·</span>
+  <a href="#" onclick="showPage('about')" id="nav-about">À propos</a>
+  <button class="nav-admin-btn" onclick="showPage('admin')" id="nav-admin">⚙ Admin</button>
+</nav>
+
+<!-- COUNTDOWN -->
+<div id="countdown-banner">
+  <span id="countdown-text">Chargement...</span> <span id="countdown-timer"></span>
+</div>
+
+<main>
+  <!-- HOME -->
+  <section class="page-section active" id="page-home">
+    <div id="home-loading" class="text-center mt-2"><div class="loading-spinner"></div></div>
+    <div id="home-locked" class="locked-overlay" style="display:none;">
+      <div class="locked-icon">🕰️</div>
+      <h2>Le journal du jour n'est pas encore publié</h2>
+      <p>La publication a lieu chaque soir à 18h00. Revenez ce soir !</p>
+      <div class="locked-time" id="locked-countdown"></div>
+    </div>
+    <div id="home-content" style="display:none;">
+      <div class="journal-hero">
+        <article>
+          <div class="journal-date-label" id="journal-date-label">—</div>
+          <h1 class="journal-title" id="journal-title">—</h1>
+          <div class="journal-meta-chips" id="journal-chips"></div>
+          <div class="journal-excerpt" id="journal-excerpt"></div>
+          <div class="journal-body" id="journal-body"></div>
+        </article>
+        <aside class="sidebar">
+          <div class="sidebar-box">
+            <h3>📊 Vos réactions</h3>
+            <div class="ratings-grid">
+              <div class="rating-stat">
+                <div class="rating-big" id="avg-stars">—</div>
+                <div class="stars-display" id="avg-stars-visual"></div>
+                <div class="rating-label">Note moyenne</div>
+              </div>
+              <div class="rating-stat">
+                <div class="rating-big" id="total-comments">0</div>
+                <div class="rating-label">Avis déposés</div>
+              </div>
+            </div>
+            <div id="reaction-bars"></div>
+            <div class="user-vote-btns">
+              <button class="vote-btn" onclick="castReaction('positive')" id="vbtn-positive">
+                👍 <span id="vc-positive">0</span>
+              </button>
+              <button class="vote-btn" onclick="castReaction('neutral')" id="vbtn-neutral">
+                🤔 <span id="vc-neutral">0</span>
+              </button>
+              <button class="vote-btn" onclick="castReaction('negative')" id="vbtn-negative">
+                👎 <span id="vc-negative">0</span>
+              </button>
+            </div>
+          </div>
+          <div class="sidebar-box">
+            <h3>📅 Derniers journaux</h3>
+            <ul class="admin-list" id="recent-list"></ul>
+          </div>
+          <div class="sidebar-box">
+            <h3>🏷️ Thèmes du moment</h3>
+            <div id="tags-cloud" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+          </div>
+        </aside>
+      </div>
+
+      <!-- COMMENTS -->
+      <div class="comments-section">
+        <h2>Avis des lecteurs</h2>
+        <div class="comment-form">
+          <div class="comment-form-row">
+            <input type="text" id="comment-name" placeholder="Votre prénom">
+            <input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
+          </div>
+          <div class="star-picker">
+            <label>Note :</label>
+            <span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>
+            <span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>
+            <span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>
+            <span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>
+            <span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>
+          </div>
+          <textarea id="comment-text" placeholder="Partagez votre avis sur le journal du jour..." rows="3"></textarea>
+          <br><br>
+          <button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>
+        </div>
+        <div class="comment-list" id="comment-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HISTORY -->
+  <section class="page-section" id="page-history">
+    <div style="margin-bottom:1.5rem;">
+      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:900;margin-bottom:0.25rem;">Archives</h1>
+      <p style="color:var(--muted);font-size:0.9rem;">Tous les journaux publiés, dans l'ordre chronologique inverse.</p>
+    </div>
+    <div class="search-bar">
+      <span class="search-bar-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Rechercher dans les archives..." oninput="filterHistory()">
+    </div>
+    <div class="filter-row" id="cat-filters"></div>
+    <div id="history-stats" class="stats-grid"></div>
+    <div class="history-grid" id="history-grid"></div>
+    <div id="history-loading" class="text-center"><div class="loading-spinner"></div></div>
+    <div id="history-empty" class="empty-state" style="display:none;"><p>Aucun journal dans les archives.</p></div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page-section" id="page-about">
+    <div style="max-width:680px;margin:2rem auto;">
+      <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;font-style:italic;margin-bottom:1.5rem;">À propos du Journal du Soir</h1>
+      <div style="font-size:1.05rem;line-height:1.85;color:var(--ink-light);">
+        <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);">
+          Chaque soir à 18h00, un nouveau regard sur le monde.
+        </p>
+        <p style="margin-bottom:1rem;">Le Journal du Soir est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
+        <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à 18h00, heure locale. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
+        <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
+        <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
+        <hr style="border:none;border-top:1px solid var(--border);margin-bottom:2rem;">
+        <div style="background:var(--parchment-mid);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;">
+          <p style="font-family:var(--font-mono);font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">TECHNIQUE</p>
+          <p style="font-size:0.9rem;color:var(--ink-light);">Ce site est un fichier HTML statique, hébergeable directement sur GitHub Pages. Les données sont stockées sur JSONBin.io. Aucun serveur, aucune base de données externe — tout fonctionne côté client.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADMIN -->
+  <section class="page-section" id="page-admin">
+    <div id="admin-login-screen" class="admin-login">
+      <h2>🔐 Accès administrateur</h2>
+      <div class="form-group">
+        <label class="form-label">Mot de passe admin</label>
+        <input type="password" class="form-input" id="admin-pw-input" placeholder="Entrez le mot de passe..." onkeydown="if(event.key==='Enter')adminLogin()">
+      </div>
+      <button class="btn-primary" onclick="adminLogin()">Se connecter →</button>
+      <div class="admin-error" id="admin-err"></div>
+    </div>
+    <div id="admin-panel" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
+        <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;">Panel d'administration</h1>
+        <button onclick="adminLogout()" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted);background:none;border:1px solid var(--border-strong);padding:0.4rem 0.8rem;border-radius:3px;cursor:pointer;">Déconnexion</button>
+      </div>
+      <div class="admin-panel">
+        <div class="admin-tabs">
+          <button class="admin-tab active" onclick="switchAdminTab('new')" id="atab-new">✏️ Nouveau journal</button>
+          <button class="admin-tab" onclick="switchAdminTab('manage')" id="atab-manage">📚 Gérer les journaux</button>
+          <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Modération</button>
+          <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
+        </div>
+        <div class="admin-body">
+          <!-- TAB: New Journal -->
+          <div id="atab-body-new">
+            <div class="form-group">
+              <label class="form-label">Titre du journal *</label>
+              <input type="text" class="form-input" id="new-title" placeholder="Un titre percutant...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Résumé / accroche (affiché en italique)</label>
+              <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contenu complet *</label>
+              <textarea class="form-textarea" id="new-body" placeholder="Corps du journal... (les sauts de ligne sont préservés)"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Catégorie</label>
+                <select class="form-select" id="new-category">
+                  <option value="Réflexion">Réflexion</option>
+                  <option value="Actualité">Actualité</option>
+                  <option value="Culture">Culture</option>
+                  <option value="Société">Société</option>
+                  <option value="Science">Science</option>
+                  <option value="Humour">Humour</option>
+                  <option value="Personnel">Personnel</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Humeur du jour</label>
+                <select class="form-select" id="new-mood">
+                  <option value="positive">😊 Optimiste</option>
+                  <option value="neutral">😐 Neutre</option>
+                  <option value="melancholic">🌧️ Mélancolique</option>
+                  <option value="energetic">⚡ Énergique</option>
+                  <option value="pensive">🤔 Pensif</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date de publication</label>
+                <input type="date" class="form-input" id="new-date">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Auteur</label>
+              <input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tags (séparés par des virgules)</label>
+              <input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien, réflexion">
+            </div>
+            <button class="btn-primary" onclick="publishJournal()" id="publish-btn">Enregistrer le journal →</button>
+            <div id="publish-status" style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.82rem;color:var(--muted);"></div>
+          </div>
+
+          <!-- TAB: Manage -->
+          <div id="atab-body-manage" style="display:none;">
+            <div id="manage-list-loading" class="text-center"><div class="loading-spinner"></div></div>
+            <ul class="admin-list" id="manage-list"></ul>
+          </div>
+
+          <!-- TAB: Moderation -->
+          <div id="atab-body-moderation" style="display:none;">
+            <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Avis en attente de modération ou signalés</p>
+            <ul class="admin-list" id="mod-list"></ul>
+            <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis à modérer.</p></div>
+          </div>
+
+          <!-- TAB: Settings -->
+          <div id="atab-body-settings" style="display:none;">
+            <div class="form-group">
+              <label class="form-label">Nom du site</label>
+              <input type="text" class="form-input" id="setting-sitename" placeholder="Le Journal du Soir">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tagline / sous-titre</label>
+              <input type="text" class="form-input" id="setting-tagline" placeholder="Réflexions du quotidien">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Heure de publication (format 24h)</label>
+              <input type="number" class="form-input" id="setting-hour" min="0" max="23" value="18">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Changer le mot de passe admin</label>
+              <input type="password" class="form-input" id="setting-newpw" placeholder="Nouveau mot de passe (laisser vide = pas de changement)">
+            </div>
+            <button class="btn-primary" onclick="saveSettings()">Sauvegarder les paramètres →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- JOURNAL MODAL -->
+<div class="modal-bg hidden" id="journal-modal">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="journal-date-label" id="modal-date">—</div>
+    <h1 class="journal-title" id="modal-title">—</h1>
+    <div class="journal-meta-chips" id="modal-chips"></div>
+    <div class="journal-excerpt" id="modal-excerpt"></div>
+    <div class="journal-body" id="modal-body"></div>
+    <div style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;">
+      <div class="comment-list" id="modal-comments"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<footer>
+  <strong>Le Journal du Soir</strong> · Publication quotidienne à 18h00 · Propulsé par JSONBin.io
+</footer>
+
+<script>
+const CONFIG_KEY = 'lejournaldusoir_cfg';
+let cfg = null;
+let db = { journals: [], comments: [], settings: {}, reactions: {} };
+let binId = null;
+let isAdmin = false;
+let currentJournalId = null;
+let commentRating = 0;
+let userReactions = {};
+let allCategories = new Set();
+let activeFilter = 'all';
+
+// ─── INIT ───────────────────────────────────────────────────────────
+window.onload = async () => {
+  updateDateDisplay();
+  startCountdown();
+  const saved = localStorage.getItem(CONFIG_KEY);
+  if (saved) {
+    try {
+      cfg = JSON.parse(saved);
+      document.getElementById('setup-overlay').classList.add('hidden');
+      await loadDB();
+      renderHome();
+    } catch(e) { showSetup(); }
+  } else { showSetup(); }
+};
+
+function showSetup() {
+  document.getElementById('setup-overlay').classList.remove('hidden');
+}
+
+async function initSetup() {
+  const key = document.getElementById('setup-api-key').value.trim();
+  const pw = document.getElementById('setup-admin-pw').value.trim();
+  const err = document.getElementById('setup-error');
+  if (!key || !pw) { err.textContent = 'Veuillez remplir tous les champs.'; return; }
+  err.textContent = 'Création de la base de données...';
+  try {
+    const initData = {
+      journals: [], comments: [], reactions: {},
+      settings: { siteName: 'Le Journal du Soir', tagline: 'Réflexions du quotidien', pubHour: 18, adminPwHash: simpleHash(pw) }
+    };
+    const res = await fetch('https://api.jsonbin.io/v3/b', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'journal-du-soir', 'X-Bin-Private': 'true' },
+      body: JSON.stringify(initData)
+    });
+    if (!res.ok) throw new Error('Clé API invalide ou erreur réseau');
+    const data = await res.json();
+    cfg = { apiKey: key, binId: data.metadata.id };
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(cfg));
+    document.getElementById('setup-overlay').classList.add('hidden');
+    await loadDB();
+    renderHome();
+  } catch(e) { err.textContent = '❌ ' + e.message; }
+}
+
+// ─── DB ─────────────────────────────────────────────────────────────
+async function loadDB() {
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}/latest`, {
+      headers: { 'X-Master-Key': cfg.apiKey }
+    });
+    if (!res.ok) throw new Error('Erreur de chargement');
+    const data = await res.json();
+    db = data.record;
+    if (!db.journals) db.journals = [];
+    if (!db.comments) db.comments = [];
+    if (!db.reactions) db.reactions = {};
+    if (!db.settings) db.settings = {};
+    userReactions = JSON.parse(localStorage.getItem('lejds_reactions') || '{}');
+    return true;
+  } catch(e) { console.error(e); showToast('Erreur de connexion à la base de données.', 'error'); return false; }
+}
+
+async function saveDB() {
+  const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': cfg.apiKey },
+    body: JSON.stringify(db)
+  });
+  if (!res.ok) throw new Error('Erreur de sauvegarde');
+  return true;
+}
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────
+function showPage(page) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  const navEl = document.getElementById('nav-' + page);
+  if (navEl) navEl.classList.add('active');
+  if (page === 'history') renderHistory();
+  if (page === 'admin') renderAdmin();
+}
+
+// ─── TODAY CHECK ─────────────────────────────────────────────────────
+function getTodayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function getPubHour() {
+  return db.settings.pubHour ?? 18;
+}
+
+function isPublished(journal) {
+  const today = getTodayStr();
+  const now = new Date();
+  if (journal.date < today) return true;
+  if (journal.date === today && now.getHours() >= getPubHour()) return true;
+  return false;
+}
+
+function getTodayJournal() {
+  const today = getTodayStr();
+  return db.journals.find(j => j.date === today) || null;
+}
+
+// ─── HOME ────────────────────────────────────────────────────────────
+function renderHome() {
+  document.getElementById('home-loading').style.display = 'none';
+  const j = getTodayJournal();
+  if (!j || !isPublished(j)) {
+    document.getElementById('home-locked').style.display = 'block';
+    document.getElementById('home-content').style.display = 'none';
+    return;
+  }
+  document.getElementById('home-locked').style.display = 'none';
+  document.getElementById('home-content').style.display = 'block';
+  currentJournalId = j.id;
+
+  document.getElementById('journal-date-label').textContent = formatDateFr(j.date);
+  document.getElementById('journal-title').textContent = j.title;
+  document.getElementById('journal-excerpt').textContent = j.excerpt || '';
+  document.getElementById('journal-body').textContent = j.body;
+
+  const chips = document.getElementById('journal-chips');
+  chips.innerHTML = '';
+  if (j.category) { const c = document.createElement('span'); c.className = 'chip cat'; c.textContent = j.category; chips.appendChild(c); }
+  if (j.mood) { const m = document.createElement('span'); m.className = 'chip ' + moodClass(j.mood); m.textContent = moodLabel(j.mood); chips.appendChild(m); }
+  if (j.author) { const a = document.createElement('span'); a.className = 'chip'; a.textContent = '✒ ' + j.author; chips.appendChild(a); }
+
+  renderReactions(j.id);
+  renderComments(j.id, 'comment-list');
+  renderRecentList();
+  renderTagsCloud();
+}
+
+function renderReactions(jid) {
+  const r = db.reactions[jid] || { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
+  const total = (r.positive || 0) + (r.neutral || 0) + (r.negative || 0);
+  const stars = r.stars && r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : '—';
+
+  document.getElementById('avg-stars').textContent = stars;
+  document.getElementById('total-comments').textContent = (db.comments || []).filter(c => c.journalId === jid).length;
+
+  const starVis = document.getElementById('avg-stars-visual');
+  starVis.innerHTML = '';
+  const sv = parseFloat(stars) || 0;
+  for (let i=1;i<=5;i++) { const s=document.createElement('span'); s.className='star'+(i<=Math.round(sv)?' filled':''); s.textContent='★'; starVis.appendChild(s); }
+
+  const bars = document.getElementById('reaction-bars');
+  bars.innerHTML = '';
+  [{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(({k,e,cls})=>{
+    const count = r[k] || 0;
+    const pct = total > 0 ? Math.round((count/total)*100) : 0;
+    bars.innerHTML += `<div class="vote-row"><span class="vote-emoji">${e}</span><div class="vote-bar-bg"><div class="vote-bar ${cls}" style="width:${pct}%"></div></div><span class="vote-count">${count}</span></div>`;
+  });
+
+  ['positive','neutral','negative'].forEach(k => {
+    document.getElementById('vc-' + k).textContent = r[k] || 0;
+    const btn = document.getElementById('vbtn-' + k);
+    btn.classList.toggle('active', userReactions[jid] === k);
+  });
+}
+
+async function castReaction(type) {
+  if (!currentJournalId) return;
+  const jid = currentJournalId;
+  const prev = userReactions[jid];
+  if (!db.reactions[jid]) db.reactions[jid] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
+  if (prev === type) {
+    db.reactions[jid][type] = Math.max(0, (db.reactions[jid][type]||0) - 1);
+    delete userReactions[jid];
+  } else {
+    if (prev) db.reactions[jid][prev] = Math.max(0, (db.reactions[jid][prev]||0) - 1);
+    db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
+    userReactions[jid] = type;
+  }
+  localStorage.setItem('lejds_reactions', JSON.stringify(userReactions));
+  try { await saveDB(); renderReactions(jid); } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+function setCommentRating(v) {
+  commentRating = v;
+  document.querySelectorAll('.star-pick').forEach(s => {
+    s.classList.toggle('active', parseInt(s.dataset.v) <= v);
+  });
+}
+
+async function submitComment() {
+  const name = document.getElementById('comment-name').value.trim();
+  const text = document.getElementById('comment-text').value.trim();
+  if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
+  if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
+  if (!currentJournalId) return;
+
+  const comment = {
+    id: Date.now().toString(),
+    journalId: currentJournalId,
+    name,
+    text,
+    rating: commentRating || 0,
+    date: new Date().toISOString(),
+    flagged: false
+  };
+
+  if (!db.reactions[currentJournalId]) db.reactions[currentJournalId] = { positive:0, neutral:0, negative:0, stars:[], total:0 };
+  if (commentRating) {
+    if (!db.reactions[currentJournalId].stars) db.reactions[currentJournalId].stars = [];
+    db.reactions[currentJournalId].stars.push(commentRating);
+  }
+
+  db.comments.push(comment);
+  try {
+    await saveDB();
+    document.getElementById('comment-name').value = '';
+    document.getElementById('comment-text').value = '';
+    setCommentRating(0);
+    renderComments(currentJournalId, 'comment-list');
+    renderReactions(currentJournalId);
+    showToast('Votre avis a été publié !', 'success');
+  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+}
+
+function renderComments(jid, containerId) {
+  const list = document.getElementById(containerId);
+  const comments = (db.comments || []).filter(c => c.journalId === jid && !c.flagged);
+  list.innerHTML = '';
+  if (!comments.length) { list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;font-family:var(--font-mono);">Aucun avis pour l\'instant. Soyez le premier !</p>'; return; }
+  comments.sort((a,b) => new Date(b.date) - new Date(a.date));
+  comments.forEach(c => {
+    const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+    const stars = Array.from({length:5},(_,i) => `<span class="comment-star ${i<c.rating?'filled':''}">★</span>`).join('');
+    const div = document.createElement('div');
+    div.className = 'comment-card';
+    div.innerHTML = `
+      <div class="comment-header">
+        <div class="comment-avatar">${initials}</div>
+        <span class="comment-name">${escHtml(c.name)}</span>
+        ${c.rating ? `<div class="comment-stars">${stars}</div>` : ''}
+        <span class="comment-date">${timeSince(c.date)}</span>
+      </div>
+      <div class="comment-text">${escHtml(c.text)}</div>
+      ${isAdmin ? `<button class="comment-delete" onclick="deleteComment('${c.id}')">Supprimer</button>` : ''}
+    `;
+    list.appendChild(div);
+  });
+}
+
+async function deleteComment(id) {
+  if (!confirm('Supprimer cet avis ?')) return;
+  db.comments = db.comments.filter(c => c.id !== id);
+  await saveDB();
+  renderComments(currentJournalId, 'comment-list');
+  showToast('Avis supprimé.');
+}
+
+function renderRecentList() {
+  const list = document.getElementById('recent-list');
+  list.innerHTML = '';
+  const published = db.journals.filter(j => isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
+  published.forEach(j => {
+    const li = document.createElement('li');
+    li.innerHTML = `<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal('${j.id}')">${escHtml(j.title)}</span><br><span class="admin-list-date">${formatDateFr(j.date)}</span></div>`;
+    list.appendChild(li);
+  });
+  if (!published.length) list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal publié</li>';
+}
+
+function renderTagsCloud() {
+  const cloud = document.getElementById('tags-cloud');
+  cloud.innerHTML = '';
+  const tagCount = {};
+  db.journals.filter(j => isPublished(j)).forEach(j => {
+    (j.tags || '').split(',').map(t=>t.trim()).filter(Boolean).forEach(t => { tagCount[t] = (tagCount[t]||0)+1; });
+  });
+  const sorted = Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,15);
+  sorted.forEach(([tag, count]) => {
+    const s = document.createElement('span');
+    s.className = 'chip';
+    s.style.cursor = 'pointer';
+    s.textContent = `#${tag} (${count})`;
+    s.onclick = () => { showPage('history'); setTimeout(()=>{ document.getElementById('search-input').value = tag; filterHistory(); },100); };
+    cloud.appendChild(s);
+  });
+}
+
+// ─── HISTORY ─────────────────────────────────────────────────────────
+function renderHistory() {
+  document.getElementById('history-loading').style.display = 'block';
+  const published = db.journals.filter(j => isPublished(j));
+  document.getElementById('history-loading').style.display = 'none';
+
+  allCategories = new Set(published.map(j=>j.category).filter(Boolean));
+  const filterRow = document.getElementById('cat-filters');
+  filterRow.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-btn' + (activeFilter==='all'?' active':'');
+  allBtn.textContent = 'Tout';
+  allBtn.onclick = () => { activeFilter='all'; renderHistory(); };
+  filterRow.appendChild(allBtn);
+  allCategories.forEach(cat => {
+    const b = document.createElement('button');
+    b.className = 'filter-btn' + (activeFilter===cat?' active':'');
+    b.textContent = cat;
+    b.onclick = () => { activeFilter=cat; renderHistory(); };
+    filterRow.appendChild(b);
+  });
+
+  const totalComments = db.comments ? db.comments.length : 0;
+  const avgRating = (() => {
+    let all = [];
+    Object.values(db.reactions).forEach(r => { if (r.stars) all = all.concat(r.stars); });
+    return all.length ? (all.reduce((a,b)=>a+b,0)/all.length).toFixed(1) : '—';
+  })();
+
+  document.getElementById('history-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${published.length}</div><div class="stat-lbl">Journaux publiés</div></div>
+    <div class="stat-card"><div class="stat-num">${totalComments}</div><div class="stat-lbl">Avis déposés</div></div>
+    <div class="stat-card"><div class="stat-num">${avgRating}</div><div class="stat-lbl">Note moyenne</div></div>
+    <div class="stat-card"><div class="stat-num">${allCategories.size}</div><div class="stat-lbl">Catégories</div></div>
+  `;
+  filterHistory();
+}
+
+function filterHistory() {
+  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const published = db.journals.filter(j => isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date));
+  let filtered = published;
+  if (activeFilter !== 'all') filtered = filtered.filter(j => j.category === activeFilter);
+  if (q) filtered = filtered.filter(j => j.title.toLowerCase().includes(q) || (j.excerpt||'').toLowerCase().includes(q) || (j.body||'').toLowerCase().includes(q) || (j.tags||'').toLowerCase().includes(q));
+
+  const grid = document.getElementById('history-grid');
+  grid.innerHTML = '';
+  document.getElementById('history-empty').style.display = filtered.length ? 'none' : 'block';
+
+  filtered.forEach(j => {
+    const r = db.reactions[j.id] || {};
+    const stars = r.stars && r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : null;
+    const commentsCount = (db.comments||[]).filter(c=>c.journalId===j.id).length;
+    const div = document.createElement('div');
+    div.className = 'history-card';
+    div.onclick = () => openModal(j.id);
+    div.innerHTML = `
+      <div class="history-card-date">${formatDateFr(j.date)}</div>
+      <div class="history-card-title">${escHtml(j.title)}</div>
+      <div class="history-card-excerpt">${escHtml(j.excerpt || j.body.slice(0,120))}</div>
+      <div class="history-card-footer">
+        ${j.category ? `<span class="history-card-cat">${escHtml(j.category)}</span>` : ''}
+        ${stars ? `<span class="history-card-rating">★ ${stars}</span>` : ''}
+        <span class="history-card-comments">${commentsCount} avis</span>
+      </div>
+    `;
+    grid.appendChild(div);
+  });
+}
+
+// ─── MODAL ───────────────────────────────────────────────────────────
+function openModal(jid) {
+  const j = db.journals.find(x=>x.id===jid);
+  if (!j) return;
+  document.getElementById('modal-date').textContent = formatDateFr(j.date);
+  document.getElementById('modal-title').textContent = j.title;
+  document.getElementById('modal-excerpt').textContent = j.excerpt || '';
+  document.getElementById('modal-body').textContent = j.body;
+  const chips = document.getElementById('modal-chips');
+  chips.innerHTML = '';
+  if (j.category) { const c=document.createElement('span');c.className='chip cat';c.textContent=j.category;chips.appendChild(c); }
+  if (j.mood) { const m=document.createElement('span');m.className='chip '+moodClass(j.mood);m.textContent=moodLabel(j.mood);chips.appendChild(m); }
+  if (j.author) { const a=document.createElement('span');a.className='chip';a.textContent='✒ '+j.author;chips.appendChild(a); }
+  renderComments(jid, 'modal-comments');
+  document.getElementById('journal-modal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('journal-modal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+document.getElementById('journal-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+
+// ─── ADMIN ───────────────────────────────────────────────────────────
+function adminLogin() {
+  const pw = document.getElementById('admin-pw-input').value;
+  const hash = simpleHash(pw);
+  if (hash === (db.settings.adminPwHash || simpleHash('admin'))) {
+    isAdmin = true;
+    document.getElementById('admin-login-screen').style.display = 'none';
+    document.getElementById('admin-panel').style.display = 'block';
+    document.getElementById('admin-err').textContent = '';
+    document.getElementById('new-date').value = getTodayStr();
+    loadManageList();
+    loadModeration();
+    loadSettings();
+  } else {
+    document.getElementById('admin-err').textContent = '❌ Mot de passe incorrect.';
+  }
+}
+function adminLogout() { isAdmin = false; document.getElementById('admin-login-screen').style.display = 'block'; document.getElementById('admin-panel').style.display = 'none'; }
+
+function switchAdminTab(tab) {
+  ['new','manage','moderation','settings'].forEach(t => {
+    document.getElementById('atab-' + t).classList.toggle('active', t === tab);
+    document.getElementById('atab-body-' + t).style.display = t === tab ? 'block' : 'none';
+  });
+  if (tab === 'manage') loadManageList();
+  if (tab === 'moderation') loadModeration();
+  if (tab === 'settings') loadSettings();
+}
+
+async function publishJournal() {
+  const title = document.getElementById('new-title').value.trim();
+  const body = document.getElementById('new-body').value.trim();
+  const date = document.getElementById('new-date').value;
+  if (!title || !body || !date) { showToast('Titre, contenu et date sont requis.', 'error'); return; }
+
+  const j = {
+    id: Date.now().toString(),
+    title,
+    excerpt: document.getElementById('new-excerpt').value.trim(),
+    body,
+    date,
+    category: document.getElementById('new-category').value,
+    mood: document.getElementById('new-mood').value,
+    author: document.getElementById('new-author').value.trim(),
+    tags: document.getElementById('new-tags').value.trim(),
+    createdAt: new Date().toISOString()
+  };
+
+  const btn = document.getElementById('publish-btn');
+  btn.disabled = true; btn.textContent = 'Enregistrement...';
+  db.journals.push(j);
+  try {
+    await saveDB();
+    showToast('Journal enregistré avec succès !', 'success');
+    btn.textContent = 'Enregistrer le journal →';
+    btn.disabled = false;
+    ['new-title','new-excerpt','new-body','new-author','new-tags'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('new-date').value = getTodayStr();
+    renderHome();
+    loadManageList();
+  } catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.', 'error'); btn.textContent='Enregistrer le journal →'; btn.disabled=false; }
+}
+
+function loadManageList() {
+  document.getElementById('manage-list-loading').style.display = 'none';
+  const list = document.getElementById('manage-list');
+  list.innerHTML = '';
+  const sorted = [...db.journals].sort((a,b)=>b.date.localeCompare(a.date));
+  if (!sorted.length) { list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal</li>'; return; }
+  sorted.forEach(j => {
+    const li = document.createElement('li');
+    const pub = isPublished(j);
+    li.innerHTML = `
+      <div>
+        <span class="admin-list-title">${escHtml(j.title)}</span>
+        <br>
+        <span class="admin-list-date">${formatDateFr(j.date)} · ${pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>'}</span>
+      </div>
+      <div class="admin-list-actions">
+        <button class="btn-danger" onclick="deleteJournal('${j.id}')">Suppr.</button>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+async function deleteJournal(id) {
+  if (!confirm('Supprimer ce journal définitivement ?')) return;
+  db.journals = db.journals.filter(j => j.id !== id);
+  db.comments = db.comments.filter(c => c.journalId !== id);
+  await saveDB();
+  loadManageList();
+  renderHome();
+  showToast('Journal supprimé.');
+}
+
+function loadModeration() {
+  const list = document.getElementById('mod-list');
+  const allComments = db.comments || [];
+  list.innerHTML = '';
+  if (!allComments.length) { document.getElementById('mod-empty').style.display = 'block'; return; }
+  document.getElementById('mod-empty').style.display = 'none';
+  const recent = [...allComments].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30);
+  recent.forEach(c => {
+    const j = db.journals.find(x=>x.id===c.journalId);
+    const li = document.createElement('li');
+    li.innerHTML = `
+      <div style="flex:1;">
+        <span style="font-weight:600;">${escHtml(c.name)}</span>
+        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-left:8px;">${timeSince(c.date)}</span>
+        <br>
+        <span style="font-size:0.85rem;color:var(--muted);">Sur : ${j?escHtml(j.title):'?'}</span>
+        <br>
+        <span style="font-size:0.9rem;">${escHtml(c.text.slice(0,80))}${c.text.length>80?'...':''}</span>
+      </div>
+      <div class="admin-list-actions">
+        <button class="btn-danger" onclick="deleteCommentAdmin('${c.id}')">Suppr.</button>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+}
+
+async function deleteCommentAdmin(id) {
+  if (!confirm('Supprimer cet avis ?')) return;
+  db.comments = db.comments.filter(c=>c.id!==id);
+  await saveDB();
+  loadModeration();
+  if (currentJournalId) renderComments(currentJournalId, 'comment-list');
+  showToast('Avis supprimé.');
+}
+
+function loadSettings() {
+  document.getElementById('setting-sitename').value = db.settings.siteName || 'Le Journal du Soir';
+  document.getElementById('setting-tagline').value = db.settings.tagline || 'Réflexions du quotidien';
+  document.getElementById('setting-hour').value = db.settings.pubHour ?? 18;
+}
+
+async function saveSettings() {
+  db.settings.siteName = document.getElementById('setting-sitename').value.trim() || 'Le Journal du Soir';
+  db.settings.tagline = document.getElementById('setting-tagline').value.trim() || 'Réflexions du quotidien';
+  db.settings.pubHour = parseInt(document.getElementById('setting-hour').value) || 18;
+  const newpw = document.getElementById('setting-newpw').value.trim();
+  if (newpw) db.settings.adminPwHash = simpleHash(newpw);
+  try {
+    await saveDB();
+    showToast('Paramètres sauvegardés !', 'success');
+    document.getElementById('setting-newpw').value = '';
+  } catch(e) { showToast('Erreur de sauvegarde.', 'error'); }
+}
+
+// ─── COUNTDOWN ───────────────────────────────────────────────────────
+function startCountdown() {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+}
+
+function updateCountdown() {
+  const now = new Date();
+  const pubHour = getPubHour();
+  const today = getTodayStr();
+  const j = getTodayJournal();
+
+  if (j && isPublished(j)) {
+    document.getElementById('countdown-banner').classList.add('published');
+    document.getElementById('countdown-text').textContent = '✓ Le journal du jour est disponible !';
+    document.getElementById('countdown-timer').textContent = '';
+    document.getElementById('locked-countdown').textContent = '';
+    return;
+  }
+
+  document.getElementById('countdown-banner').classList.remove('published');
+  const pub = new Date(); pub.setHours(pubHour,0,0,0);
+  if (now >= pub) pub.setDate(pub.getDate()+1);
+  const diff = pub - now;
+  const h = Math.floor(diff/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  const str = `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu · Prochain 18h dans :';
+  document.getElementById('countdown-timer').textContent = str;
+  document.getElementById('locked-countdown').textContent = str;
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────
+function updateDateDisplay() {
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
+  setInterval(() => {
+    document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
+  }, 60000);
+}
+
+function formatDateFr(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+
+function timeSince(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = Math.floor((now-d)/1000);
+  if (diff < 60) return 'à l\'instant';
+  if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
+  if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
+  if (diff < 604800) return `il y a ${Math.floor(diff/86400)} jour${Math.floor(diff/86400)>1?'s':''}`;
+  return d.toLocaleDateString('fr-FR');
+}
+
+function moodClass(m) {
+  return m === 'positive' || m === 'energetic' ? 'mood-good' : m === 'melancholic' ? 'mood-bad' : 'mood-neutral';
+}
+function moodLabel(m) {
+  return { positive:'😊 Optimiste', neutral:'😐 Neutre', melancholic:'🌧️ Mélancolique', energetic:'⚡ Énergique', pensive:'🤔 Pensif' }[m] || m;
+}
+
+function escHtml(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function pad(n) { return String(n).padStart(2,'0'); }
+
+function simpleHash(str) {
+  let hash = 5381;
+  for (let i=0;i<str.length;i++) hash = ((hash<<5)+hash)+str.charCodeAt(i);
+  return (hash>>>0).toString(36);
+}
+
+let toastTimer = null;
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>
