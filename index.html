@@ -755,7 +755,7 @@
         <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);">
           Chaque soir à 18h00, un nouveau regard sur le monde.
         </p>
-        <p style="margin-bottom:1rem;">Le Journal du Soir est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
+        <p style="margin-bottom:1rem;">CapNews est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
         <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à 18h00, heure locale. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
         <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
         <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
@@ -864,7 +864,7 @@
           <div id="atab-body-settings" style="display:none;">
             <div class="form-group">
               <label class="form-label">Nom du site</label>
-              <input type="text" class="form-input" id="setting-sitename" placeholder="Le Journal du Soir">
+              <input type="text" class="form-input" id="setting-sitename" placeholder="CapNews">
             </div>
             <div class="form-group">
               <label class="form-label">Tagline / sous-titre</label>
@@ -904,7 +904,7 @@
 <div class="toast" id="toast"></div>
 
 <footer>
-  <strong>Le Journal du Soir</strong> · Publication quotidienne à 18h00 · Propulsé par JSONBin.io
+  <strong>CapNews</strong> · Publication quotidienne à 18h00 · Propulsé par JSONBin.io
 </footer>
 
 <script>
@@ -947,7 +947,7 @@ async function initSetup() {
   try {
     const initData = {
       journals: [], comments: [], reactions: {},
-      settings: { siteName: 'Le Journal du Soir', tagline: 'Réflexions du quotidien', pubHour: 18, adminPwHash: simpleHash(pw) }
+      settings: { siteName: 'CapNews', tagline: 'Réflexions du quotidien', pubHour: 18, adminPwHash: simpleHash(pw) }
     };
     const res = await fetch('https://api.jsonbin.io/v3/b', {
       method: 'POST',
@@ -1431,13 +1431,13 @@ async function deleteCommentAdmin(id) {
 }
 
 function loadSettings() {
-  document.getElementById('setting-sitename').value = db.settings.siteName || 'Le Journal du Soir';
+  document.getElementById('setting-sitename').value = db.settings.siteName || 'CapNews';
   document.getElementById('setting-tagline').value = db.settings.tagline || 'Réflexions du quotidien';
   document.getElementById('setting-hour').value = db.settings.pubHour ?? 18;
 }
 
 async function saveSettings() {
-  db.settings.siteName = document.getElementById('setting-sitename').value.trim() || 'Le Journal du Soir';
+  db.settings.siteName = document.getElementById('setting-sitename').value.trim() || 'CapNews';
   db.settings.tagline = document.getElementById('setting-tagline').value.trim() || 'Réflexions du quotidien';
   db.settings.pubHour = parseInt(document.getElementById('setting-hour').value) || 18;
   const newpw = document.getElementById('setting-newpw').value.trim();
