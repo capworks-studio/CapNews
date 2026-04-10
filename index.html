@@ -46,7 +46,7 @@
   #setup-overlay {
     position: fixed; inset: 0;
     background: rgba(26,18,9,0.92);
-    display: flex; align-items: center; justify-content: center;
+    display: fx; align-items: center; justify-content: center;
     z-index: 9999;
     backdrop-filter: blur(6px);
   }
@@ -93,26 +93,26 @@
     cursor: pointer;
     transition: background 0.2s, transform 0.1s;
     font-weight: 600;
-    letter-spacing: 0.01em;
+    tter-spacing: 0.01em;
   }
   .btn-primary:hover { background: var(--ink-light); }
-  .btn-primary:active { transform: scale(0.98); }
-  .setup-steps { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
-  .step { flex: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+  .btn-primary:active { transform: sca(0.98); }
+  .setup-steps { display: fx; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .step { fx: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
   .step-num { display: inline-block; background: var(--gold); color: white; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; font-size: 0.75rem; font-weight: 700; margin-right: 4px; }
   .setup-help { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
   .setup-help a { color: var(--gold); }
 
   /* MASTHEAD */
   .masthead {
-    border-bottom: 3px double var(--border-strong);
+    border-bottom: 3px doub var(--border-strong);
     padding: 1.5rem 0 0;
     text-align: center;
     background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment));
     position: relative;
   }
   .masthead-top {
-    display: flex; align-items: center; justify-content: space-between;
+    display: fx; align-items: center; justify-content: space-between;
     padding: 0 2rem 0.75rem;
     border-bottom: 1px solid var(--border);
     margin-bottom: 0.75rem;
@@ -123,7 +123,7 @@
     font-size: clamp(2.2rem, 6vw, 4rem);
     font-weight: 900;
     color: var(--ink);
-    letter-spacing: -0.02em;
+    tter-spacing: -0.02em;
     line-height: 1;
     text-decoration: none;
     cursor: pointer;
@@ -133,16 +133,16 @@
     font-size: 0.78rem;
     font-family: var(--font-mono);
     color: var(--muted);
-    letter-spacing: 0.18em;
+    tter-spacing: 0.18em;
     text-transform: uppercase;
     margin-top: 0.25rem;
     margin-bottom: 0.75rem;
   }
-  .masthead-rule { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
+  .masthead-ru { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
 
   /* NAV */
   nav {
-    display: flex; align-items: center; justify-content: center; gap: 0;
+    display: fx; align-items: center; justify-content: center; gap: 0;
     padding: 0;
     border-bottom: 2px solid var(--ink);
     background: var(--ink);
@@ -153,18 +153,18 @@
     text-decoration: none;
     font-family: var(--font-mono);
     font-size: 0.8rem;
-    letter-spacing: 0.1em;
+    tter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.65rem 1.2rem;
     border: none; background: none;
     cursor: pointer;
     transition: background 0.15s, color 0.15s;
-    display: flex; align-items: center; gap: 6px;
+    display: fx; align-items: center; gap: 6px;
   }
   nav a:hover, nav button:hover { background: rgba(255,255,255,0.1); color: var(--gold-light); }
   nav a.active { background: rgba(255,255,255,0.12); color: var(--gold-light); }
   .nav-sep { color: rgba(255,255,255,0.2); pointer-events: none; padding: 0 2px; }
-  .nav-admin-btn { margin-left: auto; color: var(--gold-light) !important; }
+  .nav-admin-btn { margin-ft: auto; color: var(--gold-light) !important; }
   .nav-admin-btn:hover { background: rgba(212,168,67,0.15) !important; }
 
   /* COUNTDOWN BANNER */
@@ -176,7 +176,7 @@
     font-family: var(--font-mono);
     font-size: 0.82rem;
     border-bottom: 1px solid rgba(255,255,255,0.08);
-    letter-spacing: 0.05em;
+    tter-spacing: 0.05em;
   }
   #countdown-banner.published {
     background: linear-gradient(90deg, #1a3a1a, #2a4a2a, #1a3a1a);
@@ -205,34 +205,34 @@
     font-family: var(--font-mono);
     font-size: 0.75rem;
     color: var(--muted);
-    letter-spacing: 0.15em;
+    tter-spacing: 0.15em;
     text-transform: uppercase;
     margin-bottom: 0.5rem;
-    display: flex; align-items: center; gap: 8px;
+    display: fx; align-items: center; gap: 8px;
   }
-  .journal-date-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .journal-title {
+  .journal-date-label::after { content: ''; fx: 1; height: 1px; background: var(--border); }
+  .journal-tit {
     font-family: var(--font-display);
     font-size: clamp(1.8rem, 4vw, 2.8rem);
     font-weight: 900;
     line-height: 1.1;
     color: var(--ink);
     margin-bottom: 1rem;
-    font-style: italic;
+    font-sty: italic;
   }
   .journal-excerpt {
     font-size: 1.05rem;
     color: var(--ink-light);
     line-height: 1.8;
-    font-style: italic;
-    border-left: 3px solid var(--gold);
-    padding-left: 1.2rem;
+    font-sty: italic;
+    border-ft: 3px solid var(--gold);
+    padding-ft: 1.2rem;
     margin-bottom: 1.2rem;
   }
   .journal-body { font-size: 1rem; color: var(--ink); line-height: 1.85; white-space: pre-wrap; }
   .journal-body p { margin-bottom: 1rem; }
   .journal-meta-chips {
-    display: flex; gap: 0.5rem; flex-wrap: wrap;
+    display: fx; gap: 0.5rem; fx-wrap: wrap;
     margin-bottom: 1rem;
   }
   .chip {
@@ -628,7 +628,7 @@
     <div class="masthead-meta" id="date-display">—</div>
     <div class="masthead-meta">Publication quotidienne · 18h00</div>
   </div>
-  <div class="masthead-logo" onclick="showPage('home')">Le <span>Journal</span> du Soir</div>
+  <div class="masthead-logo" onclick="showPage('home')"<span>Cap</span>News</div>
   <div class="masthead-tagline">Réflexions du quotidien · Édition numérique</div>
   <hr class="masthead-rule">
 </header>
