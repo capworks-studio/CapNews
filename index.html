@@ -2609,7 +2609,7 @@ function updateCountdown() {
   const m = Math.floor((diff%3600000)/60000);
   const s = Math.floor((diff%60000)/1000);
   const str = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
-  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu · Prochain ' + String(pubHour).padStart(2,'0') + 'h dans :';
+  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu pour aujourd'hui · Prochain journal dans ' + String(pubHour).padStart(2,'0') + 'h dans :';
   document.getElementById('countdown-timer').textContent = str;
   const lc = document.getElementById('locked-countdown');
   if (lc) lc.textContent = str;
