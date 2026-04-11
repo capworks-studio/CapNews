@@ -660,13 +660,21 @@
     </div>
     <div id="home-content" style="display:none;">
       <div class="journal-hero">
-        <article>
-          <div class="journal-date-label" id="journal-date-label">—</div>
-          <h1 class="journal-title" id="journal-title">—</h1>
-          <div class="journal-meta-chips" id="journal-chips"></div>
-          <div class="journal-excerpt" id="journal-excerpt"></div>
-          <div class="journal-body" id="journal-body"></div>
-        </article>
+        <!-- BOOK READER -->
+        <div class="book-wrapper" id="book-wrapper">
+          <div class="book-reader" id="book-reader">
+            <!-- Pages injectées dynamiquement par renderBook() -->
+          </div>
+          <div class="book-nav">
+            <button class="book-nav-btn" id="btn-prev" onclick="bookPrev()">← Page précédente</button>
+            <div class="book-progress">
+              <div class="progress-dots" id="progress-dots"></div>
+              <span id="page-counter"></span>
+            </div>
+            <button class="book-nav-btn" id="btn-next" onclick="bookNext()">Page suivante →</button>
+          </div>
+        </div>
+
         <aside class="sidebar">
           <div class="sidebar-box">
             <h3>📊 Vos réactions</h3>
@@ -704,31 +712,79 @@
           </div>
         </aside>
       </div>
-
-      <!-- COMMENTS -->
-      <div class="comments-section">
-        <h2>Avis des lecteurs</h2>
-        <div class="comment-form">
-          <div class="comment-form-row">
-            <input type="text" id="comment-name" placeholder="Votre prénom">
-            <input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
-          </div>
-          <div class="star-picker">
-            <label>Note :</label>
-            <span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>
-            <span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>
-            <span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>
-            <span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>
-            <span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>
-          </div>
-          <textarea id="comment-text" placeholder="Partagez votre avis sur le journal du jour..." rows="3"></textarea>
-          <br><br>
-          <button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>
-        </div>
-        <div class="comment-list" id="comment-list"></div>
-      </div>
     </div>
   </section>
+
+  <!-- FAB modifier journal non publié (admin seulement) -->
+  <button class="edit-fab hidden" id="edit-fab" onclick="openEditModal()">✏️ Modifier ce journal</button>
+
+  <!-- MODAL ÉDITION -->
+  <div class="edit-modal-bg hidden" id="edit-modal-bg">
+    <div class="edit-modal">
+      <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
+      <h2>✏️ Modifier le journal</h2>
+      <div class="form-group">
+        <label class="form-label">Titre *</label>
+        <input type="text" class="form-input" id="edit-title">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Accroche</label>
+        <textarea class="form-textarea" id="edit-excerpt" style="min-height:60px;"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Pages du journal</label>
+        <div class="pages-editor" id="edit-pages-editor"></div>
+        <button class="add-page-btn" onclick="addEditPage()">+ Ajouter une page</button>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Catégorie</label>
+          <select class="form-select" id="edit-category">
+            <option value="Réflexion">Réflexion</option>
+            <option value="Actualité">Actualité</option>
+            <option value="Culture">Culture</option>
+            <option value="Société">Société</option>
+            <option value="Science">Science</option>
+            <option value="Humour">Humour</option>
+            <option value="Personnel">Personnel</option>
+            <option value="Autre">Autre</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Humeur</label>
+          <select class="form-select" id="edit-mood">
+            <option value="positive">😊 Optimiste</option>
+            <option value="neutral">😐 Neutre</option>
+            <option value="melancholic">🌧️ Mélancolique</option>
+            <option value="energetic">⚡ Énergique</option>
+            <option value="pensive">🤔 Pensif</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Temps de lecture</label>
+          <input type="text" class="form-input" id="edit-readtime" placeholder="ex: 4 min">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Auteur</label>
+          <input type="text" class="form-input" id="edit-author">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tags</label>
+          <input type="text" class="form-input" id="edit-tags">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="edit-date">
+        </div>
+      </div>
+      <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+        <button class="btn-primary" onclick="saveEditJournal()">Sauvegarder →</button>
+        <button onclick="closeEditModal()" style="background:none;border:1px solid var(--border-strong);padding:0.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-mono);font-size:0.85rem;">Annuler</button>
+      </div>
+    </div>
+  </div>
 
   <!-- HISTORY -->
   <section class="page-section" id="page-history">
@@ -802,10 +858,7 @@
               <label class="form-label">Résumé / accroche (affiché en italique)</label>
               <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea>
             </div>
-            <div class="form-group">
-              <label class="form-label">Contenu complet *</label>
-              <textarea class="form-textarea" id="new-body" placeholder="Corps du journal... (les sauts de ligne sont préservés)"></textarea>
-            </div>
+            <!-- Le contenu est maintenant géré page par page ci-dessous -->
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Catégorie</label>
@@ -839,9 +892,21 @@
               <label class="form-label">Auteur</label>
               <input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur">
             </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Tags (séparés par des virgules)</label>
+                <input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien, réflexion">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Temps de lecture (affiché en couverture)</label>
+                <input type="text" class="form-input" id="new-readtime" placeholder="ex: 4 min">
+              </div>
+            </div>
             <div class="form-group">
-              <label class="form-label">Tags (séparés par des virgules)</label>
-              <input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien, réflexion">
+              <label class="form-label">Pages du journal *</label>
+              <p style="font-size:0.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:0.6rem;">Chaque page correspond à un écran dans le lecteur. Ajoutez autant de pages que nécessaire.</p>
+              <div class="pages-editor" id="new-pages-editor"></div>
+              <button class="add-page-btn" onclick="addNewPage()">+ Ajouter une page</button>
             </div>
             <button class="btn-primary" onclick="publishJournal()" id="publish-btn">Enregistrer le journal →</button>
             <div id="publish-status" style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.82rem;color:var(--muted);"></div>
@@ -911,8 +976,8 @@
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // CONFIGURATION — à remplir après le premier setup, puis commit sur GitHub
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const JSONBIN_API_KEY = '$2a$10$nN9jN1jyWogDNwpAqtYMeuJypQo6xdSO1sC3CwmxhqjuAr7f3TDfG'
-const JSONBIN_BIN_ID = '69d94981856a6821891db803'
+const JSONBIN_API_KEY = '';   // ← coller ici votre clé JSONBin (X-Master-Key)
+const JSONBIN_BIN_ID  = '';   // ← coller ici l'ID du bin (créé au premier setup)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 let cfg = null;
@@ -986,25 +1051,32 @@ async function loadDB() {
     const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}/latest`, {
       headers: { 'X-Master-Key': cfg.apiKey }
     });
-    if (!res.ok) throw new Error('Erreur de chargement');
+    if (!res.ok) throw new Error('Erreur de chargement (code ' + res.status + ')');
     const data = await res.json();
     db = data.record;
-    if (!db.journals) db.journals = [];
-    if (!db.comments) db.comments = [];
+    if (!db.journals)  db.journals  = [];
+    if (!db.comments)  db.comments  = [];
     if (!db.reactions) db.reactions = {};
-    if (!db.settings) db.settings = {};
-    userReactions = JSON.parse(localStorage.getItem('lejds_reactions') || '{}');
+    if (!db.settings)  db.settings  = {};
+    userReactions = JSON.parse(localStorage.getItem('capnews_reactions') || '{}');
     return true;
-  } catch(e) { console.error(e); showToast('Erreur de connexion à la base de données.', 'error'); return false; }
+  } catch(e) { console.error(e); showToast('Erreur de connexion : ' + e.message, 'error'); return false; }
 }
 
 async function saveDB() {
+  // PUT sur le bin existant — ne crée JAMAIS un nouveau bin
   const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json', 'X-Master-Key': cfg.apiKey },
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Master-Key': cfg.apiKey
+    },
     body: JSON.stringify(db)
   });
-  if (!res.ok) throw new Error('Erreur de sauvegarde');
+  if (!res.ok) {
+    const txt = await res.text().catch(() => String(res.status));
+    throw new Error('Sauvegarde échouée : ' + txt);
+  }
   return true;
 }
 
@@ -1041,32 +1113,166 @@ function getTodayJournal() {
   return db.journals.find(j => j.date === today) || null;
 }
 
+// ─── BOOK READER ─────────────────────────────────────────────────────
+let currentPage = 0;
+let bookPages = []; // tableau de chaînes (contenu de chaque page)
+let swipeStartX = 0;
+
+function getPages(j) {
+  // Compatibilité : si ancien format (body string), on met tout en page 1
+  if (j.pages && Array.isArray(j.pages) && j.pages.length) return j.pages;
+  if (j.body) return [j.body];
+  return [''];
+}
+
+function renderBook(j, dir) {
+  bookPages = getPages(j);
+  const totalPages = bookPages.length + 2; // couverture + pages + réactions
+  const reader = document.getElementById('book-reader');
+  reader.innerHTML = '';
+
+  // ── COUVERTURE ────────────────────────────────────────
+  const cover = document.createElement('div');
+  cover.className = 'book-page cover-page' + (currentPage === 0 ? ' active' : '');
+  cover.dataset.idx = '0';
+  let chipsHtml = '';
+  if (j.category) chipsHtml += `<span class="chip cat">${escHtml(j.category)}</span>`;
+  if (j.mood) chipsHtml += `<span class="chip ${moodClass(j.mood)}">${moodLabel(j.mood)}</span>`;
+  if (j.author) chipsHtml += `<span class="chip">✒ ${escHtml(j.author)}</span>`;
+  const readtime = j.readTime ? `<div class="cover-readtime">Temps de lecture : ${escHtml(j.readTime)}</div>` : '';
+  cover.innerHTML = `
+    <div class="cover-edition">${escHtml((db.settings.siteName||'CapNews').toUpperCase())} · ${formatDateFr(j.date)}</div>
+    <div class="cover-title">${escHtml(j.title)}</div>
+    ${j.excerpt ? `<div class="cover-excerpt">${escHtml(j.excerpt)}</div>` : ''}
+    <div class="cover-meta">${chipsHtml}</div>
+    ${readtime}
+    <button class="cover-start-btn" onclick="bookNext()">Lire le journal →</button>
+    <span class="cover-page-num">Couverture</span>
+  \`;
+  reader.appendChild(cover);
+
+  // ── PAGES DE CONTENU ──────────────────────────────────
+  bookPages.forEach((pageText, i) => {
+    const pg = document.createElement('div');
+    pg.className = 'book-page' + (currentPage === i + 1 ? ' active' : '');
+    pg.dataset.idx = String(i + 1);
+    const isFirst = i === 0;
+    pg.innerHTML = `
+      <div class="page-body-text ${isFirst ? 'page-drop-cap' : ''}">${escHtml(pageText)}</div>
+      <span class="cover-page-num">Page ${i + 1} / ${bookPages.length}</span>
+    \`;
+    reader.appendChild(pg);
+  });
+
+  // ── PAGE RÉACTIONS / AVIS ─────────────────────────────
+  const lastPg = document.createElement('div');
+  lastPg.className = 'book-page reactions-page' + (currentPage === totalPages - 1 ? ' active' : '');
+  lastPg.dataset.idx = String(totalPages - 1);
+  lastPg.innerHTML = `
+    <h2>Avis des lecteurs</h2>
+    <div class="comment-form">
+      <div class="comment-form-row">
+        <input type="text" id="comment-name" placeholder="Votre prénom">
+        <input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
+      </div>
+      <div class="star-picker">
+        <label>Note :</label>
+        <span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>
+        <span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>
+        <span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>
+        <span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>
+        <span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>
+      </div>
+      <textarea id="comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3"></textarea>
+      <br><br>
+      <button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>
+    </div>
+    <div class="comment-list" id="comment-list" style="margin-top:1rem;"></div>
+    <span class="cover-page-num">Fin · ${bookPages.length + 1} / ${bookPages.length + 1}</span>
+  \`;
+  reader.appendChild(lastPg);
+
+  // ── SWIPE TOUCH ───────────────────────────────────────
+  reader.ontouchstart = e => { swipeStartX = e.touches[0].clientX; };
+  reader.ontouchend = e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? bookNext() : bookPrev(); }
+  };
+
+  updateBookNav(totalPages, dir);
+  if (currentPage === totalPages - 1) {
+    renderComments(j.id, 'comment-list');
+  }
+}
+
+function updateBookNav(totalPages, dir) {
+  document.getElementById('btn-prev').disabled = currentPage === 0;
+  document.getElementById('btn-next').disabled = currentPage === totalPages - 1;
+  document.getElementById('page-counter').textContent = `${currentPage + 1} / ${totalPages}`;
+  const dots = document.getElementById('progress-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < totalPages; i++) {
+    const d = document.createElement('span');
+    d.className = 'progress-dot' + (i === currentPage ? ' active' : '');
+    d.onclick = () => goToPage(i);
+    dots.appendChild(d);
+  }
+}
+
+function goToPage(idx, dir) {
+  const j = db.journals.find(x => x.id === currentJournalId);
+  if (!j) return;
+  const totalPages = getPages(j).length + 2;
+  if (idx < 0 || idx >= totalPages) return;
+  const fromLeft = dir === 'left' || (dir === undefined && idx < currentPage);
+  currentPage = idx;
+  renderBook(j, fromLeft ? 'left' : 'right');
+}
+
+function bookNext() { goToPage(currentPage + 1, 'right'); }
+function bookPrev() { goToPage(currentPage - 1, 'left'); }
+
+// Flèches clavier
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight') bookNext();
+  if (e.key === 'ArrowLeft') bookPrev();
+  if (e.key === 'Escape') { closeModal(); closeEditModal(); }
+});
+
 // ─── HOME ────────────────────────────────────────────────────────────
 function renderHome() {
   document.getElementById('home-loading').style.display = 'none';
   const j = getTodayJournal();
+  const fab = document.getElementById('edit-fab');
+
   if (!j || !isPublished(j)) {
     document.getElementById('home-locked').style.display = 'block';
     document.getElementById('home-content').style.display = 'none';
+    // Afficher le FAB si admin ET journal programmé (pas encore publié)
+    if (isAdmin && j && !isPublished(j)) {
+      currentJournalId = j.id;
+      fab.classList.remove('hidden');
+    } else {
+      fab.classList.add('hidden');
+    }
     return;
   }
+
   document.getElementById('home-locked').style.display = 'none';
   document.getElementById('home-content').style.display = 'block';
   currentJournalId = j.id;
+  currentPage = 0;
 
-  document.getElementById('journal-date-label').textContent = formatDateFr(j.date);
-  document.getElementById('journal-title').textContent = j.title;
-  document.getElementById('journal-excerpt').textContent = j.excerpt || '';
-  document.getElementById('journal-body').textContent = j.body;
+  // FAB édition visible uniquement si journal PAS encore publié (date future)
+  // Une fois publié on ne peut plus modifier depuis la home
+  if (isAdmin && !isPublished(j)) {
+    fab.classList.remove('hidden');
+  } else {
+    fab.classList.add('hidden');
+  }
 
-  const chips = document.getElementById('journal-chips');
-  chips.innerHTML = '';
-  if (j.category) { const c = document.createElement('span'); c.className = 'chip cat'; c.textContent = j.category; chips.appendChild(c); }
-  if (j.mood) { const m = document.createElement('span'); m.className = 'chip ' + moodClass(j.mood); m.textContent = moodLabel(j.mood); chips.appendChild(m); }
-  if (j.author) { const a = document.createElement('span'); a.className = 'chip'; a.textContent = '✒ ' + j.author; chips.appendChild(a); }
-
+  renderBook(j, 'right');
   renderReactions(j.id);
-  renderComments(j.id, 'comment-list');
   renderRecentList();
   renderTagsCloud();
 }
@@ -1280,7 +1486,7 @@ function filterHistory() {
     div.innerHTML = `
       <div class="history-card-date">${formatDateFr(j.date)}</div>
       <div class="history-card-title">${escHtml(j.title)}</div>
-      <div class="history-card-excerpt">${escHtml(j.excerpt || j.body.slice(0,120))}</div>
+      <div class="history-card-excerpt">${escHtml(j.excerpt || (getPages(j)[0] || '').slice(0,120))}</div>
       <div class="history-card-footer">
         ${j.category ? `<span class="history-card-cat">${escHtml(j.category)}</span>` : ''}
         ${stars ? `<span class="history-card-rating">★ ${stars}</span>` : ''}
@@ -1298,12 +1504,15 @@ function openModal(jid) {
   document.getElementById('modal-date').textContent = formatDateFr(j.date);
   document.getElementById('modal-title').textContent = j.title;
   document.getElementById('modal-excerpt').textContent = j.excerpt || '';
-  document.getElementById('modal-body').textContent = j.body;
+  // Afficher toutes les pages concaténées dans la modal archives
+  const pages = getPages(j);
+  document.getElementById('modal-body').textContent = pages.join('\n\n— ∗ —\n\n');
   const chips = document.getElementById('modal-chips');
   chips.innerHTML = '';
   if (j.category) { const c=document.createElement('span');c.className='chip cat';c.textContent=j.category;chips.appendChild(c); }
   if (j.mood) { const m=document.createElement('span');m.className='chip '+moodClass(j.mood);m.textContent=moodLabel(j.mood);chips.appendChild(m); }
   if (j.author) { const a=document.createElement('span');a.className='chip';a.textContent='✒ '+j.author;chips.appendChild(a); }
+  if (j.readTime) { const r=document.createElement('span');r.className='chip';r.textContent='⏱ '+j.readTime;chips.appendChild(r); }
   renderComments(jid, 'modal-comments');
   document.getElementById('journal-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -1324,6 +1533,7 @@ function adminLogin() {
     document.getElementById('admin-panel').style.display = 'block';
     document.getElementById('admin-err').textContent = '';
     document.getElementById('new-date').value = getTodayStr();
+    initNewPagesEditor();
     loadManageList();
     loadModeration();
     loadSettings();
@@ -1343,22 +1553,87 @@ function switchAdminTab(tab) {
   if (tab === 'settings') loadSettings();
 }
 
+// ── Pages editor helpers ──────────────────────────────────────────────
+function buildPageItem(text, idx, editorId) {
+  const item = document.createElement('div');
+  item.className = 'page-editor-item';
+  item.dataset.pageIdx = idx;
+  item.innerHTML = `
+    <div class="page-editor-header" onclick="togglePageEditor(this)">
+      <span>Page ${idx + 1}</span>
+      <span style="display:flex;gap:8px;">
+        <button onclick="event.stopPropagation();removePage(this,'${editorId}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:0.75rem;">Suppr.</button>
+        <span>▾</span>
+      </span>
+    </div>
+    <div class="page-editor-body open">
+      <textarea class="page-editor-textarea" placeholder="Contenu de la page ${idx + 1}...">${escHtml(text)}</textarea>
+    </div>
+  `;
+  return item;
+}
+
+function togglePageEditor(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function removePage(btn, editorId) {
+  const item = btn.closest('.page-editor-item');
+  item.remove();
+  renumberPages(editorId);
+}
+
+function renumberPages(editorId) {
+  document.querySelectorAll(`#${editorId} .page-editor-item`).forEach((item, i) => {
+    item.dataset.pageIdx = i;
+    item.querySelector('.page-editor-header span:first-child').textContent = `Page ${i + 1}`;
+    item.querySelector('textarea').placeholder = `Contenu de la page ${i + 1}...`;
+  });
+}
+
+function getPagesFromEditor(editorId) {
+  return Array.from(document.querySelectorAll(`#${editorId} .page-editor-textarea`))
+    .map(ta => ta.value.trim()).filter(Boolean);
+}
+
+function addNewPage() {
+  const editor = document.getElementById('new-pages-editor');
+  const idx = editor.querySelectorAll('.page-editor-item').length;
+  editor.appendChild(buildPageItem('', idx, 'new-pages-editor'));
+}
+
+function addEditPage() {
+  const editor = document.getElementById('edit-pages-editor');
+  const idx = editor.querySelectorAll('.page-editor-item').length;
+  editor.appendChild(buildPageItem('', idx, 'edit-pages-editor'));
+}
+
+// Initialiser avec une page vide au chargement du form
+function initNewPagesEditor() {
+  const editor = document.getElementById('new-pages-editor');
+  editor.innerHTML = '';
+  editor.appendChild(buildPageItem('', 0, 'new-pages-editor'));
+}
+
 async function publishJournal() {
   const title = document.getElementById('new-title').value.trim();
-  const body = document.getElementById('new-body').value.trim();
   const date = document.getElementById('new-date').value;
-  if (!title || !body || !date) { showToast('Titre, contenu et date sont requis.', 'error'); return; }
+  const pages = getPagesFromEditor('new-pages-editor');
+  if (!title || !date) { showToast('Titre et date sont requis.', 'error'); return; }
+  if (!pages.length) { showToast('Ajoutez au moins une page de contenu.', 'error'); return; }
 
   const j = {
     id: Date.now().toString(),
     title,
     excerpt: document.getElementById('new-excerpt').value.trim(),
-    body,
+    pages,
     date,
     category: document.getElementById('new-category').value,
     mood: document.getElementById('new-mood').value,
     author: document.getElementById('new-author').value.trim(),
     tags: document.getElementById('new-tags').value.trim(),
+    readTime: document.getElementById('new-readtime').value.trim(),
     createdAt: new Date().toISOString()
   };
 
@@ -1370,11 +1645,60 @@ async function publishJournal() {
     showToast('Journal enregistré avec succès !', 'success');
     btn.textContent = 'Enregistrer le journal →';
     btn.disabled = false;
-    ['new-title','new-excerpt','new-body','new-author','new-tags'].forEach(id => document.getElementById(id).value = '');
+    ['new-title','new-excerpt','new-author','new-tags','new-readtime'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('new-date').value = getTodayStr();
+    initNewPagesEditor();
     renderHome();
     loadManageList();
   } catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.', 'error'); btn.textContent='Enregistrer le journal →'; btn.disabled=false; }
+}
+
+// ── EDIT MODAL (journaux non encore publiés) ──────────────────────────
+function openEditModal() {
+  const j = db.journals.find(x => x.id === currentJournalId);
+  if (!j) return;
+  document.getElementById('edit-title').value = j.title || '';
+  document.getElementById('edit-excerpt').value = j.excerpt || '';
+  document.getElementById('edit-author').value = j.author || '';
+  document.getElementById('edit-tags').value = j.tags || '';
+  document.getElementById('edit-date').value = j.date || '';
+  document.getElementById('edit-readtime').value = j.readTime || '';
+  document.getElementById('edit-category').value = j.category || 'Autre';
+  document.getElementById('edit-mood').value = j.mood || 'neutral';
+  const editor = document.getElementById('edit-pages-editor');
+  editor.innerHTML = '';
+  const pages = getPages(j);
+  pages.forEach((p, i) => editor.appendChild(buildPageItem(p, i, 'edit-pages-editor')));
+  document.getElementById('edit-modal-bg').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal-bg').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+async function saveEditJournal() {
+  const j = db.journals.find(x => x.id === currentJournalId);
+  if (!j) return;
+  const pages = getPagesFromEditor('edit-pages-editor');
+  if (!pages.length) { showToast('Ajoutez au moins une page.', 'error'); return; }
+  j.title    = document.getElementById('edit-title').value.trim() || j.title;
+  j.excerpt  = document.getElementById('edit-excerpt').value.trim();
+  j.pages    = pages;
+  j.author   = document.getElementById('edit-author').value.trim();
+  j.tags     = document.getElementById('edit-tags').value.trim();
+  j.date     = document.getElementById('edit-date').value || j.date;
+  j.readTime = document.getElementById('edit-readtime').value.trim();
+  j.category = document.getElementById('edit-category').value;
+  j.mood     = document.getElementById('edit-mood').value;
+  try {
+    await saveDB();
+    closeEditModal();
+    currentPage = 0;
+    renderHome();
+    showToast('Journal mis à jour !', 'success');
+  } catch(e) { showToast('Erreur de sauvegarde.', 'error'); }
 }
 
 function loadManageList() {
@@ -1393,6 +1717,7 @@ function loadManageList() {
         <span class="admin-list-date">${formatDateFr(j.date)} · ${pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>'}</span>
       </div>
       <div class="admin-list-actions">
+        ${!pub ? `<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage('${j.id}')">Modifier</button>` : ''}
         <button class="btn-danger" onclick="deleteJournal('${j.id}')">Suppr.</button>
       </div>
     `;
@@ -1408,6 +1733,13 @@ async function deleteJournal(id) {
   loadManageList();
   renderHome();
   showToast('Journal supprimé.');
+}
+
+function editFromManage(id) {
+  // Aller sur la home, charger le journal, ouvrir le modal d'édition
+  currentJournalId = id;
+  showPage('home');
+  openEditModal();
 }
 
 function loadModeration() {
@@ -1584,7 +1916,7 @@ function showToast(msg, type='') {
   toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+// keyboard handled in book reader section above
 </script>
 </body>
 </html>
