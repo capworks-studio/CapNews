@@ -270,6 +270,319 @@
     display: flex; align-items: center; gap: 6px;
   }
 
+  /* BOOK READER */
+  .book-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .book-reader {
+    position: relative;
+    min-height: 520px;
+    background: white;
+    border: 1px solid var(--border-strong);
+    border-radius: 4px 4px 0 0;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .book-page {
+    position: absolute;
+    inset: 0;
+    padding: 2.5rem 2.8rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    overflow-y: auto;
+  }
+  .book-page.active {
+    opacity: 1;
+    pointer-events: all;
+    position: relative;
+  }
+  /* COVER PAGE */
+  .cover-page {
+    background: var(--ink);
+    color: var(--parchment);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 520px;
+  }
+  .cover-edition {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+  }
+  .cover-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 900;
+    font-style: italic;
+    line-height: 1.1;
+    color: var(--parchment);
+    margin-bottom: 1rem;
+  }
+  .cover-excerpt {
+    font-size: 1rem;
+    font-style: italic;
+    color: rgba(247,243,235,0.75);
+    line-height: 1.65;
+    border-left: 2px solid var(--gold);
+    padding-left: 1rem;
+    margin-bottom: 1.5rem;
+    max-width: 520px;
+  }
+  .cover-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.2rem;
+  }
+  .cover-meta .chip {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    color: rgba(247,243,235,0.8);
+  }
+  .cover-meta .chip.cat {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: white;
+  }
+  .cover-readtime {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: rgba(247,243,235,0.5);
+    margin-bottom: 1.8rem;
+  }
+  .cover-start-btn {
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 0.65rem 1.4rem;
+    border-radius: 3px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .cover-start-btn:hover { background: var(--gold-light); transform: translateX(3px); }
+  .cover-page-num {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: rgba(247,243,235,0.35);
+  }
+  .book-page:not(.cover-page) .cover-page-num {
+    color: var(--muted);
+  }
+  /* CONTENT PAGES */
+  .page-body-text {
+    font-size: 1rem;
+    line-height: 1.9;
+    color: var(--ink);
+    white-space: pre-wrap;
+    column-count: 1;
+  }
+  .page-drop-cap::first-letter {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    font-weight: 900;
+    float: left;
+    line-height: 0.75;
+    margin-right: 0.12em;
+    margin-top: 0.1em;
+    color: var(--gold);
+  }
+  /* REACTIONS PAGE */
+  .reactions-page {
+    background: var(--parchment-mid);
+  }
+  .reactions-page h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  /* BOOK NAV */
+  .book-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--parchment-dark);
+    border: 1px solid var(--border-strong);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    padding: 0.6rem 1rem;
+    gap: 1rem;
+  }
+  .book-nav-btn {
+    background: none;
+    border: 1px solid var(--border-strong);
+    padding: 0.35rem 0.85rem;
+    border-radius: 3px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    cursor: pointer;
+    color: var(--ink-light);
+    transition: all 0.13s;
+    white-space: nowrap;
+  }
+  .book-nav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+  .book-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .book-progress {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+  .progress-dots {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .progress-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--border-strong);
+    cursor: pointer;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .progress-dot.active { background: var(--gold); transform: scale(1.3); }
+  .progress-dot:hover { background: var(--gold-light); }
+  #page-counter {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+
+  /* FAB edit button */
+  .edit-fab {
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    background: var(--gold);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.3rem;
+    border-radius: 30px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(184,134,11,0.35);
+    z-index: 200;
+    transition: background 0.15s, transform 0.15s;
+  }
+  .edit-fab:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .edit-fab.hidden { display: none; }
+
+  /* EDIT MODAL */
+  .edit-modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(26,18,9,0.7);
+    z-index: 500;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 2rem 1rem;
+    overflow-y: auto;
+    backdrop-filter: blur(4px);
+  }
+  .edit-modal-bg.hidden { display: none; }
+  .edit-modal {
+    background: var(--parchment);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 2rem 2.5rem;
+    max-width: 760px;
+    width: 100%;
+    position: relative;
+    box-shadow: var(--shadow-strong);
+    margin-top: 1rem;
+  }
+  .edit-modal h2 {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+  }
+  .edit-modal-close {
+    position: absolute; top: 1.2rem; right: 1.4rem;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.3rem; color: var(--muted); line-height: 1;
+    font-family: var(--font-mono);
+    transition: color 0.15s;
+  }
+  .edit-modal-close:hover { color: var(--ink); }
+
+  /* PAGES EDITOR */
+  .pages-editor {
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.6rem;
+  }
+  .page-editor-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .page-editor-item:last-child { border-bottom: none; }
+  .page-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.9rem;
+    background: var(--parchment-dark);
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    user-select: none;
+  }
+  .page-editor-header:hover { background: var(--parchment-mid); }
+  .page-editor-body {
+    display: none;
+    padding: 0.75rem;
+    background: white;
+  }
+  .page-editor-body.open { display: block; }
+  .page-editor-textarea {
+    width: 100%;
+    min-height: 160px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.6rem 0.8rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--ink);
+    resize: vertical;
+    outline: none;
+    line-height: 1.65;
+  }
+  .page-editor-textarea:focus { border-color: var(--gold); }
+  .add-page-btn {
+    background: none;
+    border: 1px dashed var(--border-strong);
+    border-radius: 3px;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--muted);
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.13s;
+  }
+  .add-page-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(184,134,11,0.04); }
+
   /* RATINGS */
   .ratings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
   .rating-stat { text-align: center; }
@@ -590,7 +903,6 @@
   .text-center { text-align: center; }
   .mt-2 { margin-top: 2rem; }
 
-  /* HIGHLIGHT animation for published */
   @keyframes goldPulse {
     0% { box-shadow: 0 0 0 0 rgba(184,134,11,0.4); }
     70% { box-shadow: 0 0 0 12px rgba(184,134,11,0); }
@@ -660,11 +972,8 @@
     </div>
     <div id="home-content" style="display:none;">
       <div class="journal-hero">
-        <!-- BOOK READER -->
         <div class="book-wrapper" id="book-wrapper">
-          <div class="book-reader" id="book-reader">
-            <!-- Pages injectées dynamiquement par renderBook() -->
-          </div>
+          <div class="book-reader" id="book-reader"></div>
           <div class="book-nav">
             <button class="book-nav-btn" id="btn-prev" onclick="bookPrev()">← Page précédente</button>
             <div class="book-progress">
@@ -858,7 +1167,6 @@
               <label class="form-label">Résumé / accroche (affiché en italique)</label>
               <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea>
             </div>
-            <!-- Le contenu est maintenant géré page par page ci-dessous -->
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Catégorie</label>
@@ -993,7 +1301,6 @@ let activeFilter = 'all';
 window.onload = async () => {
   updateDateDisplay();
   startCountdown();
-  // Si les credentials sont codés en dur → on les utilise directement
   if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
     cfg = { apiKey: JSONBIN_API_KEY, binId: JSONBIN_BIN_ID };
     document.getElementById('setup-overlay').classList.add('hidden');
@@ -1001,7 +1308,6 @@ window.onload = async () => {
     applyBranding();
     renderHome();
   } else {
-    // Premier lancement : afficher l'écran de setup
     showSetup();
   }
 };
@@ -1029,7 +1335,6 @@ async function initSetup() {
     if (!res.ok) throw new Error('Clé API invalide ou erreur réseau');
     const data = await res.json();
     const binId = data.metadata.id;
-    // Afficher les credentials à copier dans le fichier HTML
     err.style.color = 'var(--gold)';
     err.innerHTML = `
       <strong style="color:var(--ink);display:block;margin-bottom:0.5rem;">✅ Base créée ! Copiez ces valeurs dans votre fichier HTML :</strong>
@@ -1037,7 +1342,6 @@ async function initSetup() {
       <code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;word-break:break-all;">JSONBIN_BIN_ID = '<b>${binId}</b>'</code>
       <span style="display:block;margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Ouvrez le fichier HTML, remplacez les deux constantes en haut du script, puis commitez sur GitHub.</span>
     `;
-    // On utilise aussi en local le temps que le fichier soit commité
     cfg = { apiKey: key, binId };
     await loadDB();
     applyBranding();
@@ -1058,13 +1362,13 @@ async function loadDB() {
     if (!db.comments)  db.comments  = [];
     if (!db.reactions) db.reactions = {};
     if (!db.settings)  db.settings  = {};
+    // BUG FIX #2 : clé localStorage unifiée — était 'lejds_reactions' côté save
     userReactions = JSON.parse(localStorage.getItem('capnews_reactions') || '{}');
     return true;
   } catch(e) { console.error(e); showToast('Erreur de connexion : ' + e.message, 'error'); return false; }
 }
 
 async function saveDB() {
-  // PUT sur le bin existant — ne crée JAMAIS un nouveau bin
   const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}`, {
     method: 'PUT',
     headers: {
@@ -1115,87 +1419,88 @@ function getTodayJournal() {
 
 // ─── BOOK READER ─────────────────────────────────────────────────────
 let currentPage = 0;
-let bookPages = []; // tableau de chaînes (contenu de chaque page)
+let bookPages = [];
 let swipeStartX = 0;
 
 function getPages(j) {
-  // Compatibilité : si ancien format (body string), on met tout en page 1
   if (j.pages && Array.isArray(j.pages) && j.pages.length) return j.pages;
   if (j.body) return [j.body];
   return [''];
 }
 
+// BUG FIX #1 : les template literals imbriqués utilisaient des \` qui cassaient le parsing JS.
+// Ils sont remplacés par des concaténations de strings ou des fonctions helper.
 function renderBook(j, dir) {
   bookPages = getPages(j);
-  const totalPages = bookPages.length + 2; // couverture + pages + réactions
+  const totalPages = bookPages.length + 2; // couverture + pages contenu + page réactions
   const reader = document.getElementById('book-reader');
   reader.innerHTML = '';
 
-  // ── COUVERTURE ────────────────────────────────────────
+  // ── COUVERTURE ─────────────────────────────────────────
   const cover = document.createElement('div');
   cover.className = 'book-page cover-page' + (currentPage === 0 ? ' active' : '');
   cover.dataset.idx = '0';
+
   let chipsHtml = '';
-  if (j.category) chipsHtml += `<span class="chip cat">${escHtml(j.category)}</span>`;
-  if (j.mood) chipsHtml += `<span class="chip ${moodClass(j.mood)}">${moodLabel(j.mood)}</span>`;
-  if (j.author) chipsHtml += `<span class="chip">✒ ${escHtml(j.author)}</span>`;
-  const readtime = j.readTime ? `<div class="cover-readtime">Temps de lecture : ${escHtml(j.readTime)}</div>` : '';
-  cover.innerHTML = `
-    <div class="cover-edition">${escHtml((db.settings.siteName||'CapNews').toUpperCase())} · ${formatDateFr(j.date)}</div>
-    <div class="cover-title">${escHtml(j.title)}</div>
-    ${j.excerpt ? `<div class="cover-excerpt">${escHtml(j.excerpt)}</div>` : ''}
-    <div class="cover-meta">${chipsHtml}</div>
-    ${readtime}
-    <button class="cover-start-btn" onclick="bookNext()">Lire le journal →</button>
-    <span class="cover-page-num">Couverture</span>
-  \`;
+  if (j.category) chipsHtml += '<span class="chip cat">' + escHtml(j.category) + '</span>';
+  if (j.mood)     chipsHtml += '<span class="chip ' + moodClass(j.mood) + '">' + moodLabel(j.mood) + '</span>';
+  if (j.author)   chipsHtml += '<span class="chip">✒ ' + escHtml(j.author) + '</span>';
+  const readtime = j.readTime ? '<div class="cover-readtime">Temps de lecture : ' + escHtml(j.readTime) + '</div>' : '';
+  const excerptHtml = j.excerpt ? '<div class="cover-excerpt">' + escHtml(j.excerpt) + '</div>' : '';
+
+  cover.innerHTML =
+    '<div class="cover-edition">' + escHtml((db.settings.siteName || 'CapNews').toUpperCase()) + ' · ' + formatDateFr(j.date) + '</div>' +
+    '<div class="cover-title">' + escHtml(j.title) + '</div>' +
+    excerptHtml +
+    '<div class="cover-meta">' + chipsHtml + '</div>' +
+    readtime +
+    '<button class="cover-start-btn" onclick="bookNext()">Lire le journal →</button>' +
+    '<span class="cover-page-num">Couverture</span>';
   reader.appendChild(cover);
 
-  // ── PAGES DE CONTENU ──────────────────────────────────
-  bookPages.forEach((pageText, i) => {
+  // ── PAGES DE CONTENU ─────────────────────────────────────
+  bookPages.forEach(function(pageText, i) {
     const pg = document.createElement('div');
     pg.className = 'book-page' + (currentPage === i + 1 ? ' active' : '');
     pg.dataset.idx = String(i + 1);
     const isFirst = i === 0;
-    pg.innerHTML = `
-      <div class="page-body-text ${isFirst ? 'page-drop-cap' : ''}">${escHtml(pageText)}</div>
-      <span class="cover-page-num">Page ${i + 1} / ${bookPages.length}</span>
-    \`;
+    pg.innerHTML =
+      '<div class="page-body-text' + (isFirst ? ' page-drop-cap' : '') + '">' + escHtml(pageText) + '</div>' +
+      '<span class="cover-page-num">Page ' + (i + 1) + ' / ' + bookPages.length + '</span>';
     reader.appendChild(pg);
   });
 
-  // ── PAGE RÉACTIONS / AVIS ─────────────────────────────
+  // ── PAGE RÉACTIONS / AVIS ────────────────────────────────
   const lastPg = document.createElement('div');
   lastPg.className = 'book-page reactions-page' + (currentPage === totalPages - 1 ? ' active' : '');
   lastPg.dataset.idx = String(totalPages - 1);
-  lastPg.innerHTML = `
-    <h2>Avis des lecteurs</h2>
-    <div class="comment-form">
-      <div class="comment-form-row">
-        <input type="text" id="comment-name" placeholder="Votre prénom">
-        <input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
-      </div>
-      <div class="star-picker">
-        <label>Note :</label>
-        <span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>
-        <span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>
-        <span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>
-        <span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>
-        <span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>
-      </div>
-      <textarea id="comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3"></textarea>
-      <br><br>
-      <button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>
-    </div>
-    <div class="comment-list" id="comment-list" style="margin-top:1rem;"></div>
-    <span class="cover-page-num">Fin · ${bookPages.length + 1} / ${bookPages.length + 1}</span>
-  \`;
+  lastPg.innerHTML =
+    '<h2>Avis des lecteurs</h2>' +
+    '<div class="comment-form">' +
+      '<div class="comment-form-row">' +
+        '<input type="text" id="comment-name" placeholder="Votre prénom">' +
+        '<input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">' +
+      '</div>' +
+      '<div class="star-picker">' +
+        '<label>Note :</label>' +
+        '<span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>' +
+        '<span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>' +
+        '<span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>' +
+        '<span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>' +
+        '<span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>' +
+      '</div>' +
+      '<textarea id="comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3"></textarea>' +
+      '<br><br>' +
+      '<button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>' +
+    '</div>' +
+    '<div class="comment-list" id="comment-list" style="margin-top:1rem;"></div>' +
+    '<span class="cover-page-num">Fin · ' + (bookPages.length + 1) + ' / ' + (bookPages.length + 1) + '</span>';
   reader.appendChild(lastPg);
 
-  // ── SWIPE TOUCH ───────────────────────────────────────
-  reader.ontouchstart = e => { swipeStartX = e.touches[0].clientX; };
-  reader.ontouchend = e => {
-    const dx = e.changedTouches[0].clientX - swipeStartX;
+  // ── SWIPE TOUCH ──────────────────────────────────────────
+  reader.ontouchstart = function(e) { swipeStartX = e.touches[0].clientX; };
+  reader.ontouchend = function(e) {
+    var dx = e.changedTouches[0].clientX - swipeStartX;
     if (Math.abs(dx) > 50) { dx < 0 ? bookNext() : bookPrev(); }
   };
 
@@ -1208,32 +1513,30 @@ function renderBook(j, dir) {
 function updateBookNav(totalPages, dir) {
   document.getElementById('btn-prev').disabled = currentPage === 0;
   document.getElementById('btn-next').disabled = currentPage === totalPages - 1;
-  document.getElementById('page-counter').textContent = `${currentPage + 1} / ${totalPages}`;
+  document.getElementById('page-counter').textContent = (currentPage + 1) + ' / ' + totalPages;
   const dots = document.getElementById('progress-dots');
   dots.innerHTML = '';
   for (let i = 0; i < totalPages; i++) {
     const d = document.createElement('span');
     d.className = 'progress-dot' + (i === currentPage ? ' active' : '');
-    d.onclick = () => goToPage(i);
+    d.onclick = (function(idx) { return function() { goToPage(idx); }; })(i);
     dots.appendChild(d);
   }
 }
 
 function goToPage(idx, dir) {
-  const j = db.journals.find(x => x.id === currentJournalId);
+  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
   if (!j) return;
   const totalPages = getPages(j).length + 2;
   if (idx < 0 || idx >= totalPages) return;
-  const fromLeft = dir === 'left' || (dir === undefined && idx < currentPage);
   currentPage = idx;
-  renderBook(j, fromLeft ? 'left' : 'right');
+  renderBook(j, dir);
 }
 
 function bookNext() { goToPage(currentPage + 1, 'right'); }
 function bookPrev() { goToPage(currentPage - 1, 'left'); }
 
-// Flèches clavier
-document.addEventListener('keydown', e => {
+document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight') bookNext();
   if (e.key === 'ArrowLeft') bookPrev();
   if (e.key === 'Escape') { closeModal(); closeEditModal(); }
@@ -1248,7 +1551,6 @@ function renderHome() {
   if (!j || !isPublished(j)) {
     document.getElementById('home-locked').style.display = 'block';
     document.getElementById('home-content').style.display = 'none';
-    // Afficher le FAB si admin ET journal programmé (pas encore publié)
     if (isAdmin && j && !isPublished(j)) {
       currentJournalId = j.id;
       fab.classList.remove('hidden');
@@ -1263,8 +1565,6 @@ function renderHome() {
   currentJournalId = j.id;
   currentPage = 0;
 
-  // FAB édition visible uniquement si journal PAS encore publié (date future)
-  // Une fois publié on ne peut plus modifier depuis la home
   if (isAdmin && !isPublished(j)) {
     fab.classList.remove('hidden');
   } else {
@@ -1280,25 +1580,30 @@ function renderHome() {
 function renderReactions(jid) {
   const r = db.reactions[jid] || { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
   const total = (r.positive || 0) + (r.neutral || 0) + (r.negative || 0);
-  const stars = r.stars && r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : '—';
+  const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : '—';
 
   document.getElementById('avg-stars').textContent = stars;
-  document.getElementById('total-comments').textContent = (db.comments || []).filter(c => c.journalId === jid).length;
+  document.getElementById('total-comments').textContent = (db.comments || []).filter(function(c) { return c.journalId === jid; }).length;
 
   const starVis = document.getElementById('avg-stars-visual');
   starVis.innerHTML = '';
   const sv = parseFloat(stars) || 0;
-  for (let i=1;i<=5;i++) { const s=document.createElement('span'); s.className='star'+(i<=Math.round(sv)?' filled':''); s.textContent='★'; starVis.appendChild(s); }
+  for (let i=1;i<=5;i++) {
+    const s = document.createElement('span');
+    s.className = 'star' + (i <= Math.round(sv) ? ' filled' : '');
+    s.textContent = '★';
+    starVis.appendChild(s);
+  }
 
   const bars = document.getElementById('reaction-bars');
   bars.innerHTML = '';
-  [{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(({k,e,cls})=>{
-    const count = r[k] || 0;
+  [{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(function(item) {
+    const count = r[item.k] || 0;
     const pct = total > 0 ? Math.round((count/total)*100) : 0;
-    bars.innerHTML += `<div class="vote-row"><span class="vote-emoji">${e}</span><div class="vote-bar-bg"><div class="vote-bar ${cls}" style="width:${pct}%"></div></div><span class="vote-count">${count}</span></div>`;
+    bars.innerHTML += '<div class="vote-row"><span class="vote-emoji">' + item.e + '</span><div class="vote-bar-bg"><div class="vote-bar ' + item.cls + '" style="width:' + pct + '%"></div></div><span class="vote-count">' + count + '</span></div>';
   });
 
-  ['positive','neutral','negative'].forEach(k => {
+  ['positive','neutral','negative'].forEach(function(k) {
     document.getElementById('vc-' + k).textContent = r[k] || 0;
     const btn = document.getElementById('vbtn-' + k);
     btn.classList.toggle('active', userReactions[jid] === k);
@@ -1318,13 +1623,14 @@ async function castReaction(type) {
     db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
     userReactions[jid] = type;
   }
-  localStorage.setItem('lejds_reactions', JSON.stringify(userReactions));
+  // BUG FIX #2 : clé unifiée 'capnews_reactions' (était 'lejds_reactions' ici)
+  localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
   try { await saveDB(); renderReactions(jid); } catch(e) { showToast('Erreur réseau', 'error'); }
 }
 
 function setCommentRating(v) {
   commentRating = v;
-  document.querySelectorAll('.star-pick').forEach(s => {
+  document.querySelectorAll('.star-pick').forEach(function(s) {
     s.classList.toggle('active', parseInt(s.dataset.v) <= v);
   });
 }
@@ -1339,8 +1645,8 @@ async function submitComment() {
   const comment = {
     id: Date.now().toString(),
     journalId: currentJournalId,
-    name,
-    text,
+    name: name,
+    text: text,
     rating: commentRating || 0,
     date: new Date().toISOString(),
     flagged: false
@@ -1366,32 +1672,35 @@ async function submitComment() {
 
 function renderComments(jid, containerId) {
   const list = document.getElementById(containerId);
-  const comments = (db.comments || []).filter(c => c.journalId === jid && !c.flagged);
+  if (!list) return;
+  const comments = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.flagged; });
   list.innerHTML = '';
-  if (!comments.length) { list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;font-family:var(--font-mono);">Aucun avis pour l\'instant. Soyez le premier !</p>'; return; }
-  comments.sort((a,b) => new Date(b.date) - new Date(a.date));
-  comments.forEach(c => {
-    const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
-    const stars = Array.from({length:5},(_,i) => `<span class="comment-star ${i<c.rating?'filled':''}">★</span>`).join('');
+  if (!comments.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;font-family:var(--font-mono);">Aucun avis pour l\'instant. Soyez le premier !</p>';
+    return;
+  }
+  comments.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+  comments.forEach(function(c) {
+    const initials = c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+    const stars = Array.from({length:5},function(_,i) { return '<span class="comment-star ' + (i<c.rating?'filled':'') + '">★</span>'; }).join('');
     const div = document.createElement('div');
     div.className = 'comment-card';
-    div.innerHTML = `
-      <div class="comment-header">
-        <div class="comment-avatar">${initials}</div>
-        <span class="comment-name">${escHtml(c.name)}</span>
-        ${c.rating ? `<div class="comment-stars">${stars}</div>` : ''}
-        <span class="comment-date">${timeSince(c.date)}</span>
-      </div>
-      <div class="comment-text">${escHtml(c.text)}</div>
-      ${isAdmin ? `<button class="comment-delete" onclick="deleteComment('${c.id}')">Supprimer</button>` : ''}
-    `;
+    div.innerHTML =
+      '<div class="comment-header">' +
+        '<div class="comment-avatar">' + initials + '</div>' +
+        '<span class="comment-name">' + escHtml(c.name) + '</span>' +
+        (c.rating ? '<div class="comment-stars">' + stars + '</div>' : '') +
+        '<span class="comment-date">' + timeSince(c.date) + '</span>' +
+      '</div>' +
+      '<div class="comment-text">' + escHtml(c.text) + '</div>' +
+      (isAdmin ? '<button class="comment-delete" onclick="deleteComment(\'' + c.id + '\')">Supprimer</button>' : '');
     list.appendChild(div);
   });
 }
 
 async function deleteComment(id) {
   if (!confirm('Supprimer cet avis ?')) return;
-  db.comments = db.comments.filter(c => c.id !== id);
+  db.comments = db.comments.filter(function(c) { return c.id !== id; });
   await saveDB();
   renderComments(currentJournalId, 'comment-list');
   showToast('Avis supprimé.');
@@ -1400,10 +1709,10 @@ async function deleteComment(id) {
 function renderRecentList() {
   const list = document.getElementById('recent-list');
   list.innerHTML = '';
-  const published = db.journals.filter(j => isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5);
-  published.forEach(j => {
+  const published = db.journals.filter(function(j) { return isPublished(j); }).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,5);
+  published.forEach(function(j) {
     const li = document.createElement('li');
-    li.innerHTML = `<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal('${j.id}')">${escHtml(j.title)}</span><br><span class="admin-list-date">${formatDateFr(j.date)}</span></div>`;
+    li.innerHTML = '<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\'' + j.id + '\')">' + escHtml(j.title) + '</span><br><span class="admin-list-date">' + formatDateFr(j.date) + '</span></div>';
     list.appendChild(li);
   });
   if (!published.length) list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal publié</li>';
@@ -1413,16 +1722,17 @@ function renderTagsCloud() {
   const cloud = document.getElementById('tags-cloud');
   cloud.innerHTML = '';
   const tagCount = {};
-  db.journals.filter(j => isPublished(j)).forEach(j => {
-    (j.tags || '').split(',').map(t=>t.trim()).filter(Boolean).forEach(t => { tagCount[t] = (tagCount[t]||0)+1; });
+  db.journals.filter(function(j) { return isPublished(j); }).forEach(function(j) {
+    (j.tags || '').split(',').map(function(t){return t.trim();}).filter(Boolean).forEach(function(t) { tagCount[t] = (tagCount[t]||0)+1; });
   });
-  const sorted = Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,15);
-  sorted.forEach(([tag, count]) => {
+  const sorted = Object.entries(tagCount).sort(function(a,b){return b[1]-a[1];}).slice(0,15);
+  sorted.forEach(function(entry) {
+    const tag = entry[0], count = entry[1];
     const s = document.createElement('span');
     s.className = 'chip';
     s.style.cursor = 'pointer';
-    s.textContent = `#${tag} (${count})`;
-    s.onclick = () => { showPage('history'); setTimeout(()=>{ document.getElementById('search-input').value = tag; filterHistory(); },100); };
+    s.textContent = '#' + tag + ' (' + count + ')';
+    s.onclick = function() { showPage('history'); setTimeout(function(){ document.getElementById('search-input').value = tag; filterHistory(); },100); };
     cloud.appendChild(s);
   });
 }
@@ -1430,81 +1740,84 @@ function renderTagsCloud() {
 // ─── HISTORY ─────────────────────────────────────────────────────────
 function renderHistory() {
   document.getElementById('history-loading').style.display = 'block';
-  const published = db.journals.filter(j => isPublished(j));
+  const published = db.journals.filter(function(j) { return isPublished(j); });
   document.getElementById('history-loading').style.display = 'none';
 
-  allCategories = new Set(published.map(j=>j.category).filter(Boolean));
+  allCategories = new Set(published.map(function(j){return j.category;}).filter(Boolean));
   const filterRow = document.getElementById('cat-filters');
   filterRow.innerHTML = '';
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn' + (activeFilter==='all'?' active':'');
   allBtn.textContent = 'Tout';
-  allBtn.onclick = () => { activeFilter='all'; renderHistory(); };
+  allBtn.onclick = function() { activeFilter='all'; renderHistory(); };
   filterRow.appendChild(allBtn);
-  allCategories.forEach(cat => {
+  allCategories.forEach(function(cat) {
     const b = document.createElement('button');
     b.className = 'filter-btn' + (activeFilter===cat?' active':'');
     b.textContent = cat;
-    b.onclick = () => { activeFilter=cat; renderHistory(); };
+    b.onclick = function() { activeFilter=cat; renderHistory(); };
     filterRow.appendChild(b);
   });
 
   const totalComments = db.comments ? db.comments.length : 0;
-  const avgRating = (() => {
+  const avgRating = (function() {
     let all = [];
-    Object.values(db.reactions).forEach(r => { if (r.stars) all = all.concat(r.stars); });
-    return all.length ? (all.reduce((a,b)=>a+b,0)/all.length).toFixed(1) : '—';
+    Object.values(db.reactions).forEach(function(r) { if (r.stars) all = all.concat(r.stars); });
+    return all.length ? (all.reduce(function(a,b){return a+b;},0)/all.length).toFixed(1) : '—';
   })();
 
-  document.getElementById('history-stats').innerHTML = `
-    <div class="stat-card"><div class="stat-num">${published.length}</div><div class="stat-lbl">Journaux publiés</div></div>
-    <div class="stat-card"><div class="stat-num">${totalComments}</div><div class="stat-lbl">Avis déposés</div></div>
-    <div class="stat-card"><div class="stat-num">${avgRating}</div><div class="stat-lbl">Note moyenne</div></div>
-    <div class="stat-card"><div class="stat-num">${allCategories.size}</div><div class="stat-lbl">Catégories</div></div>
-  `;
+  document.getElementById('history-stats').innerHTML =
+    '<div class="stat-card"><div class="stat-num">' + published.length + '</div><div class="stat-lbl">Journaux publiés</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + totalComments + '</div><div class="stat-lbl">Avis déposés</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + avgRating + '</div><div class="stat-lbl">Note moyenne</div></div>' +
+    '<div class="stat-card"><div class="stat-num">' + allCategories.size + '</div><div class="stat-lbl">Catégories</div></div>';
+
   filterHistory();
 }
 
 function filterHistory() {
-  const q = (document.getElementById('search-input')?.value || '').toLowerCase();
-  const published = db.journals.filter(j => isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date));
+  const q = (document.getElementById('search-input') ? document.getElementById('search-input').value : '').toLowerCase();
+  const published = db.journals.filter(function(j) { return isPublished(j); }).sort(function(a,b){return b.date.localeCompare(a.date);});
   let filtered = published;
-  if (activeFilter !== 'all') filtered = filtered.filter(j => j.category === activeFilter);
-  if (q) filtered = filtered.filter(j => j.title.toLowerCase().includes(q) || (j.excerpt||'').toLowerCase().includes(q) || (j.body||'').toLowerCase().includes(q) || (j.tags||'').toLowerCase().includes(q));
+  if (activeFilter !== 'all') filtered = filtered.filter(function(j) { return j.category === activeFilter; });
+  if (q) filtered = filtered.filter(function(j) {
+    return j.title.toLowerCase().includes(q) ||
+      (j.excerpt||'').toLowerCase().includes(q) ||
+      (j.body||'').toLowerCase().includes(q) ||
+      (j.tags||'').toLowerCase().includes(q);
+  });
 
   const grid = document.getElementById('history-grid');
   grid.innerHTML = '';
   document.getElementById('history-empty').style.display = filtered.length ? 'none' : 'block';
 
-  filtered.forEach(j => {
+  filtered.forEach(function(j) {
     const r = db.reactions[j.id] || {};
-    const stars = r.stars && r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : null;
-    const commentsCount = (db.comments||[]).filter(c=>c.journalId===j.id).length;
+    const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : null;
+    const commentsCount = (db.comments||[]).filter(function(c){return c.journalId===j.id;}).length;
     const div = document.createElement('div');
     div.className = 'history-card';
-    div.onclick = () => openModal(j.id);
-    div.innerHTML = `
-      <div class="history-card-date">${formatDateFr(j.date)}</div>
-      <div class="history-card-title">${escHtml(j.title)}</div>
-      <div class="history-card-excerpt">${escHtml(j.excerpt || (getPages(j)[0] || '').slice(0,120))}</div>
-      <div class="history-card-footer">
-        ${j.category ? `<span class="history-card-cat">${escHtml(j.category)}</span>` : ''}
-        ${stars ? `<span class="history-card-rating">★ ${stars}</span>` : ''}
-        <span class="history-card-comments">${commentsCount} avis</span>
-      </div>
-    `;
+    div.onclick = function() { openModal(j.id); };
+    div.innerHTML =
+      '<div class="history-card-date">' + formatDateFr(j.date) + '</div>' +
+      '<div class="history-card-title">' + escHtml(j.title) + '</div>' +
+      '<div class="history-card-excerpt">' + escHtml(j.excerpt || (getPages(j)[0] || '').slice(0,120)) + '</div>' +
+      '<div class="history-card-footer">' +
+        (j.category ? '<span class="history-card-cat">' + escHtml(j.category) + '</span>' : '') +
+        (stars ? '<span class="history-card-rating">★ ' + stars + '</span>' : '') +
+        '<span class="history-card-comments">' + commentsCount + ' avis</span>' +
+      '</div>';
     grid.appendChild(div);
   });
 }
 
 // ─── MODAL ───────────────────────────────────────────────────────────
 function openModal(jid) {
-  const j = db.journals.find(x=>x.id===jid);
+  const j = db.journals.find(function(x){return x.id===jid;});
   if (!j) return;
   document.getElementById('modal-date').textContent = formatDateFr(j.date);
   document.getElementById('modal-title').textContent = j.title;
   document.getElementById('modal-excerpt').textContent = j.excerpt || '';
-  // Afficher toutes les pages concaténées dans la modal archives
   const pages = getPages(j);
   document.getElementById('modal-body').textContent = pages.join('\n\n— ∗ —\n\n');
   const chips = document.getElementById('modal-chips');
@@ -1521,9 +1834,13 @@ function closeModal() {
   document.getElementById('journal-modal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-document.getElementById('journal-modal').addEventListener('click', e => { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('journal-modal').addEventListener('click', function(e) { if(e.target===e.currentTarget) closeModal(); });
 
 // ─── ADMIN ───────────────────────────────────────────────────────────
+function renderAdmin() {
+  // Called when admin page is shown — nothing to do if not logged in yet
+}
+
 function adminLogin() {
   const pw = document.getElementById('admin-pw-input').value;
   const hash = simpleHash(pw);
@@ -1541,10 +1858,14 @@ function adminLogin() {
     document.getElementById('admin-err').textContent = '❌ Mot de passe incorrect.';
   }
 }
-function adminLogout() { isAdmin = false; document.getElementById('admin-login-screen').style.display = 'block'; document.getElementById('admin-panel').style.display = 'none'; }
+function adminLogout() {
+  isAdmin = false;
+  document.getElementById('admin-login-screen').style.display = 'block';
+  document.getElementById('admin-panel').style.display = 'none';
+}
 
 function switchAdminTab(tab) {
-  ['new','manage','moderation','settings'].forEach(t => {
+  ['new','manage','moderation','settings'].forEach(function(t) {
     document.getElementById('atab-' + t).classList.toggle('active', t === tab);
     document.getElementById('atab-body-' + t).style.display = t === tab ? 'block' : 'none';
   });
@@ -1558,18 +1879,17 @@ function buildPageItem(text, idx, editorId) {
   const item = document.createElement('div');
   item.className = 'page-editor-item';
   item.dataset.pageIdx = idx;
-  item.innerHTML = `
-    <div class="page-editor-header" onclick="togglePageEditor(this)">
-      <span>Page ${idx + 1}</span>
-      <span style="display:flex;gap:8px;">
-        <button onclick="event.stopPropagation();removePage(this,'${editorId}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:0.75rem;">Suppr.</button>
-        <span>▾</span>
-      </span>
-    </div>
-    <div class="page-editor-body open">
-      <textarea class="page-editor-textarea" placeholder="Contenu de la page ${idx + 1}...">${escHtml(text)}</textarea>
-    </div>
-  `;
+  item.innerHTML =
+    '<div class="page-editor-header" onclick="togglePageEditor(this)">' +
+      '<span>Page ' + (idx + 1) + '</span>' +
+      '<span style="display:flex;gap:8px;">' +
+        '<button onclick="event.stopPropagation();removePage(this,\'' + editorId + '\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:0.75rem;">Suppr.</button>' +
+        '<span>▾</span>' +
+      '</span>' +
+    '</div>' +
+    '<div class="page-editor-body open">' +
+      '<textarea class="page-editor-textarea" placeholder="Contenu de la page ' + (idx + 1) + '...">' + escHtml(text) + '</textarea>' +
+    '</div>';
   return item;
 }
 
@@ -1585,16 +1905,16 @@ function removePage(btn, editorId) {
 }
 
 function renumberPages(editorId) {
-  document.querySelectorAll(`#${editorId} .page-editor-item`).forEach((item, i) => {
+  document.querySelectorAll('#' + editorId + ' .page-editor-item').forEach(function(item, i) {
     item.dataset.pageIdx = i;
-    item.querySelector('.page-editor-header span:first-child').textContent = `Page ${i + 1}`;
-    item.querySelector('textarea').placeholder = `Contenu de la page ${i + 1}...`;
+    item.querySelector('.page-editor-header span:first-child').textContent = 'Page ' + (i + 1);
+    item.querySelector('textarea').placeholder = 'Contenu de la page ' + (i + 1) + '...';
   });
 }
 
 function getPagesFromEditor(editorId) {
-  return Array.from(document.querySelectorAll(`#${editorId} .page-editor-textarea`))
-    .map(ta => ta.value.trim()).filter(Boolean);
+  return Array.from(document.querySelectorAll('#' + editorId + ' .page-editor-textarea'))
+    .map(function(ta) { return ta.value.trim(); }).filter(Boolean);
 }
 
 function addNewPage() {
@@ -1609,7 +1929,6 @@ function addEditPage() {
   editor.appendChild(buildPageItem('', idx, 'edit-pages-editor'));
 }
 
-// Initialiser avec une page vide au chargement du form
 function initNewPagesEditor() {
   const editor = document.getElementById('new-pages-editor');
   editor.innerHTML = '';
@@ -1625,10 +1944,10 @@ async function publishJournal() {
 
   const j = {
     id: Date.now().toString(),
-    title,
+    title: title,
     excerpt: document.getElementById('new-excerpt').value.trim(),
-    pages,
-    date,
+    pages: pages,
+    date: date,
     category: document.getElementById('new-category').value,
     mood: document.getElementById('new-mood').value,
     author: document.getElementById('new-author').value.trim(),
@@ -1645,7 +1964,7 @@ async function publishJournal() {
     showToast('Journal enregistré avec succès !', 'success');
     btn.textContent = 'Enregistrer le journal →';
     btn.disabled = false;
-    ['new-title','new-excerpt','new-author','new-tags','new-readtime'].forEach(id => document.getElementById(id).value = '');
+    ['new-title','new-excerpt','new-author','new-tags','new-readtime'].forEach(function(id) { document.getElementById(id).value = ''; });
     document.getElementById('new-date').value = getTodayStr();
     initNewPagesEditor();
     renderHome();
@@ -1653,9 +1972,9 @@ async function publishJournal() {
   } catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.', 'error'); btn.textContent='Enregistrer le journal →'; btn.disabled=false; }
 }
 
-// ── EDIT MODAL (journaux non encore publiés) ──────────────────────────
+// ── EDIT MODAL ──────────────────────────────────────────────────────
 function openEditModal() {
-  const j = db.journals.find(x => x.id === currentJournalId);
+  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
   if (!j) return;
   document.getElementById('edit-title').value = j.title || '';
   document.getElementById('edit-excerpt').value = j.excerpt || '';
@@ -1668,7 +1987,7 @@ function openEditModal() {
   const editor = document.getElementById('edit-pages-editor');
   editor.innerHTML = '';
   const pages = getPages(j);
-  pages.forEach((p, i) => editor.appendChild(buildPageItem(p, i, 'edit-pages-editor')));
+  pages.forEach(function(p, i) { editor.appendChild(buildPageItem(p, i, 'edit-pages-editor')); });
   document.getElementById('edit-modal-bg').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -1679,7 +1998,7 @@ function closeEditModal() {
 }
 
 async function saveEditJournal() {
-  const j = db.journals.find(x => x.id === currentJournalId);
+  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
   if (!j) return;
   const pages = getPagesFromEditor('edit-pages-editor');
   if (!pages.length) { showToast('Ajoutez au moins une page.', 'error'); return; }
@@ -1705,30 +2024,29 @@ function loadManageList() {
   document.getElementById('manage-list-loading').style.display = 'none';
   const list = document.getElementById('manage-list');
   list.innerHTML = '';
-  const sorted = [...db.journals].sort((a,b)=>b.date.localeCompare(a.date));
+  const sorted = [...db.journals].sort(function(a,b){return b.date.localeCompare(a.date);});
   if (!sorted.length) { list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal</li>'; return; }
-  sorted.forEach(j => {
+  sorted.forEach(function(j) {
     const li = document.createElement('li');
     const pub = isPublished(j);
-    li.innerHTML = `
-      <div>
-        <span class="admin-list-title">${escHtml(j.title)}</span>
-        <br>
-        <span class="admin-list-date">${formatDateFr(j.date)} · ${pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>'}</span>
-      </div>
-      <div class="admin-list-actions">
-        ${!pub ? `<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage('${j.id}')">Modifier</button>` : ''}
-        <button class="btn-danger" onclick="deleteJournal('${j.id}')">Suppr.</button>
-      </div>
-    `;
+    li.innerHTML =
+      '<div>' +
+        '<span class="admin-list-title">' + escHtml(j.title) + '</span>' +
+        '<br>' +
+        '<span class="admin-list-date">' + formatDateFr(j.date) + ' · ' + (pub ? '<span style="color:green;font-weight:500;">Publié</span>' : '<span style="color:var(--gold);">Programmé</span>') + '</span>' +
+      '</div>' +
+      '<div class="admin-list-actions">' +
+        (!pub ? '<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage(\'' + j.id + '\')">Modifier</button>' : '') +
+        '<button class="btn-danger" onclick="deleteJournal(\'' + j.id + '\')">Suppr.</button>' +
+      '</div>';
     list.appendChild(li);
   });
 }
 
 async function deleteJournal(id) {
   if (!confirm('Supprimer ce journal définitivement ?')) return;
-  db.journals = db.journals.filter(j => j.id !== id);
-  db.comments = db.comments.filter(c => c.journalId !== id);
+  db.journals = db.journals.filter(function(j) { return j.id !== id; });
+  db.comments = db.comments.filter(function(c) { return c.journalId !== id; });
   await saveDB();
   loadManageList();
   renderHome();
@@ -1736,7 +2054,6 @@ async function deleteJournal(id) {
 }
 
 function editFromManage(id) {
-  // Aller sur la home, charger le journal, ouvrir le modal d'édition
   currentJournalId = id;
   showPage('home');
   openEditModal();
@@ -1748,30 +2065,29 @@ function loadModeration() {
   list.innerHTML = '';
   if (!allComments.length) { document.getElementById('mod-empty').style.display = 'block'; return; }
   document.getElementById('mod-empty').style.display = 'none';
-  const recent = [...allComments].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30);
-  recent.forEach(c => {
-    const j = db.journals.find(x=>x.id===c.journalId);
+  const recent = [...allComments].sort(function(a,b){return new Date(b.date)-new Date(a.date);}).slice(0,30);
+  recent.forEach(function(c) {
+    const j = db.journals.find(function(x){return x.id===c.journalId;});
     const li = document.createElement('li');
-    li.innerHTML = `
-      <div style="flex:1;">
-        <span style="font-weight:600;">${escHtml(c.name)}</span>
-        <span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-left:8px;">${timeSince(c.date)}</span>
-        <br>
-        <span style="font-size:0.85rem;color:var(--muted);">Sur : ${j?escHtml(j.title):'?'}</span>
-        <br>
-        <span style="font-size:0.9rem;">${escHtml(c.text.slice(0,80))}${c.text.length>80?'...':''}</span>
-      </div>
-      <div class="admin-list-actions">
-        <button class="btn-danger" onclick="deleteCommentAdmin('${c.id}')">Suppr.</button>
-      </div>
-    `;
+    li.innerHTML =
+      '<div style="flex:1;">' +
+        '<span style="font-weight:600;">' + escHtml(c.name) + '</span>' +
+        '<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-left:8px;">' + timeSince(c.date) + '</span>' +
+        '<br>' +
+        '<span style="font-size:0.85rem;color:var(--muted);">Sur : ' + (j ? escHtml(j.title) : '?') + '</span>' +
+        '<br>' +
+        '<span style="font-size:0.9rem;">' + escHtml(c.text.slice(0,80)) + (c.text.length > 80 ? '...' : '') + '</span>' +
+      '</div>' +
+      '<div class="admin-list-actions">' +
+        '<button class="btn-danger" onclick="deleteCommentAdmin(\'' + c.id + '\')">Suppr.</button>' +
+      '</div>';
     list.appendChild(li);
   });
 }
 
 async function deleteCommentAdmin(id) {
   if (!confirm('Supprimer cet avis ?')) return;
-  db.comments = db.comments.filter(c=>c.id!==id);
+  db.comments = db.comments.filter(function(c){return c.id!==id;});
   await saveDB();
   loadModeration();
   if (currentJournalId) renderComments(currentJournalId, 'comment-list');
@@ -1787,26 +2103,26 @@ function applyBranding() {
   if (logo) {
     const first = name.slice(0, Math.ceil(name.length / 2));
     const second = name.slice(Math.ceil(name.length / 2));
-    logo.innerHTML = `${escHtml(first)}<span>${escHtml(second)}</span>`;
+    logo.innerHTML = escHtml(first) + '<span>' + escHtml(second) + '</span>';
   }
   const tgl = document.getElementById('site-tagline');
   if (tgl) tgl.textContent = tagline + ' · Édition numérique';
   const pubMeta = document.getElementById('site-pub-meta');
-  if (pubMeta) pubMeta.textContent = `Publication quotidienne · ${String(hour).padStart(2,'0')}h00`;
+  if (pubMeta) pubMeta.textContent = 'Publication quotidienne · ' + String(hour).padStart(2,'0') + 'h00';
   const footerName = document.getElementById('footer-name');
   if (footerName) footerName.textContent = name;
   const footerTag = document.getElementById('footer-tagline');
-  if (footerTag) footerTag.textContent = `Publication quotidienne à ${String(hour).padStart(2,'0')}h00`;
+  if (footerTag) footerTag.textContent = 'Publication quotidienne à ' + String(hour).padStart(2,'0') + 'h00';
   const aboutTitle = document.getElementById('about-title');
-  if (aboutTitle) aboutTitle.textContent = `À propos de ${name}`;
+  if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
   const aboutDesc = document.getElementById('about-desc');
-  if (aboutDesc) aboutDesc.textContent = `${name} est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.`;
+  if (aboutDesc) aboutDesc.textContent = name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
   const aboutTagQ = document.getElementById('about-tagline-quote');
   if (aboutTagQ) aboutTagQ.textContent = tagline;
   const lockedSub = document.getElementById('locked-subtitle');
-  if (lockedSub) lockedSub.textContent = `La publication a lieu chaque soir à ${String(hour).padStart(2,'0')}h00. Revenez ce soir !`;
+  if (lockedSub) lockedSub.textContent = 'La publication a lieu chaque soir à ' + String(hour).padStart(2,'0') + 'h00. Revenez ce soir !';
   const lockedTitle = document.getElementById('locked-title');
-  if (lockedTitle) lockedTitle.textContent = `L'édition de ce jour n'est pas encore publiée`;
+  if (lockedTitle) lockedTitle.textContent = "L'édition de ce jour n'est pas encore publiée";
 }
 
 function loadSettings() {
@@ -1838,7 +2154,6 @@ function startCountdown() {
 function updateCountdown() {
   const now = new Date();
   const pubHour = getPubHour();
-  const today = getTodayStr();
   const j = getTodayJournal();
 
   if (j && isPublished(j)) {
@@ -1856,17 +2171,18 @@ function updateCountdown() {
   const h = Math.floor(diff/3600000);
   const m = Math.floor((diff%3600000)/60000);
   const s = Math.floor((diff%60000)/1000);
-  const str = `${pad(h)}h ${pad(m)}m ${pad(s)}s`;
+  const str = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
   document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu · Prochain 18h dans :';
   document.getElementById('countdown-timer').textContent = str;
-  document.getElementById('locked-countdown').textContent = str;
+  const lc = document.getElementById('locked-countdown');
+  if (lc) lc.textContent = str;
 }
 
 // ─── UTILS ───────────────────────────────────────────────────────────
 function updateDateDisplay() {
   const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
-  setInterval(() => {
+  setInterval(function() {
     document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
   }, 60000);
 }
@@ -1881,9 +2197,9 @@ function timeSince(iso) {
   const now = new Date();
   const diff = Math.floor((now-d)/1000);
   if (diff < 60) return 'à l\'instant';
-  if (diff < 3600) return `il y a ${Math.floor(diff/60)} min`;
-  if (diff < 86400) return `il y a ${Math.floor(diff/3600)}h`;
-  if (diff < 604800) return `il y a ${Math.floor(diff/86400)} jour${Math.floor(diff/86400)>1?'s':''}`;
+  if (diff < 3600) return 'il y a ' + Math.floor(diff/60) + ' min';
+  if (diff < 86400) return 'il y a ' + Math.floor(diff/3600) + 'h';
+  if (diff < 604800) return 'il y a ' + Math.floor(diff/86400) + ' jour' + (Math.floor(diff/86400)>1?'s':'');
   return d.toLocaleDateString('fr-FR');
 }
 
@@ -1907,16 +2223,15 @@ function simpleHash(str) {
 }
 
 let toastTimer = null;
-function showToast(msg, type='') {
+function showToast(msg, type) {
+  type = type || '';
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = 'toast ' + type;
   t.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3200);
 }
-
-// keyboard handled in book reader section above
 </script>
 </body>
 </html>
