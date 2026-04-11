@@ -2486,30 +2486,79 @@ function applyBranding() {
   const tagline = db.settings.tagline || 'Réflexions du quotidien';
   const hour = db.settings.pubHour ?? 18;
   const hourStr = String(hour).padStart(2,'0') + 'h00';
+
   document.title = name;
+
+  // 🔥 Nouvelle logique de formatage du logo
+  function formatLogo(name) {
+    name = name.trim();
+
+    // 👉 Cas 1 : plusieurs mots
+    if (name.includes(' ')) {
+      const words = name.split(' ');
+
+      return (
+        escHtml(words[0]) + ' ' +
+        '<span>' + escHtml(words[1] || '') + '</span>' +
+        (words.length > 2 ? ' ' + escHtml(words.slice(2).join(' ')) : '')
+      );
+    }
+
+    // 👉 Cas 2 : un seul mot (CamelCase)
+    const parts = name.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])/g);
+
+    if (!parts) return escHtml(name);
+
+    return parts
+      .map((part, index) => {
+        if (index === 1) {
+          return '<span>' + escHtml(part) + '</span>';
+        }
+        return escHtml(part);
+      })
+      .join('');
+  }
+
   const logo = document.getElementById('site-logo');
   if (logo) {
-    const mid = Math.ceil(name.length / 2);
-    logo.innerHTML = escHtml(name.slice(0, mid)) + '<span>' + escHtml(name.slice(mid)) + '</span>';
+    logo.innerHTML = formatLogo(name);
   }
+
   const tgl = document.getElementById('site-tagline');
   if (tgl) tgl.textContent = tagline + ' · Édition numérique';
+
   const pubMeta = document.getElementById('site-pub-meta');
   if (pubMeta) pubMeta.textContent = 'Publication quotidienne · ' + hourStr;
+
   const footerName = document.getElementById('footer-name');
   if (footerName) footerName.textContent = name;
+
   const footerTag = document.getElementById('footer-tagline');
   if (footerTag) footerTag.textContent = 'Publication quotidienne à ' + hourStr;
+
   const aboutTitle = document.getElementById('about-title');
   if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
+
   const aboutDesc = document.getElementById('about-desc');
-  if (aboutDesc) aboutDesc.textContent = name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain. Pour embellir ou motiver votre journée !';
+  if (aboutDesc) {
+    aboutDesc.textContent =
+      name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain. Pour embellir ou motiver votre journée !';
+  }
+
   const aboutTagQ = document.getElementById('about-tagline-quote');
-  if (aboutTagQ) aboutTagQ.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
+  if (aboutTagQ) {
+    aboutTagQ.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
+  }
+
   const lockedSub = document.getElementById('locked-subtitle');
-  if (lockedSub) lockedSub.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
+  if (lockedSub) {
+    lockedSub.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
+  }
+
   const lockedTitle = document.getElementById('locked-title');
-  if (lockedTitle) lockedTitle.textContent = "L'édition de ce jour n'est pas encore publiée";
+  if (lockedTitle) {
+    lockedTitle.textContent = "L'édition de ce jour n'est pas encore publiée";
+  }
 }
 
 function loadSettings() {
