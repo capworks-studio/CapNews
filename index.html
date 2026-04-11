@@ -644,6 +644,7 @@
   }
   .comment-form-row input { flex: 1; }
   .comment-form-row input:focus, .comment-form textarea:focus { border-color: var(--gold); }
+  .comment-form-row input.invalid { border-color: var(--red-light); background: #fff5f5; }
   .star-picker { display: flex; gap: 4px; align-items: center; margin-bottom: 0.6rem; }
   .star-picker label { font-size: 0.82rem; color: var(--muted); font-family: var(--font-mono); margin-right: 6px; }
   .star-pick { font-size: 1.5rem; cursor: pointer; color: #ccc; transition: color 0.12s; }
@@ -661,6 +662,15 @@
     position: relative;
     animation: fadeIn 0.35s ease;
   }
+  .comment-card.reply-card {
+    border-left: 3px solid var(--gold);
+    background: var(--parchment-mid);
+    margin-left: 1.5rem;
+    margin-top: -0.5rem;
+  }
+  .comment-card.reply-card .comment-avatar {
+    background: var(--gold);
+  }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
   .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
   .comment-avatar {
@@ -676,9 +686,59 @@
   .comment-star { font-size: 0.85rem; color: #ddd; }
   .comment-star.filled { color: var(--gold); }
   .comment-text { font-size: 0.95rem; color: var(--ink-light); line-height: 1.6; }
-  .comment-delete { position: absolute; top: 0.75rem; right: 1rem; background: none; border: none; color: var(--muted); cursor: pointer; font-size: 0.75rem; font-family: var(--font-mono); opacity: 0; transition: opacity 0.15s; }
-  .comment-card:hover .comment-delete { opacity: 1; }
-  .comment-delete:hover { color: var(--red); }
+  .comment-actions {
+    display: flex; gap: 8px; margin-top: 0.6rem;
+    opacity: 0; transition: opacity 0.15s;
+  }
+  .comment-card:hover .comment-actions { opacity: 1; }
+  .comment-action-btn {
+    background: none; border: none; cursor: pointer;
+    font-size: 0.75rem; font-family: var(--font-mono);
+    color: var(--muted); padding: 2px 6px;
+    border-radius: 2px; transition: all 0.12s;
+  }
+  .comment-action-btn:hover { color: var(--ink); background: var(--parchment-dark); }
+  .comment-action-btn.delete:hover { color: var(--red); }
+  .comment-action-btn.reply-btn { color: var(--gold); }
+  .comment-action-btn.reply-btn:hover { color: var(--gold-light); background: rgba(184,134,11,0.1); }
+
+  /* INLINE REPLY FORM */
+  .reply-form {
+    margin-top: 0.75rem;
+    padding: 0.75rem;
+    background: var(--parchment-mid);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    display: none;
+  }
+  .reply-form.open { display: block; }
+  .reply-form textarea {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 70px;
+    outline: none;
+    margin-bottom: 0.5rem;
+  }
+  .reply-form textarea:focus { border-color: var(--gold); }
+  .reply-form-actions { display: flex; gap: 0.5rem; }
+  .reply-submit {
+    background: var(--gold); color: white; border: none;
+    padding: 0.4rem 0.9rem; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    cursor: pointer; transition: background 0.15s;
+  }
+  .reply-submit:hover { background: var(--gold-light); }
+  .reply-cancel {
+    background: none; border: 1px solid var(--border-strong);
+    padding: 0.4rem 0.9rem; border-radius: 3px;
+    font-family: var(--font-mono); font-size: 0.78rem;
+    cursor: pointer; color: var(--muted);
+  }
 
   /* LOCKED STATE */
   .locked-overlay {
@@ -757,6 +817,22 @@
     transition: color 0.15s;
   }
   .modal-close:hover { color: var(--ink); }
+
+  /* MODAL COMMENT FORM */
+  .modal-comment-form {
+    background: var(--parchment-mid);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    margin-top: 1.2rem;
+  }
+  .modal-comment-form h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.85rem;
+    color: var(--ink);
+  }
 
   /* ADMIN PANEL */
   .admin-panel {
@@ -909,6 +985,15 @@
     100% { box-shadow: 0 0 0 0 rgba(184,134,11,0); }
   }
   .just-published { animation: goldPulse 1.5s ease; }
+
+  /* EMAIL HINT */
+  .email-hint {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: -0.4rem;
+    margin-bottom: 0.5rem;
+  }
 </style>
 </head>
 <body>
@@ -967,7 +1052,7 @@
     <div id="home-locked" class="locked-overlay" style="display:none;">
       <div class="locked-icon">🕰️</div>
       <h2 id="locked-title">Le journal du jour n'est pas encore publié</h2>
-      <p id="locked-subtitle">La publication a lieu chaque soir à 18h00. Revenez ce soir !</p>
+      <p id="locked-subtitle">La publication a lieu chaque jour à 18h00. Revenez plus tard !</p>
       <div class="locked-time" id="locked-countdown"></div>
     </div>
     <div id="home-content" style="display:none;">
@@ -1118,10 +1203,10 @@
       <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;font-style:italic;margin-bottom:1.5rem;" id="about-title">À propos de CapNews</h1>
       <div style="font-size:1.05rem;line-height:1.85;color:var(--ink-light);">
         <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);" id="about-tagline-quote">
-          Chaque soir à 18h00, un nouveau regard sur le monde.
+          Chaque jour à 18h00, un nouveau regard sur le monde.
         </p>
         <p style="margin-bottom:1rem;" id="about-desc">CapNews est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.</p>
-        <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à 18h00, heure locale. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
+        <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à l'heure configurée. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
         <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
         <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
         <hr style="border:none;border-top:1px solid var(--border);margin-bottom:2rem;">
@@ -1228,8 +1313,8 @@
 
           <!-- TAB: Moderation -->
           <div id="atab-body-moderation" style="display:none;">
-            <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Avis en attente de modération ou signalés</p>
-            <ul class="admin-list" id="mod-list"></ul>
+            <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents — vous pouvez les supprimer ou y répondre directement.</p>
+            <ul class="admin-list" id="mod-list" style="display:flex;flex-direction:column;gap:0;"></ul>
             <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis à modérer.</p></div>
           </div>
 
@@ -1259,7 +1344,7 @@
   </section>
 </main>
 
-<!-- JOURNAL MODAL -->
+<!-- JOURNAL MODAL (archives) -->
 <div class="modal-bg hidden" id="journal-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1268,7 +1353,40 @@
     <div class="journal-meta-chips" id="modal-chips"></div>
     <div class="journal-excerpt" id="modal-excerpt"></div>
     <div class="journal-body" id="modal-body"></div>
+
+    <!-- RATING + REACTION IN MODAL -->
+    <div id="modal-reactions-section" style="margin-top:1.5rem;padding:1rem;background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;">
+      <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem;letter-spacing:0.1em;text-transform:uppercase;">Votre réaction</p>
+      <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+        <button class="vote-btn" id="modal-vbtn-positive" onclick="castModalReaction('positive')">👍 <span id="modal-vc-positive">0</span></button>
+        <button class="vote-btn" id="modal-vbtn-neutral" onclick="castModalReaction('neutral')">🤔 <span id="modal-vc-neutral">0</span></button>
+        <button class="vote-btn" id="modal-vbtn-negative" onclick="castModalReaction('negative')">👎 <span id="modal-vc-negative">0</span></button>
+      </div>
+    </div>
+
+    <!-- COMMENT FORM IN MODAL -->
+    <div class="modal-comment-form">
+      <h3>💬 Laisser un avis</h3>
+      <div class="comment-form-row">
+        <input type="text" id="modal-comment-name" placeholder="Votre prénom *">
+        <input type="email" id="modal-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
+      </div>
+      <p class="email-hint">L'email reste privé et n'est jamais affiché. Laissez vide si vous préférez.</p>
+      <div class="star-picker" id="modal-star-picker">
+        <label>Note :</label>
+        <span class="star-pick" data-v="1" onclick="setModalCommentRating(1)">★</span>
+        <span class="star-pick" data-v="2" onclick="setModalCommentRating(2)">★</span>
+        <span class="star-pick" data-v="3" onclick="setModalCommentRating(3)">★</span>
+        <span class="star-pick" data-v="4" onclick="setModalCommentRating(4)">★</span>
+        <span class="star-pick" data-v="5" onclick="setModalCommentRating(5)">★</span>
+      </div>
+      <textarea id="modal-comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:0.6rem 0.85rem;font-family:var(--font-body);font-size:0.95rem;resize:vertical;outline:none;"></textarea>
+      <br><br>
+      <button class="comment-submit" onclick="submitModalComment()">Publier mon avis →</button>
+    </div>
+
     <div style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;">
+      <p style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted);margin-bottom:1rem;">AVIS DES LECTEURS</p>
       <div class="comment-list" id="modal-comments"></div>
     </div>
   </div>
@@ -1292,12 +1410,22 @@ let cfg = null;
 let db = { journals: [], comments: [], settings: {}, reactions: {} };
 let isAdmin = false;
 let currentJournalId = null;
+let modalJournalId = null;
 let commentRating = 0;
+let modalCommentRating = 0;
 let userReactions = {};
 let allCategories = new Set();
 let activeFilter = 'all';
 
-// ─── INIT ───────────────────────────────────────────────────────────
+// ─── EMAIL VALIDATION ─────────────────────────────────────────────────
+function isValidEmail(email) {
+  if (!email || email.trim() === '') return true; // email is optional
+  // Basic but solid regex for email validation
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  return re.test(email.trim());
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────
 window.onload = async () => {
   updateDateDisplay();
   startCountdown();
@@ -1336,12 +1464,11 @@ async function initSetup() {
     const data = await res.json();
     const binId = data.metadata.id;
     err.style.color = 'var(--gold)';
-    err.innerHTML = `
-      <strong style="color:var(--ink);display:block;margin-bottom:0.5rem;">✅ Base créée ! Copiez ces valeurs dans votre fichier HTML :</strong>
-      <code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;margin-bottom:0.4rem;word-break:break-all;">JSONBIN_API_KEY = '<b>${key}</b>'</code>
-      <code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;word-break:break-all;">JSONBIN_BIN_ID = '<b>${binId}</b>'</code>
-      <span style="display:block;margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Ouvrez le fichier HTML, remplacez les deux constantes en haut du script, puis commitez sur GitHub.</span>
-    `;
+    err.innerHTML =
+      '<strong style="color:var(--ink);display:block;margin-bottom:0.5rem;">✅ Base créée ! Copiez ces valeurs dans votre fichier HTML :</strong>' +
+      '<code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;margin-bottom:0.4rem;word-break:break-all;">JSONBIN_API_KEY = \'<b>' + key + '</b>\'</code>' +
+      '<code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;word-break:break-all;">JSONBIN_BIN_ID = \'<b>' + binId + '</b>\'</code>' +
+      '<span style="display:block;margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Ouvrez le fichier HTML, remplacez les deux constantes en haut du script, puis commitez sur GitHub.</span>';
     cfg = { apiKey: key, binId };
     await loadDB();
     applyBranding();
@@ -1349,10 +1476,10 @@ async function initSetup() {
   } catch(e) { err.textContent = '❌ ' + e.message; }
 }
 
-// ─── DB ─────────────────────────────────────────────────────────────
+// ─── DB ──────────────────────────────────────────────────────────────
 async function loadDB() {
   try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}/latest`, {
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId + '/latest', {
       headers: { 'X-Master-Key': cfg.apiKey }
     });
     if (!res.ok) throw new Error('Erreur de chargement (code ' + res.status + ')');
@@ -1362,14 +1489,13 @@ async function loadDB() {
     if (!db.comments)  db.comments  = [];
     if (!db.reactions) db.reactions = {};
     if (!db.settings)  db.settings  = {};
-    // BUG FIX #2 : clé localStorage unifiée — était 'lejds_reactions' côté save
     userReactions = JSON.parse(localStorage.getItem('capnews_reactions') || '{}');
     return true;
   } catch(e) { console.error(e); showToast('Erreur de connexion : ' + e.message, 'error'); return false; }
 }
 
 async function saveDB() {
-  const res = await fetch(`https://api.jsonbin.io/v3/b/${cfg.binId}`, {
+  const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -1378,7 +1504,7 @@ async function saveDB() {
     body: JSON.stringify(db)
   });
   if (!res.ok) {
-    const txt = await res.text().catch(() => String(res.status));
+    const txt = await res.text().catch(function() { return String(res.status); });
     throw new Error('Sauvegarde échouée : ' + txt);
   }
   return true;
@@ -1386,8 +1512,8 @@ async function saveDB() {
 
 // ─── NAVIGATION ──────────────────────────────────────────────────────
 function showPage(page) {
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+  document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
   document.getElementById('page-' + page).classList.add('active');
   const navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
@@ -1414,7 +1540,7 @@ function isPublished(journal) {
 
 function getTodayJournal() {
   const today = getTodayStr();
-  return db.journals.find(j => j.date === today) || null;
+  return db.journals.find(function(j) { return j.date === today; }) || null;
 }
 
 // ─── BOOK READER ─────────────────────────────────────────────────────
@@ -1428,15 +1554,13 @@ function getPages(j) {
   return [''];
 }
 
-// BUG FIX #1 : les template literals imbriqués utilisaient des \` qui cassaient le parsing JS.
-// Ils sont remplacés par des concaténations de strings ou des fonctions helper.
 function renderBook(j, dir) {
   bookPages = getPages(j);
-  const totalPages = bookPages.length + 2; // couverture + pages contenu + page réactions
+  const totalPages = bookPages.length + 2;
   const reader = document.getElementById('book-reader');
   reader.innerHTML = '';
 
-  // ── COUVERTURE ─────────────────────────────────────────
+  // ── COUVERTURE ──────────────────────────────────────────────────
   const cover = document.createElement('div');
   cover.className = 'book-page cover-page' + (currentPage === 0 ? ' active' : '');
   cover.dataset.idx = '0';
@@ -1458,7 +1582,7 @@ function renderBook(j, dir) {
     '<span class="cover-page-num">Couverture</span>';
   reader.appendChild(cover);
 
-  // ── PAGES DE CONTENU ─────────────────────────────────────
+  // ── PAGES DE CONTENU ────────────────────────────────────────────
   bookPages.forEach(function(pageText, i) {
     const pg = document.createElement('div');
     pg.className = 'book-page' + (currentPage === i + 1 ? ' active' : '');
@@ -1470,7 +1594,7 @@ function renderBook(j, dir) {
     reader.appendChild(pg);
   });
 
-  // ── PAGE RÉACTIONS / AVIS ────────────────────────────────
+  // ── PAGE RÉACTIONS / AVIS ────────────────────────────────────────
   const lastPg = document.createElement('div');
   lastPg.className = 'book-page reactions-page' + (currentPage === totalPages - 1 ? ' active' : '');
   lastPg.dataset.idx = String(totalPages - 1);
@@ -1478,9 +1602,10 @@ function renderBook(j, dir) {
     '<h2>Avis des lecteurs</h2>' +
     '<div class="comment-form">' +
       '<div class="comment-form-row">' +
-        '<input type="text" id="comment-name" placeholder="Votre prénom">' +
+        '<input type="text" id="comment-name" placeholder="Votre prénom *">' +
         '<input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">' +
       '</div>' +
+      '<p class="email-hint">L\'email reste privé et n\'est jamais affiché. Laissez vide si vous préférez.</p>' +
       '<div class="star-picker">' +
         '<label>Note :</label>' +
         '<span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>' +
@@ -1497,7 +1622,7 @@ function renderBook(j, dir) {
     '<span class="cover-page-num">Fin · ' + (bookPages.length + 1) + ' / ' + (bookPages.length + 1) + '</span>';
   reader.appendChild(lastPg);
 
-  // ── SWIPE TOUCH ──────────────────────────────────────────
+  // ── SWIPE ────────────────────────────────────────────────────────
   reader.ontouchstart = function(e) { swipeStartX = e.touches[0].clientX; };
   reader.ontouchend = function(e) {
     var dx = e.changedTouches[0].clientX - swipeStartX;
@@ -1542,7 +1667,7 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') { closeModal(); closeEditModal(); }
 });
 
-// ─── HOME ────────────────────────────────────────────────────────────
+// ─── HOME ─────────────────────────────────────────────────────────────
 function renderHome() {
   document.getElementById('home-loading').style.display = 'none';
   const j = getTodayJournal();
@@ -1583,7 +1708,7 @@ function renderReactions(jid) {
   const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : '—';
 
   document.getElementById('avg-stars').textContent = stars;
-  document.getElementById('total-comments').textContent = (db.comments || []).filter(function(c) { return c.journalId === jid; }).length;
+  document.getElementById('total-comments').textContent = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.isReply; }).length;
 
   const starVis = document.getElementById('avg-stars-visual');
   starVis.innerHTML = '';
@@ -1623,23 +1748,73 @@ async function castReaction(type) {
     db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
     userReactions[jid] = type;
   }
-  // BUG FIX #2 : clé unifiée 'capnews_reactions' (était 'lejds_reactions' ici)
   localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
   try { await saveDB(); renderReactions(jid); } catch(e) { showToast('Erreur réseau', 'error'); }
 }
 
+// ── MODAL REACTIONS (for archived journals) ─────────────────────────
+function renderModalReactions(jid) {
+  const r = db.reactions[jid] || { positive: 0, neutral: 0, negative: 0, stars: [] };
+  ['positive','neutral','negative'].forEach(function(k) {
+    const el = document.getElementById('modal-vc-' + k);
+    if (el) el.textContent = r[k] || 0;
+    const btn = document.getElementById('modal-vbtn-' + k);
+    if (btn) btn.classList.toggle('active', userReactions[jid] === k);
+  });
+}
+
+async function castModalReaction(type) {
+  if (!modalJournalId) return;
+  const jid = modalJournalId;
+  const prev = userReactions[jid];
+  if (!db.reactions[jid]) db.reactions[jid] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
+  if (prev === type) {
+    db.reactions[jid][type] = Math.max(0, (db.reactions[jid][type]||0) - 1);
+    delete userReactions[jid];
+  } else {
+    if (prev) db.reactions[jid][prev] = Math.max(0, (db.reactions[jid][prev]||0) - 1);
+    db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
+    userReactions[jid] = type;
+  }
+  localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
+  try {
+    await saveDB();
+    renderModalReactions(jid);
+    showToast('Réaction enregistrée !', 'success');
+  } catch(e) { showToast('Erreur réseau', 'error'); }
+}
+
+// ── COMMENT RATING ──────────────────────────────────────────────────
 function setCommentRating(v) {
   commentRating = v;
   document.querySelectorAll('.star-pick').forEach(function(s) {
+    if (!s.closest('#modal-star-picker')) {
+      s.classList.toggle('active', parseInt(s.dataset.v) <= v);
+    }
+  });
+}
+
+function setModalCommentRating(v) {
+  modalCommentRating = v;
+  document.querySelectorAll('#modal-star-picker .star-pick').forEach(function(s) {
     s.classList.toggle('active', parseInt(s.dataset.v) <= v);
   });
 }
 
+// ── SUBMIT COMMENT (home book reader) ───────────────────────────────
 async function submitComment() {
   const name = document.getElementById('comment-name').value.trim();
+  const email = document.getElementById('comment-email').value.trim();
   const text = document.getElementById('comment-text').value.trim();
   if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
   if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
+  if (!isValidEmail(email)) {
+    const emailInput = document.getElementById('comment-email');
+    emailInput.classList.add('invalid');
+    showToast('Adresse email invalide. Laissez vide si vous n\'en avez pas.', 'error');
+    setTimeout(function() { emailInput.classList.remove('invalid'); }, 3000);
+    return;
+  }
   if (!currentJournalId) return;
 
   const comment = {
@@ -1649,7 +1824,8 @@ async function submitComment() {
     text: text,
     rating: commentRating || 0,
     date: new Date().toISOString(),
-    flagged: false
+    flagged: false,
+    isReply: false
   };
 
   if (!db.reactions[currentJournalId]) db.reactions[currentJournalId] = { positive:0, neutral:0, negative:0, stars:[], total:0 };
@@ -1662,6 +1838,7 @@ async function submitComment() {
   try {
     await saveDB();
     document.getElementById('comment-name').value = '';
+    document.getElementById('comment-email').value = '';
     document.getElementById('comment-text').value = '';
     setCommentRating(0);
     renderComments(currentJournalId, 'comment-list');
@@ -1670,39 +1847,166 @@ async function submitComment() {
   } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
 }
 
+// ── SUBMIT COMMENT (modal archives) ─────────────────────────────────
+async function submitModalComment() {
+  const name = document.getElementById('modal-comment-name').value.trim();
+  const email = document.getElementById('modal-comment-email').value.trim();
+  const text = document.getElementById('modal-comment-text').value.trim();
+  if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
+  if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
+  if (!isValidEmail(email)) {
+    const emailInput = document.getElementById('modal-comment-email');
+    emailInput.classList.add('invalid');
+    showToast('Adresse email invalide. Laissez vide si vous n\'en avez pas.', 'error');
+    setTimeout(function() { emailInput.classList.remove('invalid'); }, 3000);
+    return;
+  }
+  if (!modalJournalId) return;
+
+  const comment = {
+    id: Date.now().toString(),
+    journalId: modalJournalId,
+    name: name,
+    text: text,
+    rating: modalCommentRating || 0,
+    date: new Date().toISOString(),
+    flagged: false,
+    isReply: false
+  };
+
+  if (!db.reactions[modalJournalId]) db.reactions[modalJournalId] = { positive:0, neutral:0, negative:0, stars:[], total:0 };
+  if (modalCommentRating) {
+    if (!db.reactions[modalJournalId].stars) db.reactions[modalJournalId].stars = [];
+    db.reactions[modalJournalId].stars.push(modalCommentRating);
+  }
+
+  db.comments.push(comment);
+  try {
+    await saveDB();
+    document.getElementById('modal-comment-name').value = '';
+    document.getElementById('modal-comment-email').value = '';
+    document.getElementById('modal-comment-text').value = '';
+    setModalCommentRating(0);
+    renderComments(modalJournalId, 'modal-comments');
+    showToast('Votre avis a été publié !', 'success');
+  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+}
+
+// ── RENDER COMMENTS ──────────────────────────────────────────────────
 function renderComments(jid, containerId) {
   const list = document.getElementById(containerId);
   if (!list) return;
-  const comments = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.flagged; });
+  const topComments = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.flagged && !c.isReply; });
   list.innerHTML = '';
-  if (!comments.length) {
+  if (!topComments.length) {
     list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;font-family:var(--font-mono);">Aucun avis pour l\'instant. Soyez le premier !</p>';
     return;
   }
-  comments.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
-  comments.forEach(function(c) {
-    const initials = c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
-    const stars = Array.from({length:5},function(_,i) { return '<span class="comment-star ' + (i<c.rating?'filled':'') + '">★</span>'; }).join('');
-    const div = document.createElement('div');
-    div.className = 'comment-card';
-    div.innerHTML =
-      '<div class="comment-header">' +
-        '<div class="comment-avatar">' + initials + '</div>' +
-        '<span class="comment-name">' + escHtml(c.name) + '</span>' +
-        (c.rating ? '<div class="comment-stars">' + stars + '</div>' : '') +
-        '<span class="comment-date">' + timeSince(c.date) + '</span>' +
-      '</div>' +
-      '<div class="comment-text">' + escHtml(c.text) + '</div>' +
-      (isAdmin ? '<button class="comment-delete" onclick="deleteComment(\'' + c.id + '\')">Supprimer</button>' : '');
-    list.appendChild(div);
+  topComments.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
+  topComments.forEach(function(c) {
+    const commentEl = buildCommentEl(c, jid, containerId);
+    list.appendChild(commentEl);
+    // Replies
+    const replies = (db.comments || []).filter(function(r) { return r.parentId === c.id && !r.flagged; });
+    replies.sort(function(a,b) { return new Date(a.date) - new Date(b.date); });
+    replies.forEach(function(reply) {
+      list.appendChild(buildReplyEl(reply));
+    });
   });
 }
 
-async function deleteComment(id) {
+function buildCommentEl(c, jid, containerId) {
+  const initials = c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
+  const stars = Array.from({length:5},function(_,i) { return '<span class="comment-star ' + (i<c.rating?'filled':'') + '">★</span>'; }).join('');
+  const div = document.createElement('div');
+  div.className = 'comment-card';
+  div.dataset.commentId = c.id;
+  div.innerHTML =
+    '<div class="comment-header">' +
+      '<div class="comment-avatar">' + initials + '</div>' +
+      '<span class="comment-name">' + escHtml(c.name) + '</span>' +
+      (c.rating ? '<div class="comment-stars">' + stars + '</div>' : '') +
+      '<span class="comment-date">' + timeSince(c.date) + '</span>' +
+    '</div>' +
+    '<div class="comment-text">' + escHtml(c.text) + '</div>' +
+    '<div class="comment-actions">' +
+      (isAdmin ? '<button class="comment-action-btn reply-btn" onclick="toggleReplyForm(\'' + c.id + '\', \'' + (jid||'') + '\', \'' + containerId + '\')">↩ Répondre</button>' : '') +
+      (isAdmin ? '<button class="comment-action-btn delete" onclick="deleteComment(\'' + c.id + '\', \'' + containerId + '\', \'' + (jid||currentJournalId) + '\')">Supprimer</button>' : '') +
+    '</div>' +
+    (isAdmin ?
+      '<div class="reply-form" id="reply-form-' + c.id + '">' +
+        '<textarea placeholder="Votre réponse en tant qu\'administrateur..."></textarea>' +
+        '<div class="reply-form-actions">' +
+          '<button class="reply-submit" onclick="submitReply(\'' + c.id + '\', \'' + (jid||currentJournalId) + '\', \'' + containerId + '\')">Publier la réponse →</button>' +
+          '<button class="reply-cancel" onclick="toggleReplyForm(\'' + c.id + '\')">Annuler</button>' +
+        '</div>' +
+      '</div>'
+    : '');
+  return div;
+}
+
+function buildReplyEl(r) {
+  const div = document.createElement('div');
+  div.className = 'comment-card reply-card';
+  div.dataset.commentId = r.id;
+  div.innerHTML =
+    '<div class="comment-header">' +
+      '<div class="comment-avatar" style="background:var(--gold);">✍</div>' +
+      '<span class="comment-name">' + escHtml(r.name) + '</span>' +
+      '<span class="comment-date">' + timeSince(r.date) + '</span>' +
+    '</div>' +
+    '<div class="comment-text">' + escHtml(r.text) + '</div>' +
+    '<div class="comment-actions">' +
+      (isAdmin ? '<button class="comment-action-btn delete" onclick="deleteComment(\'' + r.id + '\', \'\', \'\')">Supprimer</button>' : '') +
+    '</div>';
+  return div;
+}
+
+function toggleReplyForm(commentId, jid, containerId) {
+  const form = document.getElementById('reply-form-' + commentId);
+  if (!form) return;
+  form.classList.toggle('open');
+  if (form.classList.contains('open')) {
+    form.querySelector('textarea').focus();
+  }
+}
+
+async function submitReply(parentId, jid, containerId) {
+  const form = document.getElementById('reply-form-' + parentId);
+  if (!form) return;
+  const text = form.querySelector('textarea').value.trim();
+  if (!text) { showToast('Veuillez écrire une réponse.', 'error'); return; }
+  const reply = {
+    id: Date.now().toString(),
+    journalId: jid,
+    parentId: parentId,
+    name: db.settings.siteName || 'La Rédaction',
+    text: text,
+    rating: 0,
+    date: new Date().toISOString(),
+    flagged: false,
+    isReply: true
+  };
+  db.comments.push(reply);
+  try {
+    await saveDB();
+    form.querySelector('textarea').value = '';
+    form.classList.remove('open');
+    const target = containerId || 'comment-list';
+    renderComments(jid, target);
+    showToast('Réponse publiée !', 'success');
+  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+}
+
+async function deleteComment(id, containerId, jid) {
   if (!confirm('Supprimer cet avis ?')) return;
-  db.comments = db.comments.filter(function(c) { return c.id !== id; });
+  // Also delete replies to this comment
+  db.comments = db.comments.filter(function(c) { return c.id !== id && c.parentId !== id; });
   await saveDB();
-  renderComments(currentJournalId, 'comment-list');
+  const target = containerId || 'comment-list';
+  const journalId = jid || currentJournalId;
+  if (target && journalId) renderComments(journalId, target);
+  if (currentJournalId) renderReactions(currentJournalId);
   showToast('Avis supprimé.');
 }
 
@@ -1737,7 +2041,7 @@ function renderTagsCloud() {
   });
 }
 
-// ─── HISTORY ─────────────────────────────────────────────────────────
+// ─── HISTORY ──────────────────────────────────────────────────────────
 function renderHistory() {
   document.getElementById('history-loading').style.display = 'block';
   const published = db.journals.filter(function(j) { return isPublished(j); });
@@ -1759,7 +2063,7 @@ function renderHistory() {
     filterRow.appendChild(b);
   });
 
-  const totalComments = db.comments ? db.comments.length : 0;
+  const totalComments = db.comments ? db.comments.filter(function(c){return !c.isReply;}).length : 0;
   const avgRating = (function() {
     let all = [];
     Object.values(db.reactions).forEach(function(r) { if (r.stars) all = all.concat(r.stars); });
@@ -1794,7 +2098,7 @@ function filterHistory() {
   filtered.forEach(function(j) {
     const r = db.reactions[j.id] || {};
     const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : null;
-    const commentsCount = (db.comments||[]).filter(function(c){return c.journalId===j.id;}).length;
+    const commentsCount = (db.comments||[]).filter(function(c){return c.journalId===j.id && !c.isReply;}).length;
     const div = document.createElement('div');
     div.className = 'history-card';
     div.onclick = function() { openModal(j.id); };
@@ -1811,10 +2115,11 @@ function filterHistory() {
   });
 }
 
-// ─── MODAL ───────────────────────────────────────────────────────────
+// ─── MODAL ─────────────────────────────────────────────────────────────
 function openModal(jid) {
   const j = db.journals.find(function(x){return x.id===jid;});
   if (!j) return;
+  modalJournalId = jid;
   document.getElementById('modal-date').textContent = formatDateFr(j.date);
   document.getElementById('modal-title').textContent = j.title;
   document.getElementById('modal-excerpt').textContent = j.excerpt || '';
@@ -1826,6 +2131,18 @@ function openModal(jid) {
   if (j.mood) { const m=document.createElement('span');m.className='chip '+moodClass(j.mood);m.textContent=moodLabel(j.mood);chips.appendChild(m); }
   if (j.author) { const a=document.createElement('span');a.className='chip';a.textContent='✒ '+j.author;chips.appendChild(a); }
   if (j.readTime) { const r=document.createElement('span');r.className='chip';r.textContent='⏱ '+j.readTime;chips.appendChild(r); }
+
+  // Reset comment form
+  const nameEl = document.getElementById('modal-comment-name');
+  const emailEl = document.getElementById('modal-comment-email');
+  const textEl = document.getElementById('modal-comment-text');
+  if (nameEl) nameEl.value = '';
+  if (emailEl) emailEl.value = '';
+  if (textEl) textEl.value = '';
+  modalCommentRating = 0;
+  document.querySelectorAll('#modal-star-picker .star-pick').forEach(function(s) { s.classList.remove('active'); });
+
+  renderModalReactions(jid);
   renderComments(jid, 'modal-comments');
   document.getElementById('journal-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -1833,12 +2150,13 @@ function openModal(jid) {
 function closeModal() {
   document.getElementById('journal-modal').classList.add('hidden');
   document.body.style.overflow = '';
+  modalJournalId = null;
 }
 document.getElementById('journal-modal').addEventListener('click', function(e) { if(e.target===e.currentTarget) closeModal(); });
 
-// ─── ADMIN ───────────────────────────────────────────────────────────
+// ─── ADMIN ─────────────────────────────────────────────────────────────
 function renderAdmin() {
-  // Called when admin page is shown — nothing to do if not logged in yet
+  // page shown — nothing until login
 }
 
 function adminLogin() {
@@ -1874,7 +2192,7 @@ function switchAdminTab(tab) {
   if (tab === 'settings') loadSettings();
 }
 
-// ── Pages editor helpers ──────────────────────────────────────────────
+// ── Pages editor helpers ─────────────────────────────────────────────
 function buildPageItem(text, idx, editorId) {
   const item = document.createElement('div');
   item.className = 'page-editor-item';
@@ -1972,7 +2290,7 @@ async function publishJournal() {
   } catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.', 'error'); btn.textContent='Enregistrer le journal →'; btn.disabled=false; }
 }
 
-// ── EDIT MODAL ──────────────────────────────────────────────────────
+// ── EDIT MODAL ─────────────────────────────────────────────────────────
 function openEditModal() {
   const j = db.journals.find(function(x) { return x.id === currentJournalId; });
   if (!j) return;
@@ -2036,7 +2354,7 @@ function loadManageList() {
         '<span class="admin-list-date">' + formatDateFr(j.date) + ' · ' + (pub ? '<span style="color:green;font-weight:500;">Publié</span>' : '<span style="color:var(--gold);">Programmé</span>') + '</span>' +
       '</div>' +
       '<div class="admin-list-actions">' +
-        (!pub ? '<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage(\'' + j.id + '\')">Modifier</button>' : '') +
+        '<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage(\'' + j.id + '\')">Modifier</button>' +
         '<button class="btn-danger" onclick="deleteJournal(\'' + j.id + '\')">Suppr.</button>' +
       '</div>';
     list.appendChild(li);
@@ -2061,33 +2379,102 @@ function editFromManage(id) {
 
 function loadModeration() {
   const list = document.getElementById('mod-list');
-  const allComments = db.comments || [];
+  list.style.display = 'flex';
+  list.style.flexDirection = 'column';
+  list.style.gap = '0';
+  const allComments = (db.comments || []).filter(function(c) { return !c.isReply; });
   list.innerHTML = '';
   if (!allComments.length) { document.getElementById('mod-empty').style.display = 'block'; return; }
   document.getElementById('mod-empty').style.display = 'none';
   const recent = [...allComments].sort(function(a,b){return new Date(b.date)-new Date(a.date);}).slice(0,30);
   recent.forEach(function(c) {
     const j = db.journals.find(function(x){return x.id===c.journalId;});
+    const replies = (db.comments||[]).filter(function(r){return r.parentId===c.id;});
     const li = document.createElement('li');
-    li.innerHTML =
+    li.style.display = 'flex';
+    li.style.flexDirection = 'column';
+    li.style.alignItems = 'stretch';
+    li.style.padding = '0.85rem 0';
+    li.style.borderBottom = '1px solid var(--border)';
+    li.style.gap = '0.5rem';
+
+    const mainRow = document.createElement('div');
+    mainRow.style.display = 'flex';
+    mainRow.style.alignItems = 'center';
+    mainRow.style.justifyContent = 'space-between';
+    mainRow.innerHTML =
       '<div style="flex:1;">' +
         '<span style="font-weight:600;">' + escHtml(c.name) + '</span>' +
         '<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-left:8px;">' + timeSince(c.date) + '</span>' +
         '<br>' +
         '<span style="font-size:0.85rem;color:var(--muted);">Sur : ' + (j ? escHtml(j.title) : '?') + '</span>' +
         '<br>' +
-        '<span style="font-size:0.9rem;">' + escHtml(c.text.slice(0,80)) + (c.text.length > 80 ? '...' : '') + '</span>' +
+        '<span style="font-size:0.9rem;">' + escHtml(c.text.slice(0,100)) + (c.text.length > 100 ? '...' : '') + '</span>' +
+        (replies.length ? '<br><span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--gold);">↩ ' + replies.length + ' réponse(s)</span>' : '') +
       '</div>' +
       '<div class="admin-list-actions">' +
+        '<button class="btn-primary" style="padding:0.3rem 0.7rem;font-size:0.75rem;background:var(--gold);border-color:var(--gold);" onclick="toggleModReply(\'' + c.id + '\', \'' + c.journalId + '\')">↩ Répondre</button>' +
         '<button class="btn-danger" onclick="deleteCommentAdmin(\'' + c.id + '\')">Suppr.</button>' +
       '</div>';
+
+    const replyBox = document.createElement('div');
+    replyBox.id = 'mod-reply-' + c.id;
+    replyBox.style.display = 'none';
+    replyBox.style.padding = '0.6rem';
+    replyBox.style.background = 'var(--parchment-dark)';
+    replyBox.style.borderRadius = '4px';
+    replyBox.innerHTML =
+      '<textarea id="mod-reply-text-' + c.id + '" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:0.5rem 0.75rem;font-family:var(--font-body);font-size:0.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:0.4rem;" placeholder="Votre réponse..."></textarea>' +
+      '<div style="display:flex;gap:0.4rem;">' +
+        '<button class="reply-submit" onclick="submitModReply(\'' + c.id + '\', \'' + c.journalId + '\')">Publier →</button>' +
+        '<button class="reply-cancel" onclick="toggleModReply(\'' + c.id + '\')">Annuler</button>' +
+      '</div>';
+
+    li.appendChild(mainRow);
+    li.appendChild(replyBox);
     list.appendChild(li);
   });
 }
 
+function toggleModReply(commentId, jid) {
+  const box = document.getElementById('mod-reply-' + commentId);
+  if (!box) return;
+  const isOpen = box.style.display !== 'none';
+  box.style.display = isOpen ? 'none' : 'block';
+  if (!isOpen) {
+    const ta = document.getElementById('mod-reply-text-' + commentId);
+    if (ta) ta.focus();
+  }
+}
+
+async function submitModReply(parentId, jid) {
+  const ta = document.getElementById('mod-reply-text-' + parentId);
+  if (!ta) return;
+  const text = ta.value.trim();
+  if (!text) { showToast('Veuillez écrire une réponse.', 'error'); return; }
+  const reply = {
+    id: Date.now().toString(),
+    journalId: jid,
+    parentId: parentId,
+    name: db.settings.siteName || 'La Rédaction',
+    text: text,
+    rating: 0,
+    date: new Date().toISOString(),
+    flagged: false,
+    isReply: true
+  };
+  db.comments.push(reply);
+  try {
+    await saveDB();
+    toggleModReply(parentId);
+    loadModeration();
+    showToast('Réponse publiée !', 'success');
+  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+}
+
 async function deleteCommentAdmin(id) {
-  if (!confirm('Supprimer cet avis ?')) return;
-  db.comments = db.comments.filter(function(c){return c.id!==id;});
+  if (!confirm('Supprimer cet avis (et ses réponses) ?')) return;
+  db.comments = db.comments.filter(function(c){return c.id!==id && c.parentId!==id;});
   await saveDB();
   loadModeration();
   if (currentJournalId) renderComments(currentJournalId, 'comment-list');
@@ -2098,29 +2485,29 @@ function applyBranding() {
   const name = db.settings.siteName || 'CapNews';
   const tagline = db.settings.tagline || 'Réflexions du quotidien';
   const hour = db.settings.pubHour ?? 18;
+  const hourStr = String(hour).padStart(2,'0') + 'h00';
   document.title = name;
   const logo = document.getElementById('site-logo');
   if (logo) {
-    const first = name.slice(0, Math.ceil(name.length / 2));
-    const second = name.slice(Math.ceil(name.length / 2));
-    logo.innerHTML = escHtml(first) + '<span>' + escHtml(second) + '</span>';
+    const mid = Math.ceil(name.length / 2);
+    logo.innerHTML = escHtml(name.slice(0, mid)) + '<span>' + escHtml(name.slice(mid)) + '</span>';
   }
   const tgl = document.getElementById('site-tagline');
   if (tgl) tgl.textContent = tagline + ' · Édition numérique';
   const pubMeta = document.getElementById('site-pub-meta');
-  if (pubMeta) pubMeta.textContent = 'Publication quotidienne · ' + String(hour).padStart(2,'0') + 'h00';
+  if (pubMeta) pubMeta.textContent = 'Publication quotidienne · ' + hourStr;
   const footerName = document.getElementById('footer-name');
   if (footerName) footerName.textContent = name;
   const footerTag = document.getElementById('footer-tagline');
-  if (footerTag) footerTag.textContent = 'Publication quotidienne à ' + String(hour).padStart(2,'0') + 'h00';
+  if (footerTag) footerTag.textContent = 'Publication quotidienne à ' + hourStr;
   const aboutTitle = document.getElementById('about-title');
   if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
   const aboutDesc = document.getElementById('about-desc');
   if (aboutDesc) aboutDesc.textContent = name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
   const aboutTagQ = document.getElementById('about-tagline-quote');
-  if (aboutTagQ) aboutTagQ.textContent = tagline;
+  if (aboutTagQ) aboutTagQ.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
   const lockedSub = document.getElementById('locked-subtitle');
-  if (lockedSub) lockedSub.textContent = 'La publication a lieu chaque soir à ' + String(hour).padStart(2,'0') + 'h00. Revenez ce soir !';
+  if (lockedSub) lockedSub.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
   const lockedTitle = document.getElementById('locked-title');
   if (lockedTitle) lockedTitle.textContent = "L'édition de ce jour n'est pas encore publiée";
 }
@@ -2160,7 +2547,8 @@ function updateCountdown() {
     document.getElementById('countdown-banner').classList.add('published');
     document.getElementById('countdown-text').textContent = '✓ Le journal du jour est disponible !';
     document.getElementById('countdown-timer').textContent = '';
-    document.getElementById('locked-countdown').textContent = '';
+    const lc = document.getElementById('locked-countdown');
+    if (lc) lc.textContent = '';
     return;
   }
 
@@ -2172,13 +2560,13 @@ function updateCountdown() {
   const m = Math.floor((diff%3600000)/60000);
   const s = Math.floor((diff%60000)/1000);
   const str = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
-  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu · Prochain 18h dans :';
+  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Pas de journal prévu · Prochain ' + String(pubHour).padStart(2,'0') + 'h dans :';
   document.getElementById('countdown-timer').textContent = str;
   const lc = document.getElementById('locked-countdown');
   if (lc) lc.textContent = str;
 }
 
-// ─── UTILS ───────────────────────────────────────────────────────────
+// ─── UTILS ────────────────────────────────────────────────────────────
 function updateDateDisplay() {
   const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
   document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
