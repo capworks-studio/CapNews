@@ -27,9 +27,7 @@
     --font-body: 'Source Serif 4', Georgia, serif;
     --font-mono: 'DM Mono', monospace;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background: var(--parchment);
     color: var(--ink);
@@ -42,980 +40,406 @@
       radial-gradient(ellipse at 90% 80%, rgba(139,26,26,0.04) 0%, transparent 60%);
   }
 
-  /* SETUP OVERLAY */
+  /* ── RICH TEXT CONTEXT MENU ─────────────────────────────────────── */
+  #rich-ctx-menu {
+    position: fixed;
+    z-index: 99999;
+    background: var(--ink);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    padding: 5px;
+    display: none;
+    min-width: 200px;
+    user-select: none;
+  }
+  #rich-ctx-menu.visible { display: flex; flex-direction: column; gap: 1px; }
+  .ctx-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--parchment-dark);
+    transition: background 0.12s;
+    border: none; background: none; text-align: left; width: 100%;
+  }
+  .ctx-item:hover { background: rgba(255,255,255,0.12); }
+  .ctx-item .ctx-icon { width: 18px; text-align: center; font-size: 0.9rem; opacity: 0.85; }
+  .ctx-item .ctx-label { flex: 1; }
+  .ctx-item .ctx-shortcut { font-size: 0.68rem; opacity: 0.45; }
+  .ctx-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 3px 6px; }
+  .ctx-item.ctx-ai { color: var(--gold-light); }
+  .ctx-item.ctx-ai:hover { background: rgba(184,134,11,0.2); }
+
+  /* ── SPOIL ELEMENT (reader) ────────────────────────────────────── */
+  .spoil-block {
+    display: inline;
+    background: var(--ink);
+    color: transparent;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 1px 4px;
+    transition: color 0.25s, background 0.25s;
+    user-select: none;
+  }
+  .spoil-block.revealed {
+    background: rgba(184,134,11,0.12);
+    color: var(--ink);
+    cursor: default;
+  }
+  /* ── HIGHLIGHT (mise en avant) ─────────────────────────────────── */
+  .hl-text {
+    font-size: 1.35em;
+    font-weight: 700;
+    font-family: var(--font-display);
+    color: var(--gold);
+    display: inline;
+  }
+
+  /* ── SETUP OVERLAY ──────────────────────────────────────────────── */
   #setup-overlay {
     position: fixed; inset: 0;
     background: rgba(26,18,9,0.92);
     display: flex; align-items: center; justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(6px);
+    z-index: 9999; backdrop-filter: blur(6px);
   }
   #setup-overlay.hidden { display: none; }
   .setup-card {
-    background: var(--parchment);
-    border: 1px solid var(--border-strong);
-    border-radius: 8px;
-    padding: 2.5rem;
-    max-width: 480px;
-    width: 90%;
+    background: var(--parchment); border: 1px solid var(--border-strong);
+    border-radius: 8px; padding: 2.5rem; max-width: 480px; width: 90%;
     box-shadow: var(--shadow-strong);
   }
-  .setup-card h2 {
-    font-family: var(--font-display);
-    font-size: 1.7rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    color: var(--ink);
-  }
-  .setup-card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 1.5rem; line-height: 1.5; }
-  .setup-card label { font-size: 0.85rem; font-weight: 500; color: var(--ink-light); display: block; margin-bottom: 0.3rem; font-family: var(--font-mono); }
-  .setup-card input {
-    width: 100%; padding: 0.6rem 0.85rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    background: white;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    color: var(--ink);
-    margin-bottom: 1rem;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .setup-card h2 { font-family: var(--font-display); font-size: 1.7rem; font-weight: 700; margin-bottom: .4rem; }
+  .setup-card p { color: var(--muted); font-size: .92rem; margin-bottom: 1.5rem; line-height: 1.5; }
+  .setup-card label { font-size: .85rem; font-weight: 500; color: var(--ink-light); display: block; margin-bottom: .3rem; font-family: var(--font-mono); }
+  .setup-card input { width: 100%; padding: .6rem .85rem; border: 1px solid var(--border-strong); border-radius: 4px; background: white; font-family: var(--font-mono); font-size: .88rem; color: var(--ink); margin-bottom: 1rem; outline: none; transition: border-color .2s; }
   .setup-card input:focus { border-color: var(--gold); }
-  .btn-primary {
-    background: var(--ink);
-    color: var(--parchment);
-    border: none;
-    padding: 0.7rem 1.5rem;
-    border-radius: 4px;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
+  .btn-primary { background: var(--ink); color: var(--parchment); border: none; padding: .7rem 1.5rem; border-radius: 4px; font-family: var(--font-display); font-size: 1rem; cursor: pointer; font-weight: 600; letter-spacing: .01em; transition: background .2s; }
   .btn-primary:hover { background: var(--ink-light); }
-  .btn-primary:active { transform: scale(0.98); }
-  .setup-steps { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; }
-  .step { flex: 1; font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
-  .step-num { display: inline-block; background: var(--gold); color: white; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; font-size: 0.75rem; font-weight: 700; margin-right: 4px; }
-  .setup-help { font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem; }
+  .setup-steps { display: flex; gap: .75rem; margin-bottom: 1.5rem; }
+  .step { flex: 1; font-size: .8rem; color: var(--muted); line-height: 1.4; }
+  .step-num { display: inline-block; background: var(--gold); color: white; border-radius: 50%; width: 18px; height: 18px; text-align: center; line-height: 18px; font-size: .75rem; font-weight: 700; margin-right: 4px; }
+  .setup-help { font-size: .8rem; color: var(--muted); margin-top: .5rem; }
   .setup-help a { color: var(--gold); }
 
-  /* MASTHEAD */
-  .masthead {
-    border-bottom: 3px double var(--border-strong);
-    padding: 1.5rem 0 0;
-    text-align: center;
-    background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment));
-    position: relative;
-  }
-  .masthead-top {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 2rem 0.75rem;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 0.75rem;
-  }
-  .masthead-meta { font-size: 0.78rem; color: var(--muted); font-family: var(--font-mono); }
-  .masthead-logo {
-    font-family: var(--font-display);
-    font-size: clamp(2.2rem, 6vw, 4rem);
-    font-weight: 900;
-    color: var(--ink);
-    letter-spacing: -0.02em;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  /* ── MASTHEAD ───────────────────────────────────────────────────── */
+  .masthead { border-bottom: 3px double var(--border-strong); padding: 1.5rem 0 0; text-align: center; background: linear-gradient(to bottom, var(--parchment-dark), var(--parchment)); }
+  .masthead-top { display: flex; align-items: center; justify-content: space-between; padding: 0 2rem .75rem; border-bottom: 1px solid var(--border); margin-bottom: .75rem; }
+  .masthead-meta { font-size: .78rem; color: var(--muted); font-family: var(--font-mono); }
+  .masthead-logo { font-family: var(--font-display); font-size: clamp(2.2rem,6vw,4rem); font-weight: 900; color: var(--ink); letter-spacing: -.02em; line-height: 1; text-decoration: none; cursor: pointer; }
   .masthead-logo span { color: var(--gold); }
-  .masthead-tagline {
-    font-size: 0.78rem;
-    font-family: var(--font-mono);
-    color: var(--muted);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    margin-top: 0.25rem;
-    margin-bottom: 0.75rem;
-  }
+  .masthead-tagline { font-size: .78rem; font-family: var(--font-mono); color: var(--muted); letter-spacing: .18em; text-transform: uppercase; margin-top: .25rem; margin-bottom: .75rem; }
   .masthead-rule { border: none; border-top: 1px solid var(--border-strong); margin: 0; }
 
-  /* NAV */
-  nav {
-    display: flex; align-items: center; justify-content: center; gap: 0;
-    padding: 0;
-    border-bottom: 2px solid var(--ink);
-    background: var(--ink);
-    position: sticky; top: 0; z-index: 100;
-  }
-  nav a, nav button {
-    color: var(--parchment-dark);
-    text-decoration: none;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.65rem 1.2rem;
-    border: none; background: none;
-    cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  nav a:hover, nav button:hover { background: rgba(255,255,255,0.1); color: var(--gold-light); }
-  nav a.active { background: rgba(255,255,255,0.12); color: var(--gold-light); }
-  .nav-sep { color: rgba(255,255,255,0.2); pointer-events: none; padding: 0 2px; }
+  /* ── NAV ────────────────────────────────────────────────────────── */
+  nav { display: flex; align-items: center; justify-content: center; gap: 0; border-bottom: 2px solid var(--ink); background: var(--ink); position: sticky; top: 0; z-index: 100; }
+  nav a, nav button { color: var(--parchment-dark); text-decoration: none; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; padding: .65rem 1.2rem; border: none; background: none; cursor: pointer; transition: background .15s, color .15s; display: flex; align-items: center; gap: 6px; }
+  nav a:hover, nav button:hover { background: rgba(255,255,255,.1); color: var(--gold-light); }
+  nav a.active { background: rgba(255,255,255,.12); color: var(--gold-light); }
+  .nav-sep { color: rgba(255,255,255,.2); pointer-events: none; padding: 0 2px; }
   .nav-admin-btn { margin-left: auto; color: var(--gold-light) !important; }
-  .nav-admin-btn:hover { background: rgba(212,168,67,0.15) !important; }
+  .nav-admin-btn:hover { background: rgba(212,168,67,.15) !important; }
 
-  /* COUNTDOWN BANNER */
-  #countdown-banner {
-    background: var(--ink);
-    color: var(--parchment);
-    text-align: center;
-    padding: 0.55rem 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-    letter-spacing: 0.05em;
-  }
-  #countdown-banner.published {
-    background: linear-gradient(90deg, #1a3a1a, #2a4a2a, #1a3a1a);
-    color: #a8e6a3;
-  }
+  /* ── COUNTDOWN ──────────────────────────────────────────────────── */
+  #countdown-banner { background: var(--ink); color: var(--parchment); text-align: center; padding: .55rem 1rem; font-family: var(--font-mono); font-size: .82rem; border-bottom: 1px solid rgba(255,255,255,.08); letter-spacing: .05em; }
+  #countdown-banner.published { background: linear-gradient(90deg,#1a3a1a,#2a4a2a,#1a3a1a); color: #a8e6a3; }
   #countdown-timer { font-weight: 500; color: var(--gold-light); }
 
-  /* MAIN LAYOUT */
+  /* ── MAIN ───────────────────────────────────────────────────────── */
   main { max-width: 1120px; margin: 0 auto; padding: 2rem 1.5rem; }
-
-  /* PAGE SECTIONS */
   .page-section { display: none; }
   .page-section.active { display: block; }
 
-  /* TODAY'S JOURNAL */
-  .journal-hero {
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-  @media (max-width: 768px) {
-    .journal-hero { grid-template-columns: 1fr; }
-  }
-  .journal-date-label {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .journal-date-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
-  .journal-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    font-weight: 900;
-    line-height: 1.1;
-    color: var(--ink);
-    margin-bottom: 1rem;
-    font-style: italic;
-  }
-  .journal-excerpt {
-    font-size: 1.05rem;
-    color: var(--ink-light);
-    line-height: 1.8;
-    font-style: italic;
-    border-left: 3px solid var(--gold);
-    padding-left: 1.2rem;
-    margin-bottom: 1.2rem;
-  }
-  .journal-body { font-size: 1rem; color: var(--ink); line-height: 1.85; white-space: pre-wrap; }
-  .journal-body p { margin-bottom: 1rem; }
-  .journal-meta-chips {
-    display: flex; gap: 0.5rem; flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-  .chip {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    padding: 0.2rem 0.65rem;
-    border-radius: 2px;
-    border: 1px solid var(--border-strong);
-    color: var(--muted);
-    background: var(--parchment-mid);
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
+  /* ── BOOK READER ─────────────────────────────────────────────────── */
+  .book-wrapper { display: flex; flex-direction: column; gap: 0; }
+  .book-reader { position: relative; min-height: 520px; background: white; border: 1px solid var(--border-strong); border-radius: 4px 4px 0 0; overflow: hidden; box-shadow: var(--shadow); }
+  .book-page { position: absolute; inset: 0; padding: 2.5rem 2.8rem; opacity: 0; pointer-events: none; transition: opacity .3s ease; overflow-y: auto; }
+  .book-page.active { opacity: 1; pointer-events: all; position: relative; }
+  .cover-page { background: var(--ink); color: var(--parchment); display: flex; flex-direction: column; justify-content: center; align-items: flex-start; min-height: 520px; }
+  .cover-edition { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold-light); margin-bottom: 1.5rem; opacity: .8; }
+  .cover-title { font-family: var(--font-display); font-size: clamp(1.6rem,4vw,2.4rem); font-weight: 900; font-style: italic; line-height: 1.1; color: var(--parchment); margin-bottom: 1rem; }
+  .cover-excerpt { font-size: 1rem; font-style: italic; color: rgba(247,243,235,.75); line-height: 1.65; border-left: 2px solid var(--gold); padding-left: 1rem; margin-bottom: 1.5rem; max-width: 520px; }
+  .cover-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.2rem; }
+  .cover-meta .chip { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.2); color: rgba(247,243,235,.8); }
+  .cover-meta .chip.cat { background: var(--gold); border-color: var(--gold); color: white; }
+  .cover-readtime { font-family: var(--font-mono); font-size: .78rem; color: rgba(247,243,235,.5); margin-bottom: 1.8rem; }
+  .cover-start-btn { background: var(--gold); color: white; border: none; padding: .65rem 1.4rem; border-radius: 3px; font-family: var(--font-display); font-size: 1rem; font-weight: 600; cursor: pointer; transition: background .15s, transform .1s; }
+  .cover-start-btn:hover { background: var(--gold-light); transform: translateX(3px); }
+  .cover-page-num { position: absolute; bottom: 1rem; right: 1.5rem; font-family: var(--font-mono); font-size: .72rem; color: rgba(247,243,235,.35); }
+  .book-page:not(.cover-page) .cover-page-num { color: var(--muted); }
+  .page-body-text { font-size: 1rem; line-height: 1.9; color: var(--ink); }
+  .page-drop-cap::first-letter { font-family: var(--font-display); font-size: 4rem; font-weight: 900; float: left; line-height: .75; margin-right: .12em; margin-top: .1em; color: var(--gold); }
+  .reactions-page { background: var(--parchment-mid); }
+  .reactions-page h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 1.2rem; padding-bottom: .6rem; border-bottom: 2px solid var(--ink); }
+  .book-nav { display: flex; align-items: center; justify-content: space-between; background: var(--parchment-dark); border: 1px solid var(--border-strong); border-top: none; border-radius: 0 0 4px 4px; padding: .6rem 1rem; gap: 1rem; }
+  .book-nav-btn { background: none; border: 1px solid var(--border-strong); padding: .35rem .85rem; border-radius: 3px; font-family: var(--font-mono); font-size: .78rem; cursor: pointer; color: var(--ink-light); transition: all .13s; white-space: nowrap; }
+  .book-nav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
+  .book-nav-btn:disabled { opacity: .3; cursor: not-allowed; }
+  .book-progress { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .progress-dots { display: flex; gap: 5px; flex-wrap: wrap; justify-content: center; }
+  .progress-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border-strong); cursor: pointer; transition: background .15s, transform .15s; }
+  .progress-dot.active { background: var(--gold); transform: scale(1.3); }
+  .progress-dot:hover { background: var(--gold-light); }
+  #page-counter { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); }
+
+  /* ── HOME LAYOUT ─────────────────────────────────────────────────── */
+  .journal-hero { display: grid; grid-template-columns: 1fr 340px; gap: 2.5rem; margin-bottom: 2.5rem; }
+  @media (max-width: 768px) { .journal-hero { grid-template-columns: 1fr; } }
+
+  /* ── SIDEBAR ────────────────────────────────────────────────────── */
+  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+  .sidebar-box { border: 1px solid var(--border-strong); border-radius: var(--radius); background: var(--parchment-mid); padding: 1.2rem; }
+  .sidebar-box h3 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: .85rem; padding-bottom: .6rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+
+  /* ── CHIP ───────────────────────────────────────────────────────── */
+  .chip { font-family: var(--font-mono); font-size: .72rem; padding: .2rem .65rem; border-radius: 2px; border: 1px solid var(--border-strong); color: var(--muted); background: var(--parchment-mid); letter-spacing: .08em; text-transform: uppercase; }
   .chip.cat { background: var(--ink); color: var(--parchment-dark); border-color: var(--ink); }
   .chip.mood-good { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
   .chip.mood-neutral { background: #fff8e1; color: #f57f17; border-color: #ffcc80; }
   .chip.mood-bad { background: #ffebee; color: #c62828; border-color: #ef9a9a; }
 
-  /* SIDEBAR */
-  .sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
-  .sidebar-box {
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    background: var(--parchment-mid);
-    padding: 1.2rem;
-  }
-  .sidebar-box h3 {
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 0.85rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 6px;
-  }
-
-  /* BOOK READER */
-  .book-wrapper {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .book-reader {
-    position: relative;
-    min-height: 520px;
-    background: white;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px 4px 0 0;
-    overflow: hidden;
-    box-shadow: var(--shadow);
-  }
-  .book-page {
-    position: absolute;
-    inset: 0;
-    padding: 2.5rem 2.8rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    overflow-y: auto;
-  }
-  .book-page.active {
-    opacity: 1;
-    pointer-events: all;
-    position: relative;
-  }
-  /* COVER PAGE */
-  .cover-page {
-    background: var(--ink);
-    color: var(--parchment);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    min-height: 520px;
-  }
-  .cover-edition {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    margin-bottom: 1.5rem;
-    opacity: 0.8;
-  }
-  .cover-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 900;
-    font-style: italic;
-    line-height: 1.1;
-    color: var(--parchment);
-    margin-bottom: 1rem;
-  }
-  .cover-excerpt {
-    font-size: 1rem;
-    font-style: italic;
-    color: rgba(247,243,235,0.75);
-    line-height: 1.65;
-    border-left: 2px solid var(--gold);
-    padding-left: 1rem;
-    margin-bottom: 1.5rem;
-    max-width: 520px;
-  }
-  .cover-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    margin-bottom: 1.2rem;
-  }
-  .cover-meta .chip {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.2);
-    color: rgba(247,243,235,0.8);
-  }
-  .cover-meta .chip.cat {
-    background: var(--gold);
-    border-color: var(--gold);
-    color: white;
-  }
-  .cover-readtime {
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: rgba(247,243,235,0.5);
-    margin-bottom: 1.8rem;
-  }
-  .cover-start-btn {
-    background: var(--gold);
-    color: white;
-    border: none;
-    padding: 0.65rem 1.4rem;
-    border-radius: 3px;
-    font-family: var(--font-display);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .cover-start-btn:hover { background: var(--gold-light); transform: translateX(3px); }
-  .cover-page-num {
-    position: absolute;
-    bottom: 1rem;
-    right: 1.5rem;
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: rgba(247,243,235,0.35);
-  }
-  .book-page:not(.cover-page) .cover-page-num {
-    color: var(--muted);
-  }
-  /* CONTENT PAGES */
-  .page-body-text {
-    font-size: 1rem;
-    line-height: 1.9;
-    color: var(--ink);
-    white-space: pre-wrap;
-    column-count: 1;
-  }
-  .page-drop-cap::first-letter {
-    font-family: var(--font-display);
-    font-size: 4rem;
-    font-weight: 900;
-    float: left;
-    line-height: 0.75;
-    margin-right: 0.12em;
-    margin-top: 0.1em;
-    color: var(--gold);
-  }
-  /* REACTIONS PAGE */
-  .reactions-page {
-    background: var(--parchment-mid);
-  }
-  .reactions-page h2 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-    padding-bottom: 0.6rem;
-    border-bottom: 2px solid var(--ink);
-  }
-  /* BOOK NAV */
-  .book-nav {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--parchment-dark);
-    border: 1px solid var(--border-strong);
-    border-top: none;
-    border-radius: 0 0 4px 4px;
-    padding: 0.6rem 1rem;
-    gap: 1rem;
-  }
-  .book-nav-btn {
-    background: none;
-    border: 1px solid var(--border-strong);
-    padding: 0.35rem 0.85rem;
-    border-radius: 3px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    cursor: pointer;
-    color: var(--ink-light);
-    transition: all 0.13s;
-    white-space: nowrap;
-  }
-  .book-nav-btn:hover:not(:disabled) { border-color: var(--gold); color: var(--gold); }
-  .book-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  .book-progress {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    flex: 1;
-  }
-  .progress-dots {
-    display: flex;
-    gap: 5px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .progress-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: var(--border-strong);
-    cursor: pointer;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .progress-dot.active { background: var(--gold); transform: scale(1.3); }
-  .progress-dot:hover { background: var(--gold-light); }
-  #page-counter {
-    font-family: var(--font-mono);
-    font-size: 0.72rem;
-    color: var(--muted);
-  }
-
-  /* FAB edit button */
-  .edit-fab {
-    position: fixed;
-    bottom: 2rem;
-    left: 2rem;
-    background: var(--gold);
-    color: white;
-    border: none;
-    padding: 0.7rem 1.3rem;
-    border-radius: 30px;
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 16px rgba(184,134,11,0.35);
-    z-index: 200;
-    transition: background 0.15s, transform 0.15s;
-  }
-  .edit-fab:hover { background: var(--gold-light); transform: translateY(-2px); }
-  .edit-fab.hidden { display: none; }
-
-  /* EDIT MODAL */
-  .edit-modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(26,18,9,0.7);
-    z-index: 500;
-    display: flex; align-items: flex-start; justify-content: center;
-    padding: 2rem 1rem;
-    overflow-y: auto;
-    backdrop-filter: blur(4px);
-  }
-  .edit-modal-bg.hidden { display: none; }
-  .edit-modal {
-    background: var(--parchment);
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    padding: 2rem 2.5rem;
-    max-width: 760px;
-    width: 100%;
-    position: relative;
-    box-shadow: var(--shadow-strong);
-    margin-top: 1rem;
-  }
-  .edit-modal h2 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    margin-bottom: 1.2rem;
-  }
-  .edit-modal-close {
-    position: absolute; top: 1.2rem; right: 1.4rem;
-    background: none; border: none; cursor: pointer;
-    font-size: 1.3rem; color: var(--muted); line-height: 1;
-    font-family: var(--font-mono);
-    transition: color 0.15s;
-  }
-  .edit-modal-close:hover { color: var(--ink); }
-
-  /* PAGES EDITOR */
-  .pages-editor {
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    overflow: hidden;
-    margin-bottom: 0.6rem;
-  }
-  .page-editor-item {
-    border-bottom: 1px solid var(--border);
-  }
-  .page-editor-item:last-child { border-bottom: none; }
-  .page-editor-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem 0.9rem;
-    background: var(--parchment-dark);
-    cursor: pointer;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--ink-light);
-    user-select: none;
-  }
-  .page-editor-header:hover { background: var(--parchment-mid); }
-  .page-editor-body {
-    display: none;
-    padding: 0.75rem;
-    background: white;
-  }
-  .page-editor-body.open { display: block; }
-  .page-editor-textarea {
-    width: 100%;
-    min-height: 160px;
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    padding: 0.6rem 0.8rem;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--ink);
-    resize: vertical;
-    outline: none;
-    line-height: 1.65;
-  }
-  .page-editor-textarea:focus { border-color: var(--gold); }
-  .add-page-btn {
-    background: none;
-    border: 1px dashed var(--border-strong);
-    border-radius: 3px;
-    padding: 0.5rem 1rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--muted);
-    cursor: pointer;
-    width: 100%;
-    transition: all 0.13s;
-  }
-  .add-page-btn:hover { border-color: var(--gold); color: var(--gold); background: rgba(184,134,11,0.04); }
-
-  /* RATINGS */
-  .ratings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.75rem; }
+  /* ── REACTIONS ──────────────────────────────────────────────────── */
+  .ratings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-bottom: .75rem; }
   .rating-stat { text-align: center; }
   .rating-big { font-size: 2rem; font-family: var(--font-display); font-weight: 900; color: var(--ink); line-height: 1; }
-  .rating-label { font-size: 0.72rem; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
+  .rating-label { font-size: .72rem; color: var(--muted); font-family: var(--font-mono); margin-top: 2px; }
   .stars-display { display: flex; gap: 3px; justify-content: center; margin-top: 4px; }
   .star { font-size: 1.1rem; color: #ddd; }
   .star.filled { color: var(--gold); }
-
-  .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
+  .vote-row { display: flex; align-items: center; gap: 8px; margin-bottom: .5rem; }
   .vote-emoji { font-size: 1.2rem; }
   .vote-bar-bg { flex: 1; height: 6px; background: var(--parchment-dark); border-radius: 3px; overflow: hidden; }
-  .vote-bar { height: 100%; border-radius: 3px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+  .vote-bar { height: 100%; border-radius: 3px; transition: width .6s cubic-bezier(.4,0,.2,1); }
   .vote-bar.positive { background: #4caf50; }
   .vote-bar.neutral { background: var(--gold); }
   .vote-bar.negative { background: var(--red-light); }
-  .vote-count { font-family: var(--font-mono); font-size: 0.75rem; color: var(--muted); min-width: 22px; text-align: right; }
+  .vote-count { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); min-width: 22px; text-align: right; }
+  .user-vote-btns { display: flex; gap: .4rem; margin-top: .75rem; }
+  .vote-btn { flex: 1; padding: .45rem; border: 1px solid var(--border-strong); border-radius: 3px; background: white; cursor: pointer; font-size: 1.1rem; transition: all .15s; display: flex; align-items: center; justify-content: center; gap: 4px; }
+  .vote-btn span { font-size: .75rem; font-family: var(--font-mono); color: var(--muted); }
+  .vote-btn:hover { border-color: var(--gold); background: rgba(184,134,11,.06); }
+  .vote-btn.active { border-color: var(--gold); background: rgba(184,134,11,.12); }
 
-  .user-vote-btns { display: flex; gap: 0.4rem; margin-top: 0.75rem; }
-  .vote-btn {
-    flex: 1; padding: 0.45rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 3px;
-    background: white;
-    cursor: pointer;
-    font-size: 1.1rem;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-  }
-  .vote-btn span { font-size: 0.75rem; font-family: var(--font-mono); color: var(--muted); }
-  .vote-btn:hover { border-color: var(--gold); background: rgba(184,134,11,0.06); }
-  .vote-btn.active { border-color: var(--gold); background: rgba(184,134,11,0.12); }
-  .vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-
-  /* COMMENTS */
+  /* ── COMMENTS ───────────────────────────────────────────────────── */
   .comments-section { margin-top: 2rem; }
-  .comments-section h2 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--ink);
-    margin-bottom: 1.2rem;
-    padding-bottom: 0.7rem;
-    border-bottom: 2px solid var(--ink);
-  }
-  .comment-form { margin-bottom: 1.5rem; }
-  .comment-form-row { display: flex; gap: 0.75rem; margin-bottom: 0.6rem; }
-  .comment-form-row input, .comment-form textarea, .comment-form select {
-    width: 100%; padding: 0.6rem 0.85rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    background: white;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--ink);
-    resize: none;
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .comment-form-row { display: flex; gap: .75rem; margin-bottom: .6rem; }
+  .comment-form-row input, .comment-form textarea { width: 100%; padding: .6rem .85rem; border: 1px solid var(--border-strong); border-radius: 4px; background: white; font-family: var(--font-body); font-size: .95rem; color: var(--ink); resize: none; outline: none; transition: border-color .2s; }
   .comment-form-row input { flex: 1; }
   .comment-form-row input:focus, .comment-form textarea:focus { border-color: var(--gold); }
   .comment-form-row input.invalid { border-color: var(--red-light); background: #fff5f5; }
-  .star-picker { display: flex; gap: 4px; align-items: center; margin-bottom: 0.6rem; }
-  .star-picker label { font-size: 0.82rem; color: var(--muted); font-family: var(--font-mono); margin-right: 6px; }
-  .star-pick { font-size: 1.5rem; cursor: pointer; color: #ccc; transition: color 0.12s; }
+  .star-picker { display: flex; gap: 4px; align-items: center; margin-bottom: .6rem; }
+  .star-picker label { font-size: .82rem; color: var(--muted); font-family: var(--font-mono); margin-right: 6px; }
+  .star-pick { font-size: 1.5rem; cursor: pointer; color: #ccc; transition: color .12s; }
   .star-pick.active { color: var(--gold); }
-  .star-pick:hover { color: var(--gold-light); }
-  .comment-submit { background: var(--ink); color: var(--parchment); border: none; padding: 0.6rem 1.4rem; border-radius: 3px; font-family: var(--font-display); font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+  .comment-submit { background: var(--ink); color: var(--parchment); border: none; padding: .6rem 1.4rem; border-radius: 3px; font-family: var(--font-display); font-size: .95rem; font-weight: 600; cursor: pointer; transition: background .15s; }
   .comment-submit:hover { background: var(--ink-light); }
-
   .comment-list { display: flex; flex-direction: column; gap: 1rem; }
-  .comment-card {
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1rem 1.2rem;
-    background: white;
-    position: relative;
-    animation: fadeIn 0.35s ease;
-  }
-  .comment-card.reply-card {
-    border-left: 3px solid var(--gold);
-    background: var(--parchment-mid);
-    margin-left: 1.5rem;
-    margin-top: -0.5rem;
-  }
-  .comment-card.reply-card .comment-avatar {
-    background: var(--gold);
-  }
+  .comment-card { border: 1px solid var(--border); border-radius: 4px; padding: 1rem 1.2rem; background: white; position: relative; animation: fadeIn .35s ease; }
+  .comment-card.reply-card { border-left: 3px solid var(--gold); background: var(--parchment-mid); margin-left: 1.5rem; margin-top: -.5rem; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
-  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 0.5rem; }
-  .comment-avatar {
-    width: 32px; height: 32px; border-radius: 50%;
-    background: var(--ink); color: var(--parchment);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--font-display); font-size: 0.85rem; font-weight: 700;
-    flex-shrink: 0;
-  }
-  .comment-name { font-weight: 600; font-size: 0.9rem; color: var(--ink); }
-  .comment-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-left: auto; }
+  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: .5rem; }
+  .comment-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--parchment); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: .85rem; font-weight: 700; flex-shrink: 0; }
+  .comment-name { font-weight: 600; font-size: .9rem; color: var(--ink); }
+  .comment-date { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); margin-left: auto; }
   .comment-stars { display: flex; gap: 2px; }
-  .comment-star { font-size: 0.85rem; color: #ddd; }
+  .comment-star { font-size: .85rem; color: #ddd; }
   .comment-star.filled { color: var(--gold); }
-  .comment-text { font-size: 0.95rem; color: var(--ink-light); line-height: 1.6; }
-  .comment-actions {
-    display: flex; gap: 8px; margin-top: 0.6rem;
-    opacity: 0; transition: opacity 0.15s;
-  }
+  .comment-text { font-size: .95rem; color: var(--ink-light); line-height: 1.6; }
+  .comment-actions { display: flex; gap: 8px; margin-top: .6rem; opacity: 0; transition: opacity .15s; }
   .comment-card:hover .comment-actions { opacity: 1; }
-  .comment-action-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 0.75rem; font-family: var(--font-mono);
-    color: var(--muted); padding: 2px 6px;
-    border-radius: 2px; transition: all 0.12s;
-  }
+  .comment-action-btn { background: none; border: none; cursor: pointer; font-size: .75rem; font-family: var(--font-mono); color: var(--muted); padding: 2px 6px; border-radius: 2px; transition: all .12s; }
   .comment-action-btn:hover { color: var(--ink); background: var(--parchment-dark); }
   .comment-action-btn.delete:hover { color: var(--red); }
-  .comment-action-btn.reply-btn { color: var(--gold); }
-  .comment-action-btn.reply-btn:hover { color: var(--gold-light); background: rgba(184,134,11,0.1); }
-
-  /* INLINE REPLY FORM */
-  .reply-form {
-    margin-top: 0.75rem;
-    padding: 0.75rem;
-    background: var(--parchment-mid);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    display: none;
-  }
+  .reply-form { margin-top: .75rem; padding: .75rem; background: var(--parchment-mid); border: 1px solid var(--border); border-radius: 4px; display: none; }
   .reply-form.open { display: block; }
-  .reply-form textarea {
-    width: 100%;
-    border: 1px solid var(--border-strong);
-    border-radius: 3px;
-    padding: 0.5rem 0.75rem;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    resize: vertical;
-    min-height: 70px;
-    outline: none;
-    margin-bottom: 0.5rem;
-  }
+  .reply-form textarea { width: 100%; border: 1px solid var(--border-strong); border-radius: 3px; padding: .5rem .75rem; font-family: var(--font-body); font-size: .9rem; resize: vertical; min-height: 70px; outline: none; margin-bottom: .5rem; }
   .reply-form textarea:focus { border-color: var(--gold); }
-  .reply-form-actions { display: flex; gap: 0.5rem; }
-  .reply-submit {
-    background: var(--gold); color: white; border: none;
-    padding: 0.4rem 0.9rem; border-radius: 3px;
-    font-family: var(--font-mono); font-size: 0.78rem;
-    cursor: pointer; transition: background 0.15s;
-  }
-  .reply-submit:hover { background: var(--gold-light); }
-  .reply-cancel {
-    background: none; border: 1px solid var(--border-strong);
-    padding: 0.4rem 0.9rem; border-radius: 3px;
-    font-family: var(--font-mono); font-size: 0.78rem;
-    cursor: pointer; color: var(--muted);
-  }
+  .reply-form-actions { display: flex; gap: .5rem; }
+  .reply-submit { background: var(--gold); color: white; border: none; padding: .4rem .9rem; border-radius: 3px; font-family: var(--font-mono); font-size: .78rem; cursor: pointer; }
+  .reply-cancel { background: none; border: 1px solid var(--border-strong); padding: .4rem .9rem; border-radius: 3px; font-family: var(--font-mono); font-size: .78rem; cursor: pointer; color: var(--muted); }
 
-  /* LOCKED STATE */
-  .locked-overlay {
-    text-align: center; padding: 3rem 1rem;
-    border: 1px dashed var(--border-strong);
-    border-radius: 8px;
-    background: var(--parchment-mid);
-    margin: 2rem 0;
-  }
-  .locked-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-  .locked-overlay h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-  .locked-overlay p { color: var(--muted); font-size: 0.92rem; }
-  .locked-time { font-family: var(--font-mono); font-size: 1.1rem; color: var(--gold); margin-top: 0.5rem; font-weight: 500; }
+  /* ── LOCKED ─────────────────────────────────────────────────────── */
+  .locked-overlay { text-align: center; padding: 3rem 1rem; border: 1px dashed var(--border-strong); border-radius: 8px; background: var(--parchment-mid); margin: 2rem 0; }
+  .locked-icon { font-size: 2.5rem; margin-bottom: .75rem; }
+  .locked-overlay h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: .5rem; }
+  .locked-overlay p { color: var(--muted); font-size: .92rem; }
+  .locked-time { font-family: var(--font-mono); font-size: 1.1rem; color: var(--gold); margin-top: .5rem; font-weight: 500; }
 
-  /* HISTORY */
-  .history-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.5rem;
-  }
-  .history-card {
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    background: white;
-    padding: 1.2rem;
-    cursor: pointer;
-    transition: all 0.18s;
-    position: relative;
-    overflow: hidden;
-  }
-  .history-card::before {
-    content: '';
-    position: absolute; left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: var(--gold);
-    transform: scaleY(0);
-    transition: transform 0.18s;
-  }
+  /* ── HISTORY ────────────────────────────────────────────────────── */
+  .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem; }
+  .history-card { border: 1px solid var(--border-strong); border-radius: 4px; background: white; padding: 1.2rem; cursor: pointer; transition: all .18s; position: relative; overflow: hidden; }
+  .history-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--gold); transform: scaleY(0); transition: transform .18s; }
   .history-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--gold); }
   .history-card:hover::before { transform: scaleY(1); }
-  .history-card-date { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.4rem; }
-  .history-card-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.5rem; font-style: italic; line-height: 1.3; }
-  .history-card-excerpt { font-size: 0.88rem; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  .history-card-footer { display: flex; align-items: center; gap: 8px; margin-top: 0.85rem; border-top: 1px solid var(--border); padding-top: 0.75rem; }
-  .history-card-rating { font-family: var(--font-mono); font-size: 0.78rem; color: var(--gold); font-weight: 500; }
-  .history-card-comments { font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); margin-left: auto; }
-  .history-card-cat { font-family: var(--font-mono); font-size: 0.7rem; color: var(--parchment); background: var(--ink); padding: 2px 8px; border-radius: 2px; }
+  .history-card-date { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: .4rem; }
+  .history-card-title { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--ink); margin-bottom: .5rem; font-style: italic; line-height: 1.3; }
+  .history-card-excerpt { font-size: .88rem; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .history-card-footer { display: flex; align-items: center; gap: 8px; margin-top: .85rem; border-top: 1px solid var(--border); padding-top: .75rem; }
+  .history-card-rating { font-family: var(--font-mono); font-size: .78rem; color: var(--gold); font-weight: 500; }
+  .history-card-comments { font-family: var(--font-mono); font-size: .78rem; color: var(--muted); margin-left: auto; }
+  .history-card-cat { font-family: var(--font-mono); font-size: .7rem; color: var(--parchment); background: var(--ink); padding: 2px 8px; border-radius: 2px; }
 
-  /* MODAL JOURNAL VIEW */
-  .modal-bg {
-    position: fixed; inset: 0;
-    background: rgba(26,18,9,0.7);
-    z-index: 500;
-    display: flex; align-items: flex-start; justify-content: center;
-    padding: 2rem 1rem;
-    overflow-y: auto;
-    backdrop-filter: blur(4px);
-  }
+  /* ── MODAL ──────────────────────────────────────────────────────── */
+  .modal-bg { position: fixed; inset: 0; background: rgba(26,18,9,.7); z-index: 500; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; backdrop-filter: blur(4px); }
   .modal-bg.hidden { display: none; }
-  .modal-content {
-    background: var(--parchment);
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    padding: 2rem 2.5rem;
-    max-width: 780px;
-    width: 100%;
-    position: relative;
-    box-shadow: var(--shadow-strong);
-    margin-top: 1rem;
-  }
-  .modal-close {
-    position: absolute; top: 1.2rem; right: 1.4rem;
-    background: none; border: none; cursor: pointer;
-    font-size: 1.3rem; color: var(--muted); line-height: 1;
-    font-family: var(--font-mono);
-    transition: color 0.15s;
-  }
+  .modal-content { background: var(--parchment); border: 1px solid var(--border-strong); border-radius: 6px; padding: 2rem 2.5rem; max-width: 900px; width: 100%; position: relative; box-shadow: var(--shadow-strong); margin-top: 1rem; }
+  .modal-close { position: absolute; top: 1.2rem; right: 1.4rem; background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--muted); line-height: 1; font-family: var(--font-mono); transition: color .15s; }
   .modal-close:hover { color: var(--ink); }
+  .modal-comment-form { background: var(--parchment-mid); border: 1px solid var(--border); border-radius: 4px; padding: 1.2rem; margin-top: 1.2rem; }
+  .modal-comment-form h3 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; margin-bottom: .85rem; color: var(--ink); }
 
-  /* MODAL COMMENT FORM */
-  .modal-comment-form {
-    background: var(--parchment-mid);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 1.2rem;
-    margin-top: 1.2rem;
-  }
-  .modal-comment-form h3 {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.85rem;
-    color: var(--ink);
-  }
+  /* ── EDIT FAB ───────────────────────────────────────────────────── */
+  .edit-fab { position: fixed; bottom: 2rem; left: 2rem; background: var(--gold); color: white; border: none; padding: .7rem 1.3rem; border-radius: 30px; font-family: var(--font-display); font-size: .95rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 16px rgba(184,134,11,.35); z-index: 200; transition: background .15s, transform .15s; }
+  .edit-fab:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .edit-fab.hidden { display: none; }
 
-  /* ADMIN PANEL */
-  .admin-panel {
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    background: var(--parchment-mid);
+  /* ── EDIT MODAL ─────────────────────────────────────────────────── */
+  .edit-modal-bg { position: fixed; inset: 0; background: rgba(26,18,9,.7); z-index: 500; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; overflow-y: auto; backdrop-filter: blur(4px); }
+  .edit-modal-bg.hidden { display: none; }
+  .edit-modal { background: var(--parchment); border: 1px solid var(--border-strong); border-radius: 6px; padding: 2rem 2.5rem; max-width: 760px; width: 100%; position: relative; box-shadow: var(--shadow-strong); margin-top: 1rem; }
+  .edit-modal h2 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .edit-modal-close { position: absolute; top: 1.2rem; right: 1.4rem; background: none; border: none; cursor: pointer; font-size: 1.3rem; color: var(--muted); line-height: 1; font-family: var(--font-mono); transition: color .15s; }
+  .edit-modal-close:hover { color: var(--ink); }
+
+  /* ── RICH TEXT EDITOR AREA ──────────────────────────────────────── */
+  .richtext-area {
+    width: 100%; min-height: 160px; border: 1px solid var(--border); border-radius: 3px;
+    padding: .6rem .8rem; font-family: var(--font-body); font-size: .95rem; color: var(--ink);
+    resize: vertical; outline: none; line-height: 1.65;
+    white-space: pre-wrap; overflow-wrap: break-word;
+    background: white;
   }
+  .richtext-area:focus { border-color: var(--gold); }
+  .richtext-area[contenteditable] { cursor: text; }
+  .richtext-toolbar {
+    display: flex; gap: 4px; padding: 4px 6px;
+    background: var(--parchment-dark); border: 1px solid var(--border);
+    border-bottom: none; border-radius: 3px 3px 0 0;
+    flex-wrap: wrap;
+  }
+  .richtext-toolbar-btn {
+    background: none; border: 1px solid transparent; padding: 3px 8px;
+    border-radius: 3px; cursor: pointer; font-family: var(--font-mono); font-size: .75rem;
+    color: var(--ink-light); transition: all .12s;
+  }
+  .richtext-toolbar-btn:hover { background: white; border-color: var(--border); }
+  .richtext-toolbar-btn.active { background: var(--ink); color: white; }
+  .richtext-toolbar-sep { width: 1px; background: var(--border-strong); margin: 2px 4px; }
+
+  /* ── PAGES EDITOR ─────────────────────────────────────────────────── */
+  .pages-editor { border: 1px solid var(--border-strong); border-radius: 4px; overflow: hidden; margin-bottom: .6rem; }
+  .page-editor-item { border-bottom: 1px solid var(--border); }
+  .page-editor-item:last-child { border-bottom: none; }
+  .page-editor-header { display: flex; align-items: center; justify-content: space-between; padding: .6rem .9rem; background: var(--parchment-dark); cursor: pointer; font-family: var(--font-mono); font-size: .8rem; color: var(--ink-light); user-select: none; }
+  .page-editor-header:hover { background: var(--parchment-mid); }
+  .page-editor-body { display: none; background: white; }
+  .page-editor-body.open { display: block; }
+  .add-page-btn { background: none; border: 1px dashed var(--border-strong); border-radius: 3px; padding: .5rem 1rem; font-family: var(--font-mono); font-size: .8rem; color: var(--muted); cursor: pointer; width: 100%; transition: all .13s; }
+  .add-page-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* ── ADMIN ──────────────────────────────────────────────────────── */
+  .admin-panel { border: 1px solid var(--border-strong); border-radius: 4px; background: var(--parchment-mid); }
   .admin-tabs { display: flex; border-bottom: 1px solid var(--border-strong); }
-  .admin-tab {
-    padding: 0.75rem 1.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    border: none;
-    background: none;
-    cursor: pointer;
-    color: var(--muted);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -1px;
-    transition: all 0.15s;
-  }
+  .admin-tab { padding: .75rem 1.4rem; font-family: var(--font-mono); font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; border: none; background: none; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
   .admin-tab.active { color: var(--ink); border-bottom-color: var(--ink); font-weight: 500; }
   .admin-body { padding: 1.5rem; }
   .form-group { margin-bottom: 1.2rem; }
-  .form-label { display: block; font-size: 0.82rem; font-family: var(--font-mono); color: var(--ink-light); margin-bottom: 0.4rem; letter-spacing: 0.05em; }
-  .form-input, .form-select, .form-textarea {
-    width: 100%;
-    padding: 0.6rem 0.9rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    background: white;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s;
-  }
+  .form-label { display: block; font-size: .82rem; font-family: var(--font-mono); color: var(--ink-light); margin-bottom: .4rem; letter-spacing: .05em; }
+  .form-input, .form-select, .form-textarea { width: 100%; padding: .6rem .9rem; border: 1px solid var(--border-strong); border-radius: 4px; background: white; font-family: var(--font-body); font-size: .95rem; color: var(--ink); outline: none; transition: border-color .2s; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { border-color: var(--gold); }
-  .form-textarea { resize: vertical; min-height: 180px; line-height: 1.65; }
+  .form-textarea { resize: vertical; min-height: 80px; line-height: 1.65; }
   .form-row { display: flex; gap: 1rem; }
   .form-row .form-group { flex: 1; }
-  .btn-danger { background: var(--red); color: white; border: none; padding: 0.55rem 1.1rem; border-radius: 3px; font-family: var(--font-mono); font-size: 0.8rem; cursor: pointer; }
+  .btn-danger { background: var(--red); color: white; border: none; padding: .55rem 1.1rem; border-radius: 3px; font-family: var(--font-mono); font-size: .8rem; cursor: pointer; }
   .btn-danger:hover { background: var(--red-light); }
   .admin-list { list-style: none; }
-  .admin-list li { display: flex; align-items: center; justify-content: space-between; padding: 0.7rem 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .admin-list li { display: flex; align-items: center; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid var(--border); font-size: .9rem; }
   .admin-list li:last-child { border: none; }
   .admin-list-title { font-family: var(--font-display); font-style: italic; font-weight: 700; }
-  .admin-list-date { font-family: var(--font-mono); font-size: 0.73rem; color: var(--muted); }
+  .admin-list-date { font-family: var(--font-mono); font-size: .73rem; color: var(--muted); }
   .admin-list-actions { display: flex; gap: 6px; }
-  .toast {
-    position: fixed; bottom: 2rem; right: 2rem;
-    background: var(--ink); color: var(--parchment);
-    padding: 0.75rem 1.4rem;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    z-index: 9999;
-    transform: translateY(20px); opacity: 0;
-    transition: all 0.3s cubic-bezier(.4,0,.2,1);
-    pointer-events: none;
-    max-width: 320px;
-  }
+  .admin-login { max-width: 420px; margin: 3rem auto; border: 1px solid var(--border-strong); border-radius: 6px; padding: 2rem 2.5rem; background: var(--parchment-mid); box-shadow: var(--shadow); }
+  .admin-login h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.2rem; }
+  .admin-error { color: var(--red); font-size: .85rem; margin-top: .5rem; font-family: var(--font-mono); }
+
+  /* ── SEARCH / STATS ─────────────────────────────────────────────── */
+  .search-bar { display: flex; align-items: center; gap: .75rem; margin-bottom: 1.5rem; background: white; border: 1px solid var(--border-strong); border-radius: 4px; padding: .5rem 1rem; }
+  .search-bar input { flex: 1; border: none; background: none; font-family: var(--font-body); font-size: .95rem; color: var(--ink); outline: none; }
+  .filter-row { display: flex; gap: .5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .filter-btn { padding: .3rem .85rem; border: 1px solid var(--border-strong); border-radius: 2px; background: white; font-family: var(--font-mono); font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; color: var(--muted); transition: all .13s; }
+  .filter-btn.active { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
+  .filter-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px,1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .stat-card { border: 1px solid var(--border); border-radius: 4px; padding: 1rem; background: white; text-align: center; }
+  .stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; color: var(--ink); line-height: 1; }
+  .stat-lbl { font-family: var(--font-mono); font-size: .72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .1em; }
+
+  /* ── TOAST ──────────────────────────────────────────────────────── */
+  .toast { position: fixed; bottom: 2rem; right: 2rem; background: var(--ink); color: var(--parchment); padding: .75rem 1.4rem; border-radius: 4px; font-family: var(--font-mono); font-size: .85rem; z-index: 9999; transform: translateY(20px); opacity: 0; transition: all .3s cubic-bezier(.4,0,.2,1); pointer-events: none; max-width: 320px; }
   .toast.show { opacity: 1; transform: none; }
   .toast.success { border-left: 3px solid #4caf50; }
   .toast.error { border-left: 3px solid var(--red); }
+  .toast.info { border-left: 3px solid var(--gold); }
 
-  /* SEARCH */
-  .search-bar {
-    display: flex; align-items: center; gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    background: white;
-    border: 1px solid var(--border-strong);
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-  }
-  .search-bar input {
-    flex: 1; border: none; background: none;
-    font-family: var(--font-body); font-size: 0.95rem; color: var(--ink);
-    outline: none;
-  }
-  .search-bar-icon { color: var(--muted); font-size: 0.9rem; }
-  .filter-row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
-  .filter-btn {
-    padding: 0.3rem 0.85rem;
-    border: 1px solid var(--border-strong);
-    border-radius: 2px;
-    background: white;
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    color: var(--muted);
-    transition: all 0.13s;
-  }
-  .filter-btn.active { background: var(--ink); color: var(--parchment); border-color: var(--ink); }
-  .filter-btn:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
-
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
-  .stat-card { border: 1px solid var(--border); border-radius: 4px; padding: 1rem; background: white; text-align: center; }
-  .stat-num { font-family: var(--font-display); font-size: 2.2rem; font-weight: 900; color: var(--ink); line-height: 1; }
-  .stat-lbl { font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.1em; }
-
-  /* AUTH */
-  .admin-login {
-    max-width: 420px; margin: 3rem auto;
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    padding: 2rem 2.5rem;
-    background: var(--parchment-mid);
-    box-shadow: var(--shadow);
-  }
-  .admin-login h2 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 1.2rem; }
-  .admin-error { color: var(--red); font-size: 0.85rem; margin-top: 0.5rem; font-family: var(--font-mono); }
-
-  /* NO CONTENT */
-  .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
-  .empty-state p { font-family: var(--font-mono); font-size: 0.85rem; }
-
-  /* FOOTER */
-  footer {
-    border-top: 2px solid var(--ink);
-    margin-top: 3rem;
-    padding: 1.5rem;
-    text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--muted);
-    background: var(--parchment-dark);
-  }
-  footer strong { color: var(--ink); font-weight: 500; }
-
-  .loading-spinner {
-    display: inline-block; width: 18px; height: 18px;
-    border: 2px solid var(--border-strong);
-    border-top-color: var(--ink);
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-    vertical-align: middle;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  /* ── MISC ───────────────────────────────────────────────────────── */
+  .email-hint { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); margin-top: -.4rem; margin-bottom: .5rem; }
   .text-center { text-align: center; }
   .mt-2 { margin-top: 2rem; }
+  .loading-spinner { display: inline-block; width: 18px; height: 18px; border: 2px solid var(--border-strong); border-top-color: var(--ink); border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .empty-state { text-align: center; padding: 3rem; color: var(--muted); }
+  .empty-state p { font-family: var(--font-mono); font-size: .85rem; }
 
-  @keyframes goldPulse {
-    0% { box-shadow: 0 0 0 0 rgba(184,134,11,0.4); }
-    70% { box-shadow: 0 0 0 12px rgba(184,134,11,0); }
-    100% { box-shadow: 0 0 0 0 rgba(184,134,11,0); }
-  }
-  .just-published { animation: goldPulse 1.5s ease; }
+  /* ── JOURNAL DATE LABEL ─────────────────────────────────────────── */
+  .journal-date-label { font-family: var(--font-mono); font-size: .75rem; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; margin-bottom: .5rem; display: flex; align-items: center; gap: 8px; }
+  .journal-date-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* EMAIL HINT */
-  .email-hint {
-    font-family: var(--font-mono);
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-top: -0.4rem;
-    margin-bottom: 0.5rem;
+  footer { border-top: 2px solid var(--ink); margin-top: 3rem; padding: 1.5rem; text-align: center; font-family: var(--font-mono); font-size: .78rem; color: var(--muted); background: var(--parchment-dark); }
+  footer strong { color: var(--ink); font-weight: 500; }
+
+  /* ── SECURITY NOTICE ─────────────────────────────────────────────── */
+  .security-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--font-mono); font-size: .7rem; color: #2e7d32;
+    background: #e8f5e9; border: 1px solid #a5d6a7;
+    padding: 2px 8px; border-radius: 2px;
   }
 </style>
 </head>
 <body>
 
+<!-- RICH TEXT CONTEXT MENU -->
+<div id="rich-ctx-menu">
+  <button class="ctx-item" onclick="rtCmd('bold')"><span class="ctx-icon">𝐁</span><span class="ctx-label">Gras</span><span class="ctx-shortcut">Ctrl+B</span></button>
+  <button class="ctx-item" onclick="rtCmd('italic')"><span class="ctx-icon">𝘐</span><span class="ctx-label">Italique</span><span class="ctx-shortcut">Ctrl+I</span></button>
+  <button class="ctx-item" onclick="rtCmd('highlight')"><span class="ctx-icon">✦</span><span class="ctx-label">Mise en avant</span></button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item" onclick="rtCmd('link')"><span class="ctx-icon">🔗</span><span class="ctx-label">Lien cliquable</span></button>
+  <button class="ctx-item" onclick="rtCmd('spoil')"><span class="ctx-icon">👁</span><span class="ctx-label">Spoil (révélable)</span></button>
+  <div class="ctx-sep"></div>
+  <button class="ctx-item ctx-ai" onclick="rtCmd('spellcheck')"><span class="ctx-icon">✨</span><span class="ctx-label">Corriger les fautes (IA)</span></button>
+</div>
+
 <!-- SETUP OVERLAY -->
 <div id="setup-overlay">
   <div class="setup-card">
     <h2>⚙️ Configuration initiale</h2>
-    <p><strong>CapNews</strong> utilise <strong>JSONBin.io</strong> comme base de données partagée. Cette étape ne se fait <strong>qu'une seule fois</strong> — vous recevrez ensuite deux valeurs à coller dans le fichier HTML avant de le mettre sur GitHub.</p>
+    <p><strong>CapNews</strong> utilise <strong>JSONBin.io</strong> comme base de données. Le bin sera en mode <strong>privé</strong> — seule votre clé API peut y accéder. ⚠️ Sur un site statique, la clé reste visible dans le code source. Pour une sécurité maximale, utilisez un backend proxy.</p>
     <div class="setup-steps">
-      <div class="step"><span class="step-num">1</span> Créez un compte gratuit sur jsonbin.io et copiez votre clé API</div>
-      <div class="step"><span class="step-num">2</span> Remplissez le formulaire ci-dessous et cliquez sur Initialiser</div>
-      <div class="step"><span class="step-num">3</span> Copiez les 2 valeurs affichées dans le fichier HTML, puis commitez sur GitHub</div>
+      <div class="step"><span class="step-num">1</span> Créez un compte sur jsonbin.io et copiez votre clé API (Master Key)</div>
+      <div class="step"><span class="step-num">2</span> Remplissez ci-dessous et cliquez Initialiser</div>
+      <div class="step"><span class="step-num">3</span> Copiez les 2 valeurs dans le HTML et commitez sur GitHub</div>
     </div>
     <label>Clé API JSONBin (X-Master-Key)</label>
-    <input type="text" id="setup-api-key" placeholder="$2a$10$...">
+    <input type="password" id="setup-api-key" placeholder="$2a$10$...">
     <label>Mot de passe admin</label>
     <input type="password" id="setup-admin-pw" placeholder="Choisissez un mot de passe sécurisé">
     <br>
     <button class="btn-primary" onclick="initSetup()">Initialiser le site →</button>
     <div id="setup-error" class="admin-error"></div>
-    <p class="setup-help">Les données seront dans un bin JSONBin public (lisible par tous, modifiable uniquement avec votre clé). <a href="https://jsonbin.io" target="_blank">Créer un compte gratuit</a></p>
+    <p class="setup-help">Le bin JSONBin sera créé en mode <strong>privé</strong>. <a href="https://jsonbin.io" target="_blank">Créer un compte gratuit</a></p>
   </div>
 </div>
 
@@ -1025,12 +449,11 @@
     <div class="masthead-meta" id="date-display">—</div>
     <div class="masthead-meta" id="site-pub-meta">Publication quotidienne · Chargement...</div>
   </div>
-  <div class="masthead-logo" onclick="showPage('home')" id="site-logo">Charg<span>ement...</span></div>
-  <div class="masthead-tagline" id="site-tagline">Chargement de la description... · Édition numérique</div>
+  <div class="masthead-logo" onclick="showPage('home')" id="site-logo">Cap<span>News</span></div>
+  <div class="masthead-tagline" id="site-tagline">Chargement... · Édition numérique</div>
   <hr class="masthead-rule">
 </header>
 
-<!-- NAV -->
 <nav>
   <a href="#" onclick="showPage('home')" id="nav-home" class="active">Accueil</a>
   <span class="nav-sep">·</span>
@@ -1040,7 +463,6 @@
   <button class="nav-admin-btn" onclick="showPage('admin')" id="nav-admin">⚙ Admin</button>
 </nav>
 
-<!-- COUNTDOWN -->
 <div id="countdown-banner">
   <span id="countdown-text">Chargement...</span> <span id="countdown-timer"></span>
 </div>
@@ -1060,18 +482,17 @@
         <div class="book-wrapper" id="book-wrapper">
           <div class="book-reader" id="book-reader"></div>
           <div class="book-nav">
-            <button class="book-nav-btn" id="btn-prev" onclick="bookPrev()">← Page précédente</button>
+            <button class="book-nav-btn" id="btn-prev" onclick="bookPrev()">← Précédente</button>
             <div class="book-progress">
               <div class="progress-dots" id="progress-dots"></div>
               <span id="page-counter"></span>
             </div>
-            <button class="book-nav-btn" id="btn-next" onclick="bookNext()">Page suivante →</button>
+            <button class="book-nav-btn" id="btn-next" onclick="bookNext()">Suivante →</button>
           </div>
         </div>
-
         <aside class="sidebar">
           <div class="sidebar-box">
-            <h3>📊 Vos réactions</h3>
+            <h3>📊 Réactions</h3>
             <div class="ratings-grid">
               <div class="rating-stat">
                 <div class="rating-big" id="avg-stars">—</div>
@@ -1085,15 +506,9 @@
             </div>
             <div id="reaction-bars"></div>
             <div class="user-vote-btns">
-              <button class="vote-btn" onclick="castReaction('positive')" id="vbtn-positive">
-                👍 <span id="vc-positive">0</span>
-              </button>
-              <button class="vote-btn" onclick="castReaction('neutral')" id="vbtn-neutral">
-                🤔 <span id="vc-neutral">0</span>
-              </button>
-              <button class="vote-btn" onclick="castReaction('negative')" id="vbtn-negative">
-                👎 <span id="vc-negative">0</span>
-              </button>
+              <button class="vote-btn" onclick="castReaction('positive')" id="vbtn-positive">👍 <span id="vc-positive">0</span></button>
+              <button class="vote-btn" onclick="castReaction('neutral')" id="vbtn-neutral">🤔 <span id="vc-neutral">0</span></button>
+              <button class="vote-btn" onclick="castReaction('negative')" id="vbtn-negative">👎 <span id="vc-negative">0</span></button>
             </div>
           </div>
           <div class="sidebar-box">
@@ -1101,7 +516,7 @@
             <ul class="admin-list" id="recent-list"></ul>
           </div>
           <div class="sidebar-box">
-            <h3>🏷️ Thèmes du moment</h3>
+            <h3>🏷️ Thèmes</h3>
             <div id="tags-cloud" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
           </div>
         </aside>
@@ -1109,17 +524,18 @@
     </div>
   </section>
 
-  <!-- FAB modifier journal non publié (admin seulement) -->
-  <button class="edit-fab hidden" id="edit-fab" onclick="openEditModal()">✏️ Modifier ce journal</button>
+  <!-- FAB -->
+  <button class="edit-fab hidden" id="edit-fab" onclick="openEditModal()">✏️ Modifier</button>
 
-  <!-- MODAL ÉDITION -->
+  <!-- EDIT MODAL -->
   <div class="edit-modal-bg hidden" id="edit-modal-bg">
     <div class="edit-modal">
       <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
       <h2>✏️ Modifier le journal</h2>
+      <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;">💡 Sélectionnez du texte dans une zone de contenu puis faites <strong>clic droit</strong> pour accéder aux options de mise en forme.</p>
       <div class="form-group">
         <label class="form-label">Titre *</label>
-        <input type="text" class="form-input" id="edit-title">
+        <input type="text" class="form-input richtext-single" id="edit-title">
       </div>
       <div class="form-group">
         <label class="form-label">Accroche</label>
@@ -1134,23 +550,17 @@
         <div class="form-group">
           <label class="form-label">Catégorie</label>
           <select class="form-select" id="edit-category">
-            <option value="Réflexion">Réflexion</option>
-            <option value="Actualité">Actualité</option>
-            <option value="Culture">Culture</option>
-            <option value="Société">Société</option>
-            <option value="Science">Science</option>
-            <option value="Humour">Humour</option>
-            <option value="Personnel">Personnel</option>
-            <option value="Autre">Autre</option>
+            <option value="Réflexion">Réflexion</option><option value="Actualité">Actualité</option>
+            <option value="Culture">Culture</option><option value="Société">Société</option>
+            <option value="Science">Science</option><option value="Humour">Humour</option>
+            <option value="Personnel">Personnel</option><option value="Autre">Autre</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">Humeur</label>
           <select class="form-select" id="edit-mood">
-            <option value="positive">😊 Optimiste</option>
-            <option value="neutral">😐 Neutre</option>
-            <option value="melancholic">🌧️ Mélancolique</option>
-            <option value="energetic">⚡ Énergique</option>
+            <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
+            <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
             <option value="pensive">🤔 Pensif</option>
           </select>
         </div>
@@ -1173,9 +583,9 @@
           <input type="date" class="form-input" id="edit-date">
         </div>
       </div>
-      <div style="display:flex;gap:1rem;margin-top:0.5rem;">
+      <div style="display:flex;gap:1rem;margin-top:.5rem;">
         <button class="btn-primary" onclick="saveEditJournal()">Sauvegarder →</button>
-        <button onclick="closeEditModal()" style="background:none;border:1px solid var(--border-strong);padding:0.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-mono);font-size:0.85rem;">Annuler</button>
+        <button onclick="closeEditModal()" style="background:none;border:1px solid var(--border-strong);padding:.6rem 1.2rem;border-radius:3px;cursor:pointer;font-family:var(--font-mono);font-size:.85rem;">Annuler</button>
       </div>
     </div>
   </div>
@@ -1183,11 +593,11 @@
   <!-- HISTORY -->
   <section class="page-section" id="page-history">
     <div style="margin-bottom:1.5rem;">
-      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:900;margin-bottom:0.25rem;">Archives</h1>
-      <p style="color:var(--muted);font-size:0.9rem;">Tous les journaux publiés, dans l'ordre chronologique inverse.</p>
+      <h1 style="font-family:var(--font-display);font-size:2rem;font-weight:900;margin-bottom:.25rem;">Archives</h1>
+      <p style="color:var(--muted);font-size:.9rem;">Tous les journaux publiés.</p>
     </div>
     <div class="search-bar">
-      <span class="search-bar-icon">🔍</span>
+      <span style="color:var(--muted);">🔍</span>
       <input type="text" id="search-input" placeholder="Rechercher dans les archives..." oninput="filterHistory()">
     </div>
     <div class="filter-row" id="cat-filters"></div>
@@ -1202,17 +612,18 @@
     <div style="max-width:680px;margin:2rem auto;">
       <h1 style="font-family:var(--font-display);font-size:2.5rem;font-weight:900;font-style:italic;margin-bottom:1.5rem;" id="about-title">À propos de CapNews</h1>
       <div style="font-size:1.05rem;line-height:1.85;color:var(--ink-light);">
-        <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);" id="about-tagline-quote">
-          Chaque jour à 18h00, un nouveau regard sur le monde.
-        </p>
-        <p style="margin-bottom:1rem;" id="about-desc">Aucun nom de journal défini.</p>
-        <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à l'heure configurée. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
-        <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
+        <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);" id="about-tagline-quote">Chaque jour à 18h00, un nouveau regard sur le monde.</p>
+        <p style="margin-bottom:1rem;" id="about-desc">Chargement...</p>
+        <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à l'heure configurée.</p>
         <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
         <hr style="border:none;border-top:1px solid var(--border);margin-bottom:2rem;">
         <div style="background:var(--parchment-mid);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;">
-          <p style="font-family:var(--font-mono);font-size:0.82rem;color:var(--muted);margin-bottom:0.5rem;">CRÉATION</p>
-          <p style="font-size:0.9rem;color:var(--ink-light);">Ce site à été programmé par Claude (<a href="https://claude.ai/">Claude</a>). Et modifier ensuite par Capky, le 11 avril 2026.</p>
+          <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);margin-bottom:.5rem;">SÉCURITÉ</p>
+          <p style="font-size:.9rem;color:var(--ink-light);margin-bottom:.5rem;">Les données sont stockées sur JSONBin.io en mode <span class="security-badge">🔒 Privé</span>. Le mot de passe admin est haché avant stockage. Pour une sécurité maximale sur un site public, envisagez un backend proxy pour cacher la clé API.</p>
+        </div>
+        <div style="background:var(--parchment-mid);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;margin-top:1rem;">
+          <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);margin-bottom:.5rem;">CRÉATION</p>
+          <p style="font-size:.9rem;color:var(--ink-light);">Programmé par Claude (<a href="https://claude.ai/">claude.ai</a>). Modifié par Capky, le 11 avril 2026.</p>
         </div>
       </div>
     </div>
@@ -1232,47 +643,42 @@
     <div id="admin-panel" style="display:none;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;">
         <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;">Panel d'administration</h1>
-        <button onclick="adminLogout()" style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted);background:none;border:1px solid var(--border-strong);padding:0.4rem 0.8rem;border-radius:3px;cursor:pointer;">Déconnexion</button>
+        <button onclick="adminLogout()" style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);background:none;border:1px solid var(--border-strong);padding:.4rem .8rem;border-radius:3px;cursor:pointer;">Déconnexion</button>
       </div>
+      <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.25);border-radius:4px;">💡 Dans les zones de texte des pages, sélectionnez du texte puis faites <strong>clic droit</strong> pour accéder à la mise en forme : gras, italique, lien, spoil, mise en avant, correction IA.</p>
       <div class="admin-panel">
         <div class="admin-tabs">
-          <button class="admin-tab active" onclick="switchAdminTab('new')" id="atab-new">✏️ Nouveau journal</button>
-          <button class="admin-tab" onclick="switchAdminTab('manage')" id="atab-manage">📚 Gérer les journaux</button>
+          <button class="admin-tab active" onclick="switchAdminTab('new')" id="atab-new">✏️ Nouveau</button>
+          <button class="admin-tab" onclick="switchAdminTab('manage')" id="atab-manage">📚 Gérer</button>
           <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Modération</button>
           <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
         </div>
         <div class="admin-body">
-          <!-- TAB: New Journal -->
+          <!-- TAB NEW -->
           <div id="atab-body-new">
             <div class="form-group">
               <label class="form-label">Titre du journal *</label>
               <input type="text" class="form-input" id="new-title" placeholder="Un titre percutant...">
             </div>
             <div class="form-group">
-              <label class="form-label">Résumé / accroche (affiché en italique)</label>
+              <label class="form-label">Résumé / accroche</label>
               <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea>
             </div>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label">Catégorie</label>
                 <select class="form-select" id="new-category">
-                  <option value="Réflexion">Réflexion</option>
-                  <option value="Actualité">Actualité</option>
-                  <option value="Culture">Culture</option>
-                  <option value="Société">Société</option>
-                  <option value="Science">Science</option>
-                  <option value="Humour">Humour</option>
-                  <option value="Personnel">Personnel</option>
-                  <option value="Autre">Autre</option>
+                  <option value="Réflexion">Réflexion</option><option value="Actualité">Actualité</option>
+                  <option value="Culture">Culture</option><option value="Société">Société</option>
+                  <option value="Science">Science</option><option value="Humour">Humour</option>
+                  <option value="Personnel">Personnel</option><option value="Autre">Autre</option>
                 </select>
               </div>
               <div class="form-group">
                 <label class="form-label">Humeur du jour</label>
                 <select class="form-select" id="new-mood">
-                  <option value="positive">😊 Optimiste</option>
-                  <option value="neutral">😐 Neutre</option>
-                  <option value="melancholic">🌧️ Mélancolique</option>
-                  <option value="energetic">⚡ Énergique</option>
+                  <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
+                  <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
                   <option value="pensive">🤔 Pensif</option>
                 </select>
               </div>
@@ -1281,62 +687,59 @@
                 <input type="date" class="form-input" id="new-date">
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">Auteur</label>
-              <input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur">
-            </div>
             <div class="form-row">
               <div class="form-group">
-                <label class="form-label">Tags (séparés par des virgules)</label>
+                <label class="form-label">Auteur</label>
+                <input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Tags (séparés par virgules)</label>
                 <input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien, réflexion">
               </div>
               <div class="form-group">
-                <label class="form-label">Temps de lecture (affiché en couverture)</label>
+                <label class="form-label">Temps de lecture</label>
                 <input type="text" class="form-input" id="new-readtime" placeholder="ex: 4 min">
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Pages du journal *</label>
-              <p style="font-size:0.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:0.6rem;">Chaque page correspond à un écran dans le lecteur. Ajoutez autant de pages que nécessaire.</p>
+              <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = un écran dans le lecteur. Clic droit sur la sélection pour la mise en forme.</p>
               <div class="pages-editor" id="new-pages-editor"></div>
               <button class="add-page-btn" onclick="addNewPage()">+ Ajouter une page</button>
             </div>
             <button class="btn-primary" onclick="publishJournal()" id="publish-btn">Enregistrer le journal →</button>
-            <div id="publish-status" style="margin-top:0.75rem;font-family:var(--font-mono);font-size:0.82rem;color:var(--muted);"></div>
+            <div id="publish-status" style="margin-top:.75rem;font-family:var(--font-mono);font-size:.82rem;color:var(--muted);"></div>
           </div>
-
-          <!-- TAB: Manage -->
+          <!-- TAB MANAGE -->
           <div id="atab-body-manage" style="display:none;">
             <div id="manage-list-loading" class="text-center"><div class="loading-spinner"></div></div>
             <ul class="admin-list" id="manage-list"></ul>
           </div>
-
-          <!-- TAB: Moderation -->
+          <!-- TAB MODERATION -->
           <div id="atab-body-moderation" style="display:none;">
-            <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents — vous pouvez les supprimer ou y répondre directement.</p>
+            <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents — vous pouvez les supprimer ou y répondre.</p>
             <ul class="admin-list" id="mod-list" style="display:flex;flex-direction:column;gap:0;"></ul>
-            <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis à modérer.</p></div>
+            <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis.</p></div>
           </div>
-
-          <!-- TAB: Settings -->
+          <!-- TAB SETTINGS -->
           <div id="atab-body-settings" style="display:none;">
             <div class="form-group">
               <label class="form-label">Nom du site</label>
-              <input type="text" class="form-input" id="setting-sitename" placeholder="Le Journal du Soir">
+              <input type="text" class="form-input" id="setting-sitename" placeholder="CapNews">
             </div>
             <div class="form-group">
               <label class="form-label">Tagline / sous-titre</label>
-              <input type="text" class="form-input" id="setting-tagline" placeholder="Réflexions du quotidien">
+              <input type="text" class="form-input" id="setting-tagline">
             </div>
             <div class="form-group">
-              <label class="form-label">Heure de publication (format 24h)</label>
+              <label class="form-label">Heure de publication (0-23)</label>
               <input type="number" class="form-input" id="setting-hour" min="0" max="23" value="18">
             </div>
             <div class="form-group">
-              <label class="form-label">Changer le mot de passe admin</label>
-              <input type="password" class="form-input" id="setting-newpw" placeholder="Nouveau mot de passe (laisser vide = pas de changement)">
+              <label class="form-label">Nouveau mot de passe admin</label>
+              <input type="password" class="form-input" id="setting-newpw" placeholder="Laisser vide = pas de changement">
             </div>
-            <button class="btn-primary" onclick="saveSettings()">Sauvegarder les paramètres →</button>
+            <button class="btn-primary" onclick="saveSettings()">Sauvegarder →</button>
           </div>
         </div>
       </div>
@@ -1344,34 +747,51 @@
   </section>
 </main>
 
-<!-- JOURNAL MODAL (archives) -->
+<!-- MODAL ARCHIVES (book reader version) -->
 <div class="modal-bg hidden" id="journal-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="journal-date-label" id="modal-date">—</div>
-    <h1 class="journal-title" id="modal-title">—</h1>
-    <div class="journal-meta-chips" id="modal-chips"></div>
-    <div class="journal-excerpt" id="modal-excerpt"></div>
-    <div class="journal-body" id="modal-body"></div>
-
-    <!-- RATING + REACTION IN MODAL -->
-    <div id="modal-reactions-section" style="margin-top:1.5rem;padding:1rem;background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;">
-      <p style="font-family:var(--font-mono);font-size:0.75rem;color:var(--muted);margin-bottom:0.6rem;letter-spacing:0.1em;text-transform:uppercase;">Votre réaction</p>
-      <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+    <!-- Book reader inside modal -->
+    <div id="modal-book-wrapper">
+      <div class="book-reader" id="modal-book-reader" style="min-height:480px;border-radius:4px;"></div>
+      <div class="book-nav">
+        <button class="book-nav-btn" id="modal-btn-prev" onclick="modalBookPrev()">← Précédente</button>
+        <div class="book-progress">
+          <div class="progress-dots" id="modal-progress-dots"></div>
+          <span id="modal-page-counter"></span>
+        </div>
+        <button class="book-nav-btn" id="modal-btn-next" onclick="modalBookNext()">Suivante →</button>
+      </div>
+    </div>
+    <!-- Reactions -->
+    <div style="margin-top:1.5rem;padding:1rem;background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;">
+      <p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:.5rem;letter-spacing:.1em;text-transform:uppercase;">Votre réaction</p>
+      <div class="ratings-grid" style="margin-bottom:.6rem;">
+        <div class="rating-stat">
+          <div class="rating-big" id="modal-avg-stars">—</div>
+          <div class="stars-display" id="modal-avg-stars-visual"></div>
+          <div class="rating-label">Note moyenne</div>
+        </div>
+        <div class="rating-stat">
+          <div class="rating-big" id="modal-total-comments">0</div>
+          <div class="rating-label">Avis</div>
+        </div>
+      </div>
+      <div id="modal-reaction-bars"></div>
+      <div class="user-vote-btns">
         <button class="vote-btn" id="modal-vbtn-positive" onclick="castModalReaction('positive')">👍 <span id="modal-vc-positive">0</span></button>
         <button class="vote-btn" id="modal-vbtn-neutral" onclick="castModalReaction('neutral')">🤔 <span id="modal-vc-neutral">0</span></button>
         <button class="vote-btn" id="modal-vbtn-negative" onclick="castModalReaction('negative')">👎 <span id="modal-vc-negative">0</span></button>
       </div>
     </div>
-
-    <!-- COMMENT FORM IN MODAL -->
+    <!-- Comment form -->
     <div class="modal-comment-form">
       <h3>💬 Laisser un avis</h3>
       <div class="comment-form-row">
         <input type="text" id="modal-comment-name" placeholder="Votre prénom *">
         <input type="email" id="modal-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
       </div>
-      <p class="email-hint">L'email reste privé et n'est jamais affiché. Laissez vide si vous préférez.</p>
+      <p class="email-hint">L'email reste privé et n'est jamais affiché.</p>
       <div class="star-picker" id="modal-star-picker">
         <label>Note :</label>
         <span class="star-pick" data-v="1" onclick="setModalCommentRating(1)">★</span>
@@ -1380,13 +800,12 @@
         <span class="star-pick" data-v="4" onclick="setModalCommentRating(4)">★</span>
         <span class="star-pick" data-v="5" onclick="setModalCommentRating(5)">★</span>
       </div>
-      <textarea id="modal-comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:0.6rem 0.85rem;font-family:var(--font-body);font-size:0.95rem;resize:vertical;outline:none;"></textarea>
+      <textarea id="modal-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;"></textarea>
       <br><br>
       <button class="comment-submit" onclick="submitModalComment()">Publier mon avis →</button>
     </div>
-
     <div style="margin-top:1.5rem;border-top:1px solid var(--border);padding-top:1rem;">
-      <p style="font-family:var(--font-mono);font-size:0.78rem;color:var(--muted);margin-bottom:1rem;">AVIS DES LECTEURS</p>
+      <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:1rem;">AVIS DES LECTEURS</p>
       <div class="comment-list" id="modal-comments"></div>
     </div>
   </div>
@@ -1395,40 +814,41 @@
 <div class="toast" id="toast"></div>
 
 <footer>
-  <strong id="footer-name">Chargement...</strong> · <span id="footer-tagline">Publication quotidienne à [chargement...]</span> · Propulsé par JSONBin.io
+  <strong id="footer-name">CapNews</strong> · <span id="footer-tagline">Publication quotidienne</span> · Propulsé par JSONBin.io <span class="security-badge" style="margin-left:8px;">🔒 Privé</span>
 </footer>
 
 <script>
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// CONFIGURATION — à remplir après le premier setup, puis commit sur GitHub
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const JSONBIN_API_KEY = '$2a$10$nN9jN1jyWogDNwpAqtYMeuJypQo6xdSO1sC3CwmxhqjuAr7f3TDfG'
-const JSONBIN_BIN_ID = '69da02ba856a6821892058e3'
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// CONFIG — remplir après setup, puis commit GitHub
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const JSONBIN_API_KEY = '$2a$10$nN9jN1jyWogDNwpAqtYMeuJypQo6xdSO1sC3CwmxhqjuAr7f3TDfG';
+const JSONBIN_BIN_ID  = '69da02ba856a6821892058e3';
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+// ─── ÉTAT GLOBAL ─────────────────────────────────────────────
 let cfg = null;
 let db = { journals: [], comments: [], settings: {}, reactions: {} };
 let isAdmin = false;
 let currentJournalId = null;
 let modalJournalId = null;
+let currentPage = 0;
+let bookPages = [];
+let modalCurrentPage = 0;
+let modalBookPages = [];
 let commentRating = 0;
 let modalCommentRating = 0;
 let userReactions = {};
 let allCategories = new Set();
 let activeFilter = 'all';
+let swipeStartX = 0;
+let activeRichTarget = null; // element currently focused for rich text
+let savedRange = null; // saved selection for context menu actions
 
-// ─── EMAIL VALIDATION ─────────────────────────────────────────────────
-function isValidEmail(email) {
-  if (!email || email.trim() === '') return true; // email is optional
-  // Basic but solid regex for email validation
-  const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-  return re.test(email.trim());
-}
-
-// ─── INIT ────────────────────────────────────────────────────────────
+// ─── INIT ─────────────────────────────────────────────────────
 window.onload = async () => {
   updateDateDisplay();
   startCountdown();
+  setupContextMenu();
   if (JSONBIN_API_KEY && JSONBIN_BIN_ID) {
     cfg = { apiKey: JSONBIN_API_KEY, binId: JSONBIN_BIN_ID };
     document.getElementById('setup-overlay').classList.add('hidden');
@@ -1436,17 +856,41 @@ window.onload = async () => {
     applyBranding();
     renderHome();
   } else {
-    showSetup();
+    document.getElementById('setup-overlay').classList.remove('hidden');
   }
 };
 
-function showSetup() {
-  document.getElementById('setup-overlay').classList.remove('hidden');
+// ─── DB ──────────────────────────────────────────────────────
+async function loadDB() {
+  try {
+    const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId + '/latest', {
+      headers: { 'X-Master-Key': cfg.apiKey }
+    });
+    if (!res.ok) throw new Error('Erreur ' + res.status);
+    const data = await res.json();
+    db = data.record;
+    if (!db.journals)  db.journals  = [];
+    if (!db.comments)  db.comments  = [];
+    if (!db.reactions) db.reactions = {};
+    if (!db.settings)  db.settings  = {};
+    userReactions = JSON.parse(localStorage.getItem('capnews_reactions') || '{}');
+    return true;
+  } catch(e) { showToast('Erreur de connexion : ' + e.message, 'error'); return false; }
+}
+
+async function saveDB() {
+  const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': cfg.apiKey },
+    body: JSON.stringify(db)
+  });
+  if (!res.ok) throw new Error('Sauvegarde échouée (' + res.status + ')');
+  return true;
 }
 
 async function initSetup() {
   const key = document.getElementById('setup-api-key').value.trim();
-  const pw = document.getElementById('setup-admin-pw').value.trim();
+  const pw  = document.getElementById('setup-admin-pw').value.trim();
   const err = document.getElementById('setup-error');
   if (!key || !pw) { err.textContent = 'Veuillez remplir tous les champs.'; return; }
   err.textContent = 'Création de la base de données...';
@@ -1457,7 +901,12 @@ async function initSetup() {
     };
     const res = await fetch('https://api.jsonbin.io/v3/b', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'X-Master-Key': key, 'X-Bin-Name': 'capnews', 'X-Bin-Private': 'false' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': key,
+        'X-Bin-Name': 'capnews',
+        'X-Bin-Private': 'true'   // ← BIN PRIVÉ
+      },
       body: JSON.stringify(initData)
     });
     if (!res.ok) throw new Error('Clé API invalide ou erreur réseau');
@@ -1465,55 +914,19 @@ async function initSetup() {
     const binId = data.metadata.id;
     err.style.color = 'var(--gold)';
     err.innerHTML =
-      '<strong style="color:var(--ink);display:block;margin-bottom:0.5rem;">✅ Base créée ! Copiez ces valeurs dans votre fichier HTML :</strong>' +
-      '<code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;margin-bottom:0.4rem;word-break:break-all;">JSONBIN_API_KEY = \'<b>' + key + '</b>\'</code>' +
-      '<code style="display:block;background:#f5f5f0;padding:0.5rem;border-radius:3px;font-size:0.8rem;word-break:break-all;">JSONBIN_BIN_ID = \'<b>' + binId + '</b>\'</code>' +
-      '<span style="display:block;margin-top:0.75rem;font-size:0.8rem;color:var(--muted);">Ouvrez le fichier HTML, remplacez les deux constantes en haut du script, puis commitez sur GitHub.</span>';
+      '<strong style="color:var(--ink);display:block;margin-bottom:.5rem;">✅ Base créée (mode privé) ! Copiez ces valeurs dans le HTML :</strong>' +
+      '<code style="display:block;background:#f5f5f0;padding:.5rem;border-radius:3px;font-size:.8rem;margin-bottom:.4rem;word-break:break-all;">JSONBIN_API_KEY = \'<b>' + key + '</b>\'</code>' +
+      '<code style="display:block;background:#f5f5f0;padding:.5rem;border-radius:3px;font-size:.8rem;word-break:break-all;">JSONBIN_BIN_ID = \'<b>' + binId + '</b>\'</code>' +
+      '<span style="display:block;margin-top:.75rem;font-size:.8rem;color:var(--muted);">⚠️ Sur un site statique, la clé reste visible dans le code source. Pour cacher la clé, utilisez un backend/proxy.</span>';
     cfg = { apiKey: key, binId };
-    await loadDB();
-    applyBranding();
-    renderHome();
+    await loadDB(); applyBranding(); renderHome();
   } catch(e) { err.textContent = '❌ ' + e.message; }
 }
 
-// ─── DB ──────────────────────────────────────────────────────────────
-async function loadDB() {
-  try {
-    const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId + '/latest', {
-      headers: { 'X-Master-Key': cfg.apiKey }
-    });
-    if (!res.ok) throw new Error('Erreur de chargement (code ' + res.status + ')');
-    const data = await res.json();
-    db = data.record;
-    if (!db.journals)  db.journals  = [];
-    if (!db.comments)  db.comments  = [];
-    if (!db.reactions) db.reactions = {};
-    if (!db.settings)  db.settings  = {};
-    userReactions = JSON.parse(localStorage.getItem('capnews_reactions') || '{}');
-    return true;
-  } catch(e) { console.error(e); showToast('Erreur de connexion : ' + e.message, 'error'); return false; }
-}
-
-async function saveDB() {
-  const res = await fetch('https://api.jsonbin.io/v3/b/' + cfg.binId, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Master-Key': cfg.apiKey
-    },
-    body: JSON.stringify(db)
-  });
-  if (!res.ok) {
-    const txt = await res.text().catch(function() { return String(res.status); });
-    throw new Error('Sauvegarde échouée : ' + txt);
-  }
-  return true;
-}
-
-// ─── NAVIGATION ──────────────────────────────────────────────────────
+// ─── NAVIGATION ──────────────────────────────────────────────
 function showPage(page) {
-  document.querySelectorAll('.page-section').forEach(function(s) { s.classList.remove('active'); });
-  document.querySelectorAll('nav a').forEach(function(a) { a.classList.remove('active'); });
+  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
   document.getElementById('page-' + page).classList.add('active');
   const navEl = document.getElementById('nav-' + page);
   if (navEl) navEl.classList.add('active');
@@ -1521,491 +934,590 @@ function showPage(page) {
   if (page === 'admin') renderAdmin();
 }
 
-// ─── TODAY CHECK ─────────────────────────────────────────────────────
-function getTodayStr() {
-  return new Date().toISOString().split('T')[0];
-}
-
-function getPubHour() {
-  return db.settings.pubHour ?? 18;
-}
-
-function isPublished(journal) {
-  const today = getTodayStr();
-  const now = new Date();
-  if (journal.date < today) return true;
-  if (journal.date === today && now.getHours() >= getPubHour()) return true;
+// ─── UTILS ────────────────────────────────────────────────────
+function getTodayStr() { return new Date().toISOString().split('T')[0]; }
+function getPubHour() { return db.settings.pubHour ?? 18; }
+function isPublished(j) {
+  const today = getTodayStr(), now = new Date();
+  if (j.date < today) return true;
+  if (j.date === today && now.getHours() >= getPubHour()) return true;
   return false;
 }
-
 function getTodayJournal() {
   const today = getTodayStr();
-  return db.journals.find(function(j) { return j.date === today; }) || null;
+  return db.journals.find(j => j.date === today) || null;
 }
-
-// ─── BOOK READER ─────────────────────────────────────────────────────
-let currentPage = 0;
-let bookPages = [];
-let swipeStartX = 0;
-
 function getPages(j) {
   if (j.pages && Array.isArray(j.pages) && j.pages.length) return j.pages;
   if (j.body) return [j.body];
   return [''];
 }
+function pad(n) { return String(n).padStart(2,'0'); }
+function simpleHash(str) {
+  let hash = 5381;
+  for (let i = 0; i < str.length; i++) hash = ((hash << 5) + hash) + str.charCodeAt(i);
+  return (hash >>> 0).toString(36);
+}
+function isValidEmail(email) {
+  if (!email || email.trim() === '') return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
+}
+function escHtml(str) {
+  return String(str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function formatDateFr(dateStr) {
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+}
+function timeSince(iso) {
+  const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
+  if (diff < 60) return 'à l\'instant';
+  if (diff < 3600) return 'il y a ' + Math.floor(diff/60) + ' min';
+  if (diff < 86400) return 'il y a ' + Math.floor(diff/3600) + 'h';
+  if (diff < 604800) return 'il y a ' + Math.floor(diff/86400) + ' j';
+  return new Date(iso).toLocaleDateString('fr-FR');
+}
+function moodClass(m) { return m==='positive'||m==='energetic'?'mood-good':m==='melancholic'?'mood-bad':'mood-neutral'; }
+function moodLabel(m) { return {positive:'😊 Optimiste',neutral:'😐 Neutre',melancholic:'🌧️ Mélancolique',energetic:'⚡ Énergique',pensive:'🤔 Pensif'}[m]||m; }
 
-function renderBook(j, dir) {
-  bookPages = getPages(j);
-  const totalPages = bookPages.length + 2;
-  const reader = document.getElementById('book-reader');
+let toastTimer = null;
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + (type||'');
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+function updateDateDisplay() {
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
+}
+
+// ─── RICH TEXT PARSING / RENDERING ───────────────────────────
+// Format storage: plain text with special markers
+// [b]text[/b]  [i]text[/i]  [hl]text[/hl]
+// [sp]text[/sp]  [a url]text[/a]
+
+function parseRichText(raw) {
+  // Returns HTML string for display
+  let html = escHtml(raw);
+  // Preserve line breaks
+  html = html.replace(/\n/g, '<br>');
+  // Bold
+  html = html.replace(/\[b\]([\s\S]*?)\[\/b\]/g, '<strong>$1</strong>');
+  // Italic
+  html = html.replace(/\[i\]([\s\S]*?)\[\/i\]/g, '<em>$1</em>');
+  // Highlight / mise en avant
+  html = html.replace(/\[hl\]([\s\S]*?)\[\/hl\]/g, '<span class="hl-text">$1</span>');
+  // Spoil
+  html = html.replace(/\[sp\]([\s\S]*?)\[\/sp\]/g, '<span class="spoil-block" onclick="this.classList.add(\'revealed\')" title="Cliquer pour révéler">$1</span>');
+  // Link
+  html = html.replace(/\[a ([^\]]+)\]([\s\S]*?)\[\/a\]/g, '<a href="$1" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">$2</a>');
+  return html;
+}
+
+function stripRichTags(raw) {
+  // Returns plain text for excerpts/previews
+  return raw
+    .replace(/\[b\]([\s\S]*?)\[\/b\]/g,'$1')
+    .replace(/\[i\]([\s\S]*?)\[\/i\]/g,'$1')
+    .replace(/\[hl\]([\s\S]*?)\[\/hl\]/g,'$1')
+    .replace(/\[sp\]([\s\S]*?)\[\/sp\]/g,'$1')
+    .replace(/\[a [^\]]+\]([\s\S]*?)\[\/a\]/g,'$1');
+}
+
+// ─── RICH TEXT EDITOR ─────────────────────────────────────────
+function buildRichEditor(text, idx, editorId) {
+  const wrapper = document.createElement('div');
+  // Toolbar
+  const toolbar = document.createElement('div');
+  toolbar.className = 'richtext-toolbar';
+  toolbar.innerHTML = `
+    <button class="richtext-toolbar-btn" title="Gras" onclick="editorCmd(this,'bold')"><strong>B</strong></button>
+    <button class="richtext-toolbar-btn" title="Italique" onclick="editorCmd(this,'italic')"><em>I</em></button>
+    <div class="richtext-toolbar-sep"></div>
+    <button class="richtext-toolbar-btn" title="Mise en avant" onclick="editorCmd(this,'highlight')">✦</button>
+    <button class="richtext-toolbar-btn" title="Spoil" onclick="editorCmd(this,'spoil')">👁</button>
+    <button class="richtext-toolbar-btn" title="Lien" onclick="editorCmd(this,'link')">🔗</button>
+    <div class="richtext-toolbar-sep"></div>
+    <button class="richtext-toolbar-btn ctx-ai" title="Corriger (IA)" onclick="editorCmd(this,'spellcheck')" style="color:var(--gold);">✨ Corriger</button>
+  `;
+  // Textarea (stocke le format [b]...[/b])
+  const ta = document.createElement('textarea');
+  ta.className = 'richtext-area';
+  ta.value = text || '';
+  ta.setAttribute('data-page-idx', idx);
+  ta.setAttribute('data-editor-id', editorId);
+  ta.addEventListener('focus', () => { activeRichTarget = ta; });
+  ta.addEventListener('contextmenu', (e) => {
+    const sel = window.getSelection ? window.getSelection().toString() : '';
+    if (!sel && ta.selectionStart === ta.selectionEnd) return;
+    activeRichTarget = ta;
+    e.preventDefault();
+    showCtxMenu(e.clientX, e.clientY);
+  });
+  wrapper.appendChild(toolbar);
+  wrapper.appendChild(ta);
+  return wrapper;
+}
+
+function editorCmd(btn, cmd) {
+  // Find the textarea in the same page-editor-body
+  const body = btn.closest('.page-editor-body') || btn.closest('.edit-modal');
+  const ta = body ? body.querySelector('.richtext-area') : null;
+  if (!ta) return;
+  activeRichTarget = ta;
+  applyRichCmd(cmd, ta);
+}
+
+function applyRichCmd(cmd, ta) {
+  if (!ta) ta = activeRichTarget;
+  if (!ta) return;
+  const start = ta.selectionStart, end = ta.selectionEnd;
+  const sel = ta.value.substring(start, end);
+  if (!sel && cmd !== 'spellcheck') { showToast('Sélectionnez d\'abord du texte.', 'info'); return; }
+
+  let replacement = '';
+  if (cmd === 'bold') replacement = '[b]' + sel + '[/b]';
+  else if (cmd === 'italic') replacement = '[i]' + sel + '[/i]';
+  else if (cmd === 'highlight') replacement = '[hl]' + sel + '[/hl]';
+  else if (cmd === 'spoil') replacement = '[sp]' + sel + '[/sp]';
+  else if (cmd === 'link') {
+    const url = prompt('URL du lien :', 'https://');
+    if (!url) return;
+    replacement = '[a ' + url + ']' + sel + '[/a]';
+  } else if (cmd === 'spellcheck') {
+    const text = sel || ta.value;
+    aiSpellcheck(ta, text, start, end);
+    return;
+  }
+
+  ta.value = ta.value.substring(0, start) + replacement + ta.value.substring(end);
+  ta.selectionStart = start;
+  ta.selectionEnd = start + replacement.length;
+  ta.focus();
+  hideCtxMenu();
+}
+
+async function aiSpellcheck(ta, text, start, end) {
+  showToast('Correction en cours...', 'info');
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{
+          role: 'user',
+          content: 'Corrige uniquement les fautes d\'orthographe et de grammaire dans ce texte français. Garde exactement le même style, la même structure et les mêmes balises de mise en forme (comme [b], [i], [sp], [hl], [a url]). Ne reformule pas, ne change pas le contenu. Retourne UNIQUEMENT le texte corrigé, sans explication ni guillemets.\n\nTexte:\n' + text
+        }]
+      })
+    });
+    const data = await res.json();
+    const corrected = data.content && data.content[0] && data.content[0].text ? data.content[0].text.trim() : null;
+    if (!corrected) { showToast('Correction échouée.', 'error'); return; }
+    const selAll = (!start && end === ta.value.length) || (start === 0 && end === text.length);
+    if (selAll || start === end) {
+      ta.value = corrected;
+    } else {
+      ta.value = ta.value.substring(0, start) + corrected + ta.value.substring(end);
+    }
+    ta.focus();
+    showToast('✅ Texte corrigé !', 'success');
+  } catch(e) { showToast('Erreur IA : ' + e.message, 'error'); }
+  hideCtxMenu();
+}
+
+// ─── CONTEXT MENU ─────────────────────────────────────────────
+function setupContextMenu() {
+  document.addEventListener('click', hideCtxMenu);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') hideCtxMenu(); });
+}
+
+function showCtxMenu(x, y) {
+  const menu = document.getElementById('rich-ctx-menu');
+  menu.classList.add('visible');
+  // Position with boundary check
+  const mw = menu.offsetWidth || 210, mh = menu.offsetHeight || 220;
+  let px = x, py = y;
+  if (px + mw > window.innerWidth) px = x - mw;
+  if (py + mh > window.innerHeight) py = y - mh;
+  menu.style.left = px + 'px';
+  menu.style.top  = py + 'px';
+}
+
+function hideCtxMenu() {
+  document.getElementById('rich-ctx-menu').classList.remove('visible');
+}
+
+function rtCmd(cmd) {
+  applyRichCmd(cmd, activeRichTarget);
+}
+
+// ─── GLOBAL CONTEXTMENU on richtext-area ──────────────────────
+document.addEventListener('contextmenu', function(e) {
+  const ta = e.target.closest('.richtext-area');
+  if (!ta) return;
+  e.preventDefault();
+  activeRichTarget = ta;
+  showCtxMenu(e.clientX, e.clientY);
+});
+
+// ─── BOOK READER (home) ───────────────────────────────────────
+function buildBookPages(j, readerId, prevId, nextId, dotsId, counterId, navClickPrev, navClickNext, getPage, setPage) {
+  // Generic book renderer
+  const pages = getPages(j);
+  const totalPages = pages.length + 2;
+  const reader = document.getElementById(readerId);
   reader.innerHTML = '';
+  const cp = getPage();
 
-  // ── COUVERTURE ──────────────────────────────────────────────────
+  // COVER
   const cover = document.createElement('div');
-  cover.className = 'book-page cover-page' + (currentPage === 0 ? ' active' : '');
+  cover.className = 'book-page cover-page' + (cp===0?' active':'');
   cover.dataset.idx = '0';
-
   let chipsHtml = '';
   if (j.category) chipsHtml += '<span class="chip cat">' + escHtml(j.category) + '</span>';
-  if (j.mood)     chipsHtml += '<span class="chip ' + moodClass(j.mood) + '">' + moodLabel(j.mood) + '</span>';
-  if (j.author)   chipsHtml += '<span class="chip">✒ ' + escHtml(j.author) + '</span>';
-  const readtime = j.readTime ? '<div class="cover-readtime">Temps de lecture : ' + escHtml(j.readTime) + '</div>' : '';
-  const excerptHtml = j.excerpt ? '<div class="cover-excerpt">' + escHtml(j.excerpt) + '</div>' : '';
-
+  if (j.mood) chipsHtml += '<span class="chip ' + moodClass(j.mood) + '">' + moodLabel(j.mood) + '</span>';
+  if (j.author) chipsHtml += '<span class="chip">✒ ' + escHtml(j.author) + '</span>';
+  const rt = j.readTime ? '<div class="cover-readtime">Temps de lecture : ' + escHtml(j.readTime) + '</div>' : '';
+  const exc = j.excerpt ? '<div class="cover-excerpt">' + parseRichText(j.excerpt) + '</div>' : '';
   cover.innerHTML =
-    '<div class="cover-edition">' + escHtml((db.settings.siteName || 'CapNews').toUpperCase()) + ' · ' + formatDateFr(j.date) + '</div>' +
+    '<div class="cover-edition">' + escHtml((db.settings.siteName||'CapNews').toUpperCase()) + ' · ' + formatDateFr(j.date) + '</div>' +
     '<div class="cover-title">' + escHtml(j.title) + '</div>' +
-    excerptHtml +
-    '<div class="cover-meta">' + chipsHtml + '</div>' +
-    readtime +
-    '<button class="cover-start-btn" onclick="bookNext()">Lire le journal →</button>' +
+    exc + '<div class="cover-meta">' + chipsHtml + '</div>' + rt +
+    '<button class="cover-start-btn" onclick="(' + navClickNext + ')()">Lire le journal →</button>' +
     '<span class="cover-page-num">Couverture</span>';
   reader.appendChild(cover);
 
-  // ── PAGES DE CONTENU ────────────────────────────────────────────
-  bookPages.forEach(function(pageText, i) {
+  // CONTENT PAGES
+  pages.forEach((pageText, i) => {
     const pg = document.createElement('div');
-    pg.className = 'book-page' + (currentPage === i + 1 ? ' active' : '');
-    pg.dataset.idx = String(i + 1);
-    const isFirst = i === 0;
+    pg.className = 'book-page' + (cp===i+1?' active':'');
+    pg.dataset.idx = String(i+1);
     pg.innerHTML =
-      '<div class="page-body-text' + (isFirst ? ' page-drop-cap' : '') + '">' + escHtml(pageText) + '</div>' +
-      '<span class="cover-page-num">Page ' + (i + 1) + ' / ' + bookPages.length + '</span>';
+      '<div class="page-body-text' + (i===0?' page-drop-cap':'') + '">' + parseRichText(pageText) + '</div>' +
+      '<span class="cover-page-num">Page ' + (i+1) + ' / ' + pages.length + '</span>';
     reader.appendChild(pg);
   });
 
-  // ── PAGE RÉACTIONS / AVIS ────────────────────────────────────────
-  const lastPg = document.createElement('div');
-  lastPg.className = 'book-page reactions-page' + (currentPage === totalPages - 1 ? ' active' : '');
-  lastPg.dataset.idx = String(totalPages - 1);
-  lastPg.innerHTML =
-    '<h2>Avis des lecteurs</h2>' +
-    '<div class="comment-form">' +
-      '<div class="comment-form-row">' +
-        '<input type="text" id="comment-name" placeholder="Votre prénom *">' +
-        '<input type="email" id="comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">' +
-      '</div>' +
-      '<p class="email-hint">L\'email reste privé et n\'est jamais affiché. Laissez vide si vous préférez.</p>' +
-      '<div class="star-picker">' +
-        '<label>Note :</label>' +
-        '<span class="star-pick" data-v="1" onclick="setCommentRating(1)">★</span>' +
-        '<span class="star-pick" data-v="2" onclick="setCommentRating(2)">★</span>' +
-        '<span class="star-pick" data-v="3" onclick="setCommentRating(3)">★</span>' +
-        '<span class="star-pick" data-v="4" onclick="setCommentRating(4)">★</span>' +
-        '<span class="star-pick" data-v="5" onclick="setCommentRating(5)">★</span>' +
-      '</div>' +
-      '<textarea id="comment-text" placeholder="Partagez votre avis sur ce journal..." rows="3"></textarea>' +
-      '<br><br>' +
-      '<button class="comment-submit" onclick="submitComment()">Publier mon avis →</button>' +
-    '</div>' +
-    '<div class="comment-list" id="comment-list" style="margin-top:1rem;"></div>' +
-    '<span class="cover-page-num">Fin · ' + (bookPages.length + 1) + ' / ' + (bookPages.length + 1) + '</span>';
-  reader.appendChild(lastPg);
-
-  // ── SWIPE ────────────────────────────────────────────────────────
-  reader.ontouchstart = function(e) { swipeStartX = e.touches[0].clientX; };
-  reader.ontouchend = function(e) {
-    var dx = e.changedTouches[0].clientX - swipeStartX;
-    if (Math.abs(dx) > 50) { dx < 0 ? bookNext() : bookPrev(); }
-  };
-
-  updateBookNav(totalPages, dir);
-  if (currentPage === totalPages - 1) {
-    renderComments(j.id, 'comment-list');
-  }
-}
-
-function updateBookNav(totalPages, dir) {
-  document.getElementById('btn-prev').disabled = currentPage === 0;
-  document.getElementById('btn-next').disabled = currentPage === totalPages - 1;
-  document.getElementById('page-counter').textContent = (currentPage + 1) + ' / ' + totalPages;
-  const dots = document.getElementById('progress-dots');
+  // READER NAV UPDATE
+  document.getElementById(prevId).disabled = cp === 0;
+  document.getElementById(nextId).disabled = cp === totalPages - 1;
+  document.getElementById(counterId).textContent = (cp+1) + ' / ' + totalPages;
+  const dots = document.getElementById(dotsId);
   dots.innerHTML = '';
   for (let i = 0; i < totalPages; i++) {
     const d = document.createElement('span');
-    d.className = 'progress-dot' + (i === currentPage ? ' active' : '');
-    d.onclick = (function(idx) { return function() { goToPage(idx); }; })(i);
+    d.className = 'progress-dot' + (i===cp?' active':'');
+    d.onclick = () => setPage(i);
     dots.appendChild(d);
   }
+
+  // SWIPE
+  reader.ontouchstart = e => { swipeStartX = e.touches[0].clientX; };
+  reader.ontouchend = e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 50) { dx < 0 ? setPage(cp+1) : setPage(cp-1); }
+  };
 }
 
-function goToPage(idx, dir) {
-  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
+function renderBook(j) {
+  buildBookPages(j,
+    'book-reader','btn-prev','btn-next','progress-dots','page-counter',
+    'bookNext','bookPrev',
+    () => currentPage,
+    (idx) => {
+      const total = getPages(j).length + 2;
+      if (idx < 0 || idx >= total) return;
+      currentPage = idx;
+      renderBook(j);
+    }
+  );
+}
+function bookNext() {
+  const j = db.journals.find(x => x.id === currentJournalId);
+  if (j) { const t = getPages(j).length+2; if (currentPage<t-1){currentPage++;renderBook(j);} }
+}
+function bookPrev() {
+  const j = db.journals.find(x => x.id === currentJournalId);
+  if (j) { if (currentPage>0){currentPage--;renderBook(j);} }
+}
+
+// ─── MODAL BOOK ───────────────────────────────────────────────
+function renderModalBook(j) {
+  const pages = getPages(j);
+  const totalPages = pages.length + 2;
+  const cp = modalCurrentPage;
+  const reader = document.getElementById('modal-book-reader');
+  reader.innerHTML = '';
+
+  // COVER
+  const cover = document.createElement('div');
+  cover.className = 'book-page cover-page' + (cp===0?' active':'');
+  let chipsHtml = '';
+  if (j.category) chipsHtml += '<span class="chip cat">' + escHtml(j.category) + '</span>';
+  if (j.mood) chipsHtml += '<span class="chip ' + moodClass(j.mood) + '">' + moodLabel(j.mood) + '</span>';
+  if (j.author) chipsHtml += '<span class="chip">✒ ' + escHtml(j.author) + '</span>';
+  const rt = j.readTime ? '<div class="cover-readtime">Temps de lecture : ' + escHtml(j.readTime) + '</div>' : '';
+  const exc = j.excerpt ? '<div class="cover-excerpt">' + parseRichText(j.excerpt) + '</div>' : '';
+  cover.innerHTML =
+    '<div class="cover-edition">' + escHtml((db.settings.siteName||'CapNews').toUpperCase()) + ' · ' + formatDateFr(j.date) + '</div>' +
+    '<div class="cover-title">' + escHtml(j.title) + '</div>' +
+    exc + '<div class="cover-meta">' + chipsHtml + '</div>' + rt +
+    '<button class="cover-start-btn" onclick="modalBookNext()">Lire le journal →</button>' +
+    '<span class="cover-page-num">Couverture</span>';
+  reader.appendChild(cover);
+
+  // CONTENT
+  pages.forEach((pageText, i) => {
+    const pg = document.createElement('div');
+    pg.className = 'book-page' + (cp===i+1?' active':'');
+    pg.innerHTML =
+      '<div class="page-body-text' + (i===0?' page-drop-cap':'') + '">' + parseRichText(pageText) + '</div>' +
+      '<span class="cover-page-num">Page ' + (i+1) + ' / ' + pages.length + '</span>';
+    reader.appendChild(pg);
+  });
+
+  // NAV
+  document.getElementById('modal-btn-prev').disabled = cp === 0;
+  document.getElementById('modal-btn-next').disabled = cp === totalPages - 1;
+  document.getElementById('modal-page-counter').textContent = (cp+1) + ' / ' + totalPages;
+  const dots = document.getElementById('modal-progress-dots');
+  dots.innerHTML = '';
+  for (let i = 0; i < totalPages; i++) {
+    const d = document.createElement('span');
+    d.className = 'progress-dot' + (i===cp?' active':'');
+    d.onclick = () => { modalCurrentPage = i; renderModalBook(j); };
+    dots.appendChild(d);
+  }
+
+  // SWIPE
+  reader.ontouchstart = e => { swipeStartX = e.touches[0].clientX; };
+  reader.ontouchend = e => {
+    const dx = e.changedTouches[0].clientX - swipeStartX;
+    if (Math.abs(dx) > 50) {
+      if (dx < 0) modalBookNext(); else modalBookPrev();
+    }
+  };
+}
+function modalBookNext() {
+  const j = db.journals.find(x => x.id === modalJournalId);
   if (!j) return;
-  const totalPages = getPages(j).length + 2;
-  if (idx < 0 || idx >= totalPages) return;
-  currentPage = idx;
-  renderBook(j, dir);
+  const t = getPages(j).length + 2;
+  if (modalCurrentPage < t-1) { modalCurrentPage++; renderModalBook(j); }
+}
+function modalBookPrev() {
+  const j = db.journals.find(x => x.id === modalJournalId);
+  if (!j) return;
+  if (modalCurrentPage > 0) { modalCurrentPage--; renderModalBook(j); }
 }
 
-function bookNext() { goToPage(currentPage + 1, 'right'); }
-function bookPrev() { goToPage(currentPage - 1, 'left'); }
-
-document.addEventListener('keydown', function(e) {
-  if (e.key === 'ArrowRight') bookNext();
-  if (e.key === 'ArrowLeft') bookPrev();
-  if (e.key === 'Escape') { closeModal(); closeEditModal(); }
-});
-
-// ─── HOME ─────────────────────────────────────────────────────────────
+// ─── HOME ─────────────────────────────────────────────────────
 function renderHome() {
   document.getElementById('home-loading').style.display = 'none';
   const j = getTodayJournal();
   const fab = document.getElementById('edit-fab');
-
   if (!j || !isPublished(j)) {
     document.getElementById('home-locked').style.display = 'block';
     document.getElementById('home-content').style.display = 'none';
-    if (isAdmin && j && !isPublished(j)) {
-      currentJournalId = j.id;
-      fab.classList.remove('hidden');
-    } else {
-      fab.classList.add('hidden');
-    }
+    if (isAdmin && j) { currentJournalId = j.id; fab.classList.remove('hidden'); }
+    else fab.classList.add('hidden');
     return;
   }
-
   document.getElementById('home-locked').style.display = 'none';
   document.getElementById('home-content').style.display = 'block';
   currentJournalId = j.id;
   currentPage = 0;
-
-  if (isAdmin && !isPublished(j)) {
-    fab.classList.remove('hidden');
-  } else {
-    fab.classList.add('hidden');
-  }
-
-  renderBook(j, 'right');
+  fab.classList.add('hidden');
+  renderBook(j);
   renderReactions(j.id);
   renderRecentList();
   renderTagsCloud();
 }
 
+// ─── REACTIONS ────────────────────────────────────────────────
+function renderReactionBars(jid, barsId, vcIds, vbtnIds) {
+  const r = db.reactions[jid] || { positive:0, neutral:0, negative:0, stars:[], total:0 };
+  const total = (r.positive||0) + (r.neutral||0) + (r.negative||0);
+  const bars = document.getElementById(barsId);
+  if (bars) {
+    bars.innerHTML = '';
+    [{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(item => {
+      const count = r[item.k]||0, pct = total>0?Math.round((count/total)*100):0;
+      bars.innerHTML += '<div class="vote-row"><span class="vote-emoji">' + item.e + '</span><div class="vote-bar-bg"><div class="vote-bar ' + item.cls + '" style="width:' + pct + '%"></div></div><span class="vote-count">' + count + '</span></div>';
+    });
+  }
+  ['positive','neutral','negative'].forEach(k => {
+    const vcEl = document.getElementById(vcIds[k]);
+    if (vcEl) vcEl.textContent = r[k]||0;
+    const btn = document.getElementById(vbtnIds[k]);
+    if (btn) btn.classList.toggle('active', userReactions[jid]===k);
+  });
+}
+
 function renderReactions(jid) {
-  const r = db.reactions[jid] || { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-  const total = (r.positive || 0) + (r.neutral || 0) + (r.negative || 0);
-  const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : '—';
-
+  const r = db.reactions[jid] || { stars:[] };
+  const stars = r.stars&&r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : '—';
   document.getElementById('avg-stars').textContent = stars;
-  document.getElementById('total-comments').textContent = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.isReply; }).length;
-
+  document.getElementById('total-comments').textContent = (db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;
   const starVis = document.getElementById('avg-stars-visual');
   starVis.innerHTML = '';
-  const sv = parseFloat(stars) || 0;
-  for (let i=1;i<=5;i++) {
-    const s = document.createElement('span');
-    s.className = 'star' + (i <= Math.round(sv) ? ' filled' : '');
-    s.textContent = '★';
-    starVis.appendChild(s);
+  const sv = parseFloat(stars)||0;
+  for (let i=1;i<=5;i++) { const s=document.createElement('span');s.className='star'+(i<=Math.round(sv)?' filled':'');s.textContent='★';starVis.appendChild(s); }
+  renderReactionBars(jid,'reaction-bars',{positive:'vc-positive',neutral:'vc-neutral',negative:'vc-negative'},{positive:'vbtn-positive',neutral:'vbtn-neutral',negative:'vbtn-negative'});
+}
+
+function renderModalReactions(jid) {
+  const r = db.reactions[jid] || { stars:[] };
+  const stars = r.stars&&r.stars.length ? (r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1) : '—';
+  const avgEl = document.getElementById('modal-avg-stars');
+  if (avgEl) avgEl.textContent = stars;
+  const tcEl = document.getElementById('modal-total-comments');
+  if (tcEl) tcEl.textContent = (db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;
+  const starVis = document.getElementById('modal-avg-stars-visual');
+  if (starVis) {
+    starVis.innerHTML = '';
+    const sv = parseFloat(stars)||0;
+    for (let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(sv)?' filled':'');s.textContent='★';starVis.appendChild(s);}
   }
-
-  const bars = document.getElementById('reaction-bars');
-  bars.innerHTML = '';
-  [{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(function(item) {
-    const count = r[item.k] || 0;
-    const pct = total > 0 ? Math.round((count/total)*100) : 0;
-    bars.innerHTML += '<div class="vote-row"><span class="vote-emoji">' + item.e + '</span><div class="vote-bar-bg"><div class="vote-bar ' + item.cls + '" style="width:' + pct + '%"></div></div><span class="vote-count">' + count + '</span></div>';
-  });
-
-  ['positive','neutral','negative'].forEach(function(k) {
-    document.getElementById('vc-' + k).textContent = r[k] || 0;
-    const btn = document.getElementById('vbtn-' + k);
-    btn.classList.toggle('active', userReactions[jid] === k);
-  });
+  renderReactionBars(jid,'modal-reaction-bars',{positive:'modal-vc-positive',neutral:'modal-vc-neutral',negative:'modal-vc-negative'},{positive:'modal-vbtn-positive',neutral:'modal-vbtn-neutral',negative:'modal-vbtn-negative'});
 }
 
 async function castReaction(type) {
   if (!currentJournalId) return;
-  const jid = currentJournalId;
-  const prev = userReactions[jid];
-  if (!db.reactions[jid]) db.reactions[jid] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-  if (prev === type) {
-    db.reactions[jid][type] = Math.max(0, (db.reactions[jid][type]||0) - 1);
-    delete userReactions[jid];
-  } else {
-    if (prev) db.reactions[jid][prev] = Math.max(0, (db.reactions[jid][prev]||0) - 1);
-    db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
-    userReactions[jid] = type;
-  }
-  localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
-  try { await saveDB(); renderReactions(jid); } catch(e) { showToast('Erreur réseau', 'error'); }
+  await toggleReaction(currentJournalId, type);
+  renderReactions(currentJournalId);
 }
-
-// ── MODAL REACTIONS (for archived journals) ─────────────────────────
-function renderModalReactions(jid) {
-  const r = db.reactions[jid] || { positive: 0, neutral: 0, negative: 0, stars: [] };
-  ['positive','neutral','negative'].forEach(function(k) {
-    const el = document.getElementById('modal-vc-' + k);
-    if (el) el.textContent = r[k] || 0;
-    const btn = document.getElementById('modal-vbtn-' + k);
-    if (btn) btn.classList.toggle('active', userReactions[jid] === k);
-  });
-}
-
 async function castModalReaction(type) {
   if (!modalJournalId) return;
-  const jid = modalJournalId;
+  await toggleReaction(modalJournalId, type);
+  renderModalReactions(modalJournalId);
+  showToast('Réaction enregistrée !', 'success');
+}
+async function toggleReaction(jid, type) {
   const prev = userReactions[jid];
-  if (!db.reactions[jid]) db.reactions[jid] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-  if (prev === type) {
-    db.reactions[jid][type] = Math.max(0, (db.reactions[jid][type]||0) - 1);
-    delete userReactions[jid];
-  } else {
-    if (prev) db.reactions[jid][prev] = Math.max(0, (db.reactions[jid][prev]||0) - 1);
-    db.reactions[jid][type] = (db.reactions[jid][type]||0) + 1;
-    userReactions[jid] = type;
-  }
+  if (!db.reactions[jid]) db.reactions[jid] = {positive:0,neutral:0,negative:0,stars:[],total:0};
+  if (prev===type) { db.reactions[jid][type]=Math.max(0,(db.reactions[jid][type]||0)-1); delete userReactions[jid]; }
+  else { if(prev) db.reactions[jid][prev]=Math.max(0,(db.reactions[jid][prev]||0)-1); db.reactions[jid][type]=(db.reactions[jid][type]||0)+1; userReactions[jid]=type; }
   localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
-  try {
-    await saveDB();
-    renderModalReactions(jid);
-    showToast('Réaction enregistrée !', 'success');
-  } catch(e) { showToast('Erreur réseau', 'error'); }
+  try { await saveDB(); } catch(e) { showToast('Erreur réseau', 'error'); }
 }
 
-// ── COMMENT RATING ──────────────────────────────────────────────────
+// ─── COMMENTS ─────────────────────────────────────────────────
 function setCommentRating(v) {
   commentRating = v;
-  document.querySelectorAll('.star-pick').forEach(function(s) {
-    if (!s.closest('#modal-star-picker')) {
-      s.classList.toggle('active', parseInt(s.dataset.v) <= v);
-    }
+  document.querySelectorAll('.star-pick').forEach(s => {
+    if (!s.closest('#modal-star-picker')) s.classList.toggle('active', parseInt(s.dataset.v)<=v);
   });
 }
-
 function setModalCommentRating(v) {
   modalCommentRating = v;
-  document.querySelectorAll('#modal-star-picker .star-pick').forEach(function(s) {
-    s.classList.toggle('active', parseInt(s.dataset.v) <= v);
-  });
+  document.querySelectorAll('#modal-star-picker .star-pick').forEach(s => s.classList.toggle('active', parseInt(s.dataset.v)<=v));
 }
 
-// ── SUBMIT COMMENT (home book reader) ───────────────────────────────
 async function submitComment() {
   const name = document.getElementById('comment-name').value.trim();
   const email = document.getElementById('comment-email').value.trim();
   const text = document.getElementById('comment-text').value.trim();
-  if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
-  if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
-  if (!isValidEmail(email)) {
-    const emailInput = document.getElementById('comment-email');
-    emailInput.classList.add('invalid');
-    showToast('Adresse email invalide. Laissez vide si vous n\'en avez pas.', 'error');
-    setTimeout(function() { emailInput.classList.remove('invalid'); }, 3000);
-    return;
-  }
+  if (!name) { showToast('Veuillez entrer votre prénom.','error'); return; }
+  if (!text) { showToast('Veuillez écrire un avis.','error'); return; }
+  if (!isValidEmail(email)) { showToast('Email invalide.','error'); return; }
   if (!currentJournalId) return;
-
-  const comment = {
-    id: Date.now().toString(),
-    journalId: currentJournalId,
-    name: name,
-    text: text,
-    rating: commentRating || 0,
-    date: new Date().toISOString(),
-    flagged: false,
-    isReply: false
-  };
-
-  if (!db.reactions[currentJournalId]) db.reactions[currentJournalId] = { positive:0, neutral:0, negative:0, stars:[], total:0 };
-  if (commentRating) {
-    if (!db.reactions[currentJournalId].stars) db.reactions[currentJournalId].stars = [];
-    db.reactions[currentJournalId].stars.push(commentRating);
-  }
-
+  const comment = { id:Date.now().toString(), journalId:currentJournalId, name, text, rating:commentRating||0, date:new Date().toISOString(), flagged:false, isReply:false };
+  if (!db.reactions[currentJournalId]) db.reactions[currentJournalId]={positive:0,neutral:0,negative:0,stars:[],total:0};
+  if (commentRating) { if(!db.reactions[currentJournalId].stars) db.reactions[currentJournalId].stars=[]; db.reactions[currentJournalId].stars.push(commentRating); }
   db.comments.push(comment);
   try {
     await saveDB();
-    document.getElementById('comment-name').value = '';
-    document.getElementById('comment-email').value = '';
-    document.getElementById('comment-text').value = '';
+    document.getElementById('comment-name').value='';
+    document.getElementById('comment-email').value='';
+    document.getElementById('comment-text').value='';
     setCommentRating(0);
-    renderComments(currentJournalId, 'comment-list');
+    renderComments(currentJournalId,'comment-list');
     renderReactions(currentJournalId);
-    showToast('Votre avis a été publié !', 'success');
-  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+    showToast('Votre avis a été publié !','success');
+  } catch(e) { showToast('Erreur.','error'); db.comments.pop(); }
 }
 
-// ── SUBMIT COMMENT (modal archives) ─────────────────────────────────
 async function submitModalComment() {
   const name = document.getElementById('modal-comment-name').value.trim();
   const email = document.getElementById('modal-comment-email').value.trim();
   const text = document.getElementById('modal-comment-text').value.trim();
-  if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
-  if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
-  if (!isValidEmail(email)) {
-    const emailInput = document.getElementById('modal-comment-email');
-    emailInput.classList.add('invalid');
-    showToast('Adresse email invalide. Laissez vide si vous n\'en avez pas.', 'error');
-    setTimeout(function() { emailInput.classList.remove('invalid'); }, 3000);
-    return;
-  }
+  if (!name) { showToast('Veuillez entrer votre prénom.','error'); return; }
+  if (!text) { showToast('Veuillez écrire un avis.','error'); return; }
+  if (!isValidEmail(email)) { showToast('Email invalide.','error'); return; }
   if (!modalJournalId) return;
-
-  const comment = {
-    id: Date.now().toString(),
-    journalId: modalJournalId,
-    name: name,
-    text: text,
-    rating: modalCommentRating || 0,
-    date: new Date().toISOString(),
-    flagged: false,
-    isReply: false
-  };
-
-  if (!db.reactions[modalJournalId]) db.reactions[modalJournalId] = { positive:0, neutral:0, negative:0, stars:[], total:0 };
-  if (modalCommentRating) {
-    if (!db.reactions[modalJournalId].stars) db.reactions[modalJournalId].stars = [];
-    db.reactions[modalJournalId].stars.push(modalCommentRating);
-  }
-
+  const comment = { id:Date.now().toString(), journalId:modalJournalId, name, text, rating:modalCommentRating||0, date:new Date().toISOString(), flagged:false, isReply:false };
+  if (!db.reactions[modalJournalId]) db.reactions[modalJournalId]={positive:0,neutral:0,negative:0,stars:[],total:0};
+  if (modalCommentRating) { if(!db.reactions[modalJournalId].stars) db.reactions[modalJournalId].stars=[]; db.reactions[modalJournalId].stars.push(modalCommentRating); }
   db.comments.push(comment);
   try {
     await saveDB();
-    document.getElementById('modal-comment-name').value = '';
-    document.getElementById('modal-comment-email').value = '';
-    document.getElementById('modal-comment-text').value = '';
+    document.getElementById('modal-comment-name').value='';
+    document.getElementById('modal-comment-email').value='';
+    document.getElementById('modal-comment-text').value='';
     setModalCommentRating(0);
-    renderComments(modalJournalId, 'modal-comments');
-    showToast('Votre avis a été publié !', 'success');
-  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+    renderComments(modalJournalId,'modal-comments');
+    renderModalReactions(modalJournalId);
+    showToast('Votre avis a été publié !','success');
+  } catch(e) { showToast('Erreur.','error'); db.comments.pop(); }
 }
 
-// ── RENDER COMMENTS ──────────────────────────────────────────────────
 function renderComments(jid, containerId) {
   const list = document.getElementById(containerId);
   if (!list) return;
-  const topComments = (db.comments || []).filter(function(c) { return c.journalId === jid && !c.flagged && !c.isReply; });
+  const topComments = (db.comments||[]).filter(c=>c.journalId===jid&&!c.flagged&&!c.isReply).sort((a,b)=>new Date(b.date)-new Date(a.date));
   list.innerHTML = '';
-  if (!topComments.length) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:0.9rem;font-family:var(--font-mono);">Aucun avis pour l\'instant. Soyez le premier !</p>';
-    return;
-  }
-  topComments.sort(function(a,b) { return new Date(b.date) - new Date(a.date); });
-  topComments.forEach(function(c) {
-    const commentEl = buildCommentEl(c, jid, containerId);
-    list.appendChild(commentEl);
-    // Replies
-    const replies = (db.comments || []).filter(function(r) { return r.parentId === c.id && !r.flagged; });
-    replies.sort(function(a,b) { return new Date(a.date) - new Date(b.date); });
-    replies.forEach(function(reply) {
-      list.appendChild(buildReplyEl(reply));
-    });
+  if (!topComments.length) { list.innerHTML = '<p style="color:var(--muted);font-size:.9rem;font-family:var(--font-mono);">Aucun avis. Soyez le premier !</p>'; return; }
+  topComments.forEach(c => {
+    list.appendChild(buildCommentEl(c, jid, containerId));
+    (db.comments||[]).filter(r=>r.parentId===c.id&&!r.flagged).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(reply => list.appendChild(buildReplyEl(reply)));
   });
 }
 
 function buildCommentEl(c, jid, containerId) {
-  const initials = c.name.split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);
-  const stars = Array.from({length:5},function(_,i) { return '<span class="comment-star ' + (i<c.rating?'filled':'') + '">★</span>'; }).join('');
+  const initials = c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const stars = Array.from({length:5},(_,i)=>'<span class="comment-star'+(i<c.rating?' filled':'')+'">★</span>').join('');
   const div = document.createElement('div');
   div.className = 'comment-card';
-  div.dataset.commentId = c.id;
   div.innerHTML =
-    '<div class="comment-header">' +
-      '<div class="comment-avatar">' + initials + '</div>' +
-      '<span class="comment-name">' + escHtml(c.name) + '</span>' +
-      (c.rating ? '<div class="comment-stars">' + stars + '</div>' : '') +
-      '<span class="comment-date">' + timeSince(c.date) + '</span>' +
-    '</div>' +
+    '<div class="comment-header"><div class="comment-avatar">' + initials + '</div><span class="comment-name">' + escHtml(c.name) + '</span>' +
+    (c.rating?'<div class="comment-stars">' + stars + '</div>':'') +
+    '<span class="comment-date">' + timeSince(c.date) + '</span></div>' +
     '<div class="comment-text">' + escHtml(c.text) + '</div>' +
     '<div class="comment-actions">' +
-      (isAdmin ? '<button class="comment-action-btn reply-btn" onclick="toggleReplyForm(\'' + c.id + '\', \'' + (jid||'') + '\', \'' + containerId + '\')">↩ Répondre</button>' : '') +
-      (isAdmin ? '<button class="comment-action-btn delete" onclick="deleteComment(\'' + c.id + '\', \'' + containerId + '\', \'' + (jid||currentJournalId) + '\')">Supprimer</button>' : '') +
+    (isAdmin?'<button class="comment-action-btn" onclick="toggleReplyForm(\'' + c.id + '\',\'' + jid + '\',\'' + containerId + '\')">↩ Répondre</button>':'') +
+    (isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\'' + c.id + '\',\'' + containerId + '\',\'' + jid + '\')">Supprimer</button>':'') +
     '</div>' +
-    (isAdmin ?
-      '<div class="reply-form" id="reply-form-' + c.id + '">' +
-        '<textarea placeholder="Votre réponse en tant qu\'administrateur..."></textarea>' +
-        '<div class="reply-form-actions">' +
-          '<button class="reply-submit" onclick="submitReply(\'' + c.id + '\', \'' + (jid||currentJournalId) + '\', \'' + containerId + '\')">Publier la réponse →</button>' +
-          '<button class="reply-cancel" onclick="toggleReplyForm(\'' + c.id + '\')">Annuler</button>' +
-        '</div>' +
-      '</div>'
-    : '');
+    (isAdmin?'<div class="reply-form" id="reply-form-' + c.id + '"><textarea placeholder="Votre réponse..."></textarea><div class="reply-form-actions"><button class="reply-submit" onclick="submitReply(\'' + c.id + '\',\'' + jid + '\',\'' + containerId + '\')">Publier →</button><button class="reply-cancel" onclick="toggleReplyForm(\'' + c.id + '\')">Annuler</button></div></div>':'');
   return div;
 }
-
 function buildReplyEl(r) {
   const div = document.createElement('div');
   div.className = 'comment-card reply-card';
-  div.dataset.commentId = r.id;
   div.innerHTML =
-    '<div class="comment-header">' +
-      '<div class="comment-avatar" style="background:var(--gold);">✍</div>' +
-      '<span class="comment-name">' + escHtml(r.name) + '</span>' +
-      '<span class="comment-date">' + timeSince(r.date) + '</span>' +
-    '</div>' +
+    '<div class="comment-header"><div class="comment-avatar" style="background:var(--gold);">✍</div><span class="comment-name">' + escHtml(r.name) + '</span><span class="comment-date">' + timeSince(r.date) + '</span></div>' +
     '<div class="comment-text">' + escHtml(r.text) + '</div>' +
-    '<div class="comment-actions">' +
-      (isAdmin ? '<button class="comment-action-btn delete" onclick="deleteComment(\'' + r.id + '\', \'\', \'\')">Supprimer</button>' : '') +
-    '</div>';
+    '<div class="comment-actions">' + (isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\'' + r.id + '\',\'\',\'\')">Supprimer</button>':'') + '</div>';
   return div;
 }
-
-function toggleReplyForm(commentId, jid, containerId) {
-  const form = document.getElementById('reply-form-' + commentId);
-  if (!form) return;
-  form.classList.toggle('open');
-  if (form.classList.contains('open')) {
-    form.querySelector('textarea').focus();
-  }
-}
-
+function toggleReplyForm(id) { const f=document.getElementById('reply-form-'+id); if(f){f.classList.toggle('open');if(f.classList.contains('open'))f.querySelector('textarea').focus();} }
 async function submitReply(parentId, jid, containerId) {
-  const form = document.getElementById('reply-form-' + parentId);
-  if (!form) return;
-  const text = form.querySelector('textarea').value.trim();
-  if (!text) { showToast('Veuillez écrire une réponse.', 'error'); return; }
-  const reply = {
-    id: Date.now().toString(),
-    journalId: jid,
-    parentId: parentId,
-    name: db.settings.siteName || 'La Rédaction',
-    text: text,
-    rating: 0,
-    date: new Date().toISOString(),
-    flagged: false,
-    isReply: true
-  };
+  const form = document.getElementById('reply-form-'+parentId);
+  const text = form ? form.querySelector('textarea').value.trim() : '';
+  if (!text) { showToast('Veuillez écrire une réponse.','error'); return; }
+  const reply = { id:Date.now().toString(), journalId:jid, parentId, name:db.settings.siteName||'La Rédaction', text, rating:0, date:new Date().toISOString(), flagged:false, isReply:true };
   db.comments.push(reply);
-  try {
-    await saveDB();
-    form.querySelector('textarea').value = '';
-    form.classList.remove('open');
-    const target = containerId || 'comment-list';
-    renderComments(jid, target);
-    showToast('Réponse publiée !', 'success');
-  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+  try { await saveDB(); if(form){form.querySelector('textarea').value='';form.classList.remove('open');} renderComments(jid, containerId); showToast('Réponse publiée !','success'); }
+  catch(e) { showToast('Erreur.','error'); db.comments.pop(); }
 }
-
 async function deleteComment(id, containerId, jid) {
   if (!confirm('Supprimer cet avis ?')) return;
-  // Also delete replies to this comment
-  db.comments = db.comments.filter(function(c) { return c.id !== id && c.parentId !== id; });
+  db.comments = db.comments.filter(c=>c.id!==id&&c.parentId!==id);
   await saveDB();
-  const target = containerId || 'comment-list';
-  const journalId = jid || currentJournalId;
-  if (target && journalId) renderComments(journalId, target);
+  if (containerId && jid) renderComments(jid, containerId);
   if (currentJournalId) renderReactions(currentJournalId);
   showToast('Avis supprimé.');
 }
@@ -2013,137 +1525,107 @@ async function deleteComment(id, containerId, jid) {
 function renderRecentList() {
   const list = document.getElementById('recent-list');
   list.innerHTML = '';
-  const published = db.journals.filter(function(j) { return isPublished(j); }).sort(function(a,b){return b.date.localeCompare(a.date);}).slice(0,5);
-  published.forEach(function(j) {
+  db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j => {
     const li = document.createElement('li');
     li.innerHTML = '<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\'' + j.id + '\')">' + escHtml(j.title) + '</span><br><span class="admin-list-date">' + formatDateFr(j.date) + '</span></div>';
     list.appendChild(li);
   });
-  if (!published.length) list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal publié</li>';
+  if (!list.children.length) list.innerHTML = '<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>';
 }
 
 function renderTagsCloud() {
   const cloud = document.getElementById('tags-cloud');
   cloud.innerHTML = '';
   const tagCount = {};
-  db.journals.filter(function(j) { return isPublished(j); }).forEach(function(j) {
-    (j.tags || '').split(',').map(function(t){return t.trim();}).filter(Boolean).forEach(function(t) { tagCount[t] = (tagCount[t]||0)+1; });
+  db.journals.filter(j=>isPublished(j)).forEach(j => {
+    (j.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t => { tagCount[t]=(tagCount[t]||0)+1; });
   });
-  const sorted = Object.entries(tagCount).sort(function(a,b){return b[1]-a[1];}).slice(0,15);
-  sorted.forEach(function(entry) {
-    const tag = entry[0], count = entry[1];
+  Object.entries(tagCount).sort((a,b)=>b[1]-a[1]).slice(0,15).forEach(([tag,count]) => {
     const s = document.createElement('span');
-    s.className = 'chip';
-    s.style.cursor = 'pointer';
+    s.className = 'chip'; s.style.cursor = 'pointer';
     s.textContent = '#' + tag + ' (' + count + ')';
-    s.onclick = function() { showPage('history'); setTimeout(function(){ document.getElementById('search-input').value = tag; filterHistory(); },100); };
+    s.onclick = () => { showPage('history'); setTimeout(()=>{document.getElementById('search-input').value=tag;filterHistory();},100); };
     cloud.appendChild(s);
   });
 }
 
-// ─── HISTORY ──────────────────────────────────────────────────────────
+// ─── HISTORY ──────────────────────────────────────────────────
 function renderHistory() {
   document.getElementById('history-loading').style.display = 'block';
-  const published = db.journals.filter(function(j) { return isPublished(j); });
+  const published = db.journals.filter(j=>isPublished(j));
   document.getElementById('history-loading').style.display = 'none';
-
-  allCategories = new Set(published.map(function(j){return j.category;}).filter(Boolean));
+  allCategories = new Set(published.map(j=>j.category).filter(Boolean));
   const filterRow = document.getElementById('cat-filters');
   filterRow.innerHTML = '';
   const allBtn = document.createElement('button');
-  allBtn.className = 'filter-btn' + (activeFilter==='all'?' active':'');
+  allBtn.className = 'filter-btn'+(activeFilter==='all'?' active':'');
   allBtn.textContent = 'Tout';
-  allBtn.onclick = function() { activeFilter='all'; renderHistory(); };
+  allBtn.onclick = () => { activeFilter='all'; renderHistory(); };
   filterRow.appendChild(allBtn);
-  allCategories.forEach(function(cat) {
+  allCategories.forEach(cat => {
     const b = document.createElement('button');
-    b.className = 'filter-btn' + (activeFilter===cat?' active':'');
+    b.className = 'filter-btn'+(activeFilter===cat?' active':'');
     b.textContent = cat;
-    b.onclick = function() { activeFilter=cat; renderHistory(); };
+    b.onclick = () => { activeFilter=cat; renderHistory(); };
     filterRow.appendChild(b);
   });
-
-  const totalComments = db.comments ? db.comments.filter(function(c){return !c.isReply;}).length : 0;
-  const avgRating = (function() {
-    let all = [];
-    Object.values(db.reactions).forEach(function(r) { if (r.stars) all = all.concat(r.stars); });
-    return all.length ? (all.reduce(function(a,b){return a+b;},0)/all.length).toFixed(1) : '—';
-  })();
-
+  let allStars = [];
+  Object.values(db.reactions).forEach(r=>{ if(r.stars) allStars=allStars.concat(r.stars); });
+  const avgR = allStars.length ? (allStars.reduce((a,b)=>a+b,0)/allStars.length).toFixed(1) : '—';
   document.getElementById('history-stats').innerHTML =
-    '<div class="stat-card"><div class="stat-num">' + published.length + '</div><div class="stat-lbl">Journaux publiés</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + totalComments + '</div><div class="stat-lbl">Avis déposés</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + avgRating + '</div><div class="stat-lbl">Note moyenne</div></div>' +
-    '<div class="stat-card"><div class="stat-num">' + allCategories.size + '</div><div class="stat-lbl">Catégories</div></div>';
-
+    '<div class="stat-card"><div class="stat-num">'+published.length+'</div><div class="stat-lbl">Journaux</div></div>' +
+    '<div class="stat-card"><div class="stat-num">'+((db.comments||[]).filter(c=>!c.isReply).length)+'</div><div class="stat-lbl">Avis</div></div>' +
+    '<div class="stat-card"><div class="stat-num">'+avgR+'</div><div class="stat-lbl">Note moyenne</div></div>' +
+    '<div class="stat-card"><div class="stat-num">'+allCategories.size+'</div><div class="stat-lbl">Catégories</div></div>';
   filterHistory();
 }
 
 function filterHistory() {
-  const q = (document.getElementById('search-input') ? document.getElementById('search-input').value : '').toLowerCase();
-  const published = db.journals.filter(function(j) { return isPublished(j); }).sort(function(a,b){return b.date.localeCompare(a.date);});
-  let filtered = published;
-  if (activeFilter !== 'all') filtered = filtered.filter(function(j) { return j.category === activeFilter; });
-  if (q) filtered = filtered.filter(function(j) {
-    return j.title.toLowerCase().includes(q) ||
-      (j.excerpt||'').toLowerCase().includes(q) ||
-      (j.body||'').toLowerCase().includes(q) ||
-      (j.tags||'').toLowerCase().includes(q);
-  });
-
+  const q = (document.getElementById('search-input')?.value||'').toLowerCase();
+  let filtered = db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date));
+  if (activeFilter!=='all') filtered = filtered.filter(j=>j.category===activeFilter);
+  if (q) filtered = filtered.filter(j=>
+    j.title.toLowerCase().includes(q) ||
+    (j.excerpt||'').toLowerCase().includes(q) ||
+    stripRichTags(getPages(j).join(' ')).toLowerCase().includes(q) ||
+    (j.tags||'').toLowerCase().includes(q)
+  );
   const grid = document.getElementById('history-grid');
   grid.innerHTML = '';
-  document.getElementById('history-empty').style.display = filtered.length ? 'none' : 'block';
-
-  filtered.forEach(function(j) {
-    const r = db.reactions[j.id] || {};
-    const stars = r.stars && r.stars.length ? (r.stars.reduce(function(a,b){return a+b;},0)/r.stars.length).toFixed(1) : null;
-    const commentsCount = (db.comments||[]).filter(function(c){return c.journalId===j.id && !c.isReply;}).length;
+  document.getElementById('history-empty').style.display = filtered.length?'none':'block';
+  filtered.forEach(j => {
+    const r = db.reactions[j.id]||{};
+    const stars = r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):null;
+    const cc = (db.comments||[]).filter(c=>c.journalId===j.id&&!c.isReply).length;
     const div = document.createElement('div');
     div.className = 'history-card';
-    div.onclick = function() { openModal(j.id); };
+    div.onclick = () => openModal(j.id);
     div.innerHTML =
-      '<div class="history-card-date">' + formatDateFr(j.date) + '</div>' +
-      '<div class="history-card-title">' + escHtml(j.title) + '</div>' +
-      '<div class="history-card-excerpt">' + escHtml(j.excerpt || (getPages(j)[0] || '').slice(0,120)) + '</div>' +
+      '<div class="history-card-date">'+formatDateFr(j.date)+'</div>' +
+      '<div class="history-card-title">'+escHtml(j.title)+'</div>' +
+      '<div class="history-card-excerpt">'+escHtml(stripRichTags(j.excerpt||getPages(j)[0]||'').slice(0,120))+'</div>' +
       '<div class="history-card-footer">' +
-        (j.category ? '<span class="history-card-cat">' + escHtml(j.category) + '</span>' : '') +
-        (stars ? '<span class="history-card-rating">★ ' + stars + '</span>' : '') +
-        '<span class="history-card-comments">' + commentsCount + ' avis</span>' +
+      (j.category?'<span class="history-card-cat">'+escHtml(j.category)+'</span>':'') +
+      (stars?'<span class="history-card-rating">★ '+stars+'</span>':'') +
+      '<span class="history-card-comments">'+cc+' avis</span>' +
       '</div>';
     grid.appendChild(div);
   });
 }
 
-// ─── MODAL ─────────────────────────────────────────────────────────────
+// ─── MODAL (book reader) ──────────────────────────────────────
 function openModal(jid) {
-  const j = db.journals.find(function(x){return x.id===jid;});
+  const j = db.journals.find(x=>x.id===jid);
   if (!j) return;
   modalJournalId = jid;
-  document.getElementById('modal-date').textContent = formatDateFr(j.date);
-  document.getElementById('modal-title').textContent = j.title;
-  document.getElementById('modal-excerpt').textContent = j.excerpt || '';
-  const pages = getPages(j);
-  document.getElementById('modal-body').textContent = pages.join('\n\n— ∗ —\n\n');
-  const chips = document.getElementById('modal-chips');
-  chips.innerHTML = '';
-  if (j.category) { const c=document.createElement('span');c.className='chip cat';c.textContent=j.category;chips.appendChild(c); }
-  if (j.mood) { const m=document.createElement('span');m.className='chip '+moodClass(j.mood);m.textContent=moodLabel(j.mood);chips.appendChild(m); }
-  if (j.author) { const a=document.createElement('span');a.className='chip';a.textContent='✒ '+j.author;chips.appendChild(a); }
-  if (j.readTime) { const r=document.createElement('span');r.className='chip';r.textContent='⏱ '+j.readTime;chips.appendChild(r); }
-
-  // Reset comment form
-  const nameEl = document.getElementById('modal-comment-name');
-  const emailEl = document.getElementById('modal-comment-email');
-  const textEl = document.getElementById('modal-comment-text');
-  if (nameEl) nameEl.value = '';
-  if (emailEl) emailEl.value = '';
-  if (textEl) textEl.value = '';
-  modalCommentRating = 0;
-  document.querySelectorAll('#modal-star-picker .star-pick').forEach(function(s) { s.classList.remove('active'); });
-
+  modalCurrentPage = 0;
+  renderModalBook(j);
   renderModalReactions(jid);
-  renderComments(jid, 'modal-comments');
+  // Reset comment form
+  ['modal-comment-name','modal-comment-email','modal-comment-text'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  modalCommentRating = 0;
+  document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.remove('active'));
+  renderComments(jid,'modal-comments');
   document.getElementById('journal-modal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -2152,17 +1634,13 @@ function closeModal() {
   document.body.style.overflow = '';
   modalJournalId = null;
 }
-document.getElementById('journal-modal').addEventListener('click', function(e) { if(e.target===e.currentTarget) closeModal(); });
+document.getElementById('journal-modal').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
 
-// ─── ADMIN ─────────────────────────────────────────────────────────────
-function renderAdmin() {
-  // page shown — nothing until login
-}
-
+// ─── ADMIN ────────────────────────────────────────────────────
+function renderAdmin() {}
 function adminLogin() {
   const pw = document.getElementById('admin-pw-input').value;
-  const hash = simpleHash(pw);
-  if (hash === (db.settings.adminPwHash || simpleHash('admin'))) {
+  if (simpleHash(pw) === (db.settings.adminPwHash || simpleHash('admin'))) {
     isAdmin = true;
     document.getElementById('admin-login-screen').style.display = 'none';
     document.getElementById('admin-panel').style.display = 'block';
@@ -2176,499 +1654,236 @@ function adminLogin() {
     document.getElementById('admin-err').textContent = '❌ Mot de passe incorrect.';
   }
 }
-function adminLogout() {
-  isAdmin = false;
-  document.getElementById('admin-login-screen').style.display = 'block';
-  document.getElementById('admin-panel').style.display = 'none';
-}
-
+function adminLogout() { isAdmin=false; document.getElementById('admin-login-screen').style.display='block'; document.getElementById('admin-panel').style.display='none'; }
 function switchAdminTab(tab) {
-  ['new','manage','moderation','settings'].forEach(function(t) {
-    document.getElementById('atab-' + t).classList.toggle('active', t === tab);
-    document.getElementById('atab-body-' + t).style.display = t === tab ? 'block' : 'none';
+  ['new','manage','moderation','settings'].forEach(t=>{
+    document.getElementById('atab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';
   });
-  if (tab === 'manage') loadManageList();
-  if (tab === 'moderation') loadModeration();
-  if (tab === 'settings') loadSettings();
+  if (tab==='manage') loadManageList();
+  if (tab==='moderation') loadModeration();
+  if (tab==='settings') loadSettings();
 }
 
-// ── Pages editor helpers ─────────────────────────────────────────────
+// ─── PAGES EDITOR ─────────────────────────────────────────────
 function buildPageItem(text, idx, editorId) {
   const item = document.createElement('div');
   item.className = 'page-editor-item';
   item.dataset.pageIdx = idx;
-  item.innerHTML =
-    '<div class="page-editor-header" onclick="togglePageEditor(this)">' +
-      '<span>Page ' + (idx + 1) + '</span>' +
-      '<span style="display:flex;gap:8px;">' +
-        '<button onclick="event.stopPropagation();removePage(this,\'' + editorId + '\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:0.75rem;">Suppr.</button>' +
-        '<span>▾</span>' +
-      '</span>' +
-    '</div>' +
-    '<div class="page-editor-body open">' +
-      '<textarea class="page-editor-textarea" placeholder="Contenu de la page ' + (idx + 1) + '...">' + escHtml(text) + '</textarea>' +
-    '</div>';
+  const header = document.createElement('div');
+  header.className = 'page-editor-header';
+  header.innerHTML = '<span>Page ' + (idx+1) + '</span><span style="display:flex;gap:8px;"><button onclick="event.stopPropagation();removePage(this,\'' + editorId + '\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:.75rem;">Suppr.</button><span>▾</span></span>';
+  header.onclick = () => body.classList.toggle('open');
+  const body = document.createElement('div');
+  body.className = 'page-editor-body open';
+  body.appendChild(buildRichEditor(text, idx, editorId));
+  item.appendChild(header);
+  item.appendChild(body);
   return item;
 }
-
-function togglePageEditor(header) {
-  const body = header.nextElementSibling;
-  body.classList.toggle('open');
-}
-
-function removePage(btn, editorId) {
-  const item = btn.closest('.page-editor-item');
-  item.remove();
-  renumberPages(editorId);
-}
-
+function removePage(btn, editorId) { btn.closest('.page-editor-item').remove(); renumberPages(editorId); }
 function renumberPages(editorId) {
-  document.querySelectorAll('#' + editorId + ' .page-editor-item').forEach(function(item, i) {
+  document.querySelectorAll('#' + editorId + ' .page-editor-item').forEach((item,i) => {
     item.dataset.pageIdx = i;
-    item.querySelector('.page-editor-header span:first-child').textContent = 'Page ' + (i + 1);
-    item.querySelector('textarea').placeholder = 'Contenu de la page ' + (i + 1) + '...';
+    item.querySelector('.page-editor-header span:first-child').textContent = 'Page ' + (i+1);
+    const ta = item.querySelector('.richtext-area');
+    if (ta) ta.setAttribute('data-page-idx', i);
   });
 }
-
 function getPagesFromEditor(editorId) {
-  return Array.from(document.querySelectorAll('#' + editorId + ' .page-editor-textarea'))
-    .map(function(ta) { return ta.value.trim(); }).filter(Boolean);
+  return Array.from(document.querySelectorAll('#' + editorId + ' .richtext-area')).map(ta=>ta.value.trim()).filter(Boolean);
 }
+function addNewPage() { const e=document.getElementById('new-pages-editor'); e.appendChild(buildPageItem('', e.querySelectorAll('.page-editor-item').length,'new-pages-editor')); }
+function addEditPage() { const e=document.getElementById('edit-pages-editor'); e.appendChild(buildPageItem('', e.querySelectorAll('.page-editor-item').length,'edit-pages-editor')); }
+function initNewPagesEditor() { const e=document.getElementById('new-pages-editor'); e.innerHTML=''; e.appendChild(buildPageItem('',0,'new-pages-editor')); }
 
-function addNewPage() {
-  const editor = document.getElementById('new-pages-editor');
-  const idx = editor.querySelectorAll('.page-editor-item').length;
-  editor.appendChild(buildPageItem('', idx, 'new-pages-editor'));
-}
-
-function addEditPage() {
-  const editor = document.getElementById('edit-pages-editor');
-  const idx = editor.querySelectorAll('.page-editor-item').length;
-  editor.appendChild(buildPageItem('', idx, 'edit-pages-editor'));
-}
-
-function initNewPagesEditor() {
-  const editor = document.getElementById('new-pages-editor');
-  editor.innerHTML = '';
-  editor.appendChild(buildPageItem('', 0, 'new-pages-editor'));
-}
-
+// ─── PUBLISH ──────────────────────────────────────────────────
 async function publishJournal() {
   const title = document.getElementById('new-title').value.trim();
   const date = document.getElementById('new-date').value;
   const pages = getPagesFromEditor('new-pages-editor');
-  if (!title || !date) { showToast('Titre et date sont requis.', 'error'); return; }
-  if (!pages.length) { showToast('Ajoutez au moins une page de contenu.', 'error'); return; }
-
+  if (!title||!date) { showToast('Titre et date requis.','error'); return; }
+  if (!pages.length) { showToast('Ajoutez au moins une page.','error'); return; }
   const j = {
-    id: Date.now().toString(),
-    title: title,
-    excerpt: document.getElementById('new-excerpt').value.trim(),
-    pages: pages,
-    date: date,
-    category: document.getElementById('new-category').value,
-    mood: document.getElementById('new-mood').value,
-    author: document.getElementById('new-author').value.trim(),
-    tags: document.getElementById('new-tags').value.trim(),
-    readTime: document.getElementById('new-readtime').value.trim(),
+    id: Date.now().toString(), title, excerpt: document.getElementById('new-excerpt').value.trim(),
+    pages, date, category: document.getElementById('new-category').value,
+    mood: document.getElementById('new-mood').value, author: document.getElementById('new-author').value.trim(),
+    tags: document.getElementById('new-tags').value.trim(), readTime: document.getElementById('new-readtime').value.trim(),
     createdAt: new Date().toISOString()
   };
-
   const btn = document.getElementById('publish-btn');
-  btn.disabled = true; btn.textContent = 'Enregistrement...';
+  btn.disabled=true; btn.textContent='Enregistrement...';
   db.journals.push(j);
-  try {
-    await saveDB();
-    showToast('Journal enregistré avec succès !', 'success');
-    btn.textContent = 'Enregistrer le journal →';
-    btn.disabled = false;
-    ['new-title','new-excerpt','new-author','new-tags','new-readtime'].forEach(function(id) { document.getElementById(id).value = ''; });
-    document.getElementById('new-date').value = getTodayStr();
-    initNewPagesEditor();
-    renderHome();
-    loadManageList();
-  } catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.', 'error'); btn.textContent='Enregistrer le journal →'; btn.disabled=false; }
+  try { await saveDB(); showToast('Journal enregistré !','success'); btn.textContent='Enregistrer →'; btn.disabled=false; ['new-title','new-excerpt','new-author','new-tags','new-readtime'].forEach(id=>document.getElementById(id).value=''); document.getElementById('new-date').value=getTodayStr(); initNewPagesEditor(); renderHome(); loadManageList(); }
+  catch(e) { db.journals.pop(); showToast('Erreur de sauvegarde.','error'); btn.textContent='Enregistrer →'; btn.disabled=false; }
 }
 
-// ── EDIT MODAL ─────────────────────────────────────────────────────────
+// ─── EDIT MODAL ───────────────────────────────────────────────
 function openEditModal() {
-  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
+  const j = db.journals.find(x=>x.id===currentJournalId);
   if (!j) return;
-  document.getElementById('edit-title').value = j.title || '';
-  document.getElementById('edit-excerpt').value = j.excerpt || '';
-  document.getElementById('edit-author').value = j.author || '';
-  document.getElementById('edit-tags').value = j.tags || '';
-  document.getElementById('edit-date').value = j.date || '';
-  document.getElementById('edit-readtime').value = j.readTime || '';
-  document.getElementById('edit-category').value = j.category || 'Autre';
-  document.getElementById('edit-mood').value = j.mood || 'neutral';
+  document.getElementById('edit-title').value = j.title||'';
+  document.getElementById('edit-excerpt').value = j.excerpt||'';
+  document.getElementById('edit-author').value = j.author||'';
+  document.getElementById('edit-tags').value = j.tags||'';
+  document.getElementById('edit-date').value = j.date||'';
+  document.getElementById('edit-readtime').value = j.readTime||'';
+  document.getElementById('edit-category').value = j.category||'Autre';
+  document.getElementById('edit-mood').value = j.mood||'neutral';
   const editor = document.getElementById('edit-pages-editor');
   editor.innerHTML = '';
-  const pages = getPages(j);
-  pages.forEach(function(p, i) { editor.appendChild(buildPageItem(p, i, 'edit-pages-editor')); });
+  getPages(j).forEach((p,i) => editor.appendChild(buildPageItem(p,i,'edit-pages-editor')));
   document.getElementById('edit-modal-bg').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
-
-function closeEditModal() {
-  document.getElementById('edit-modal-bg').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
+function closeEditModal() { document.getElementById('edit-modal-bg').classList.add('hidden'); document.body.style.overflow=''; }
 async function saveEditJournal() {
-  const j = db.journals.find(function(x) { return x.id === currentJournalId; });
+  const j = db.journals.find(x=>x.id===currentJournalId);
   if (!j) return;
   const pages = getPagesFromEditor('edit-pages-editor');
-  if (!pages.length) { showToast('Ajoutez au moins une page.', 'error'); return; }
-  j.title    = document.getElementById('edit-title').value.trim() || j.title;
-  j.excerpt  = document.getElementById('edit-excerpt').value.trim();
-  j.pages    = pages;
-  j.author   = document.getElementById('edit-author').value.trim();
-  j.tags     = document.getElementById('edit-tags').value.trim();
-  j.date     = document.getElementById('edit-date').value || j.date;
-  j.readTime = document.getElementById('edit-readtime').value.trim();
-  j.category = document.getElementById('edit-category').value;
-  j.mood     = document.getElementById('edit-mood').value;
-  try {
-    await saveDB();
-    closeEditModal();
-    currentPage = 0;
-    renderHome();
-    showToast('Journal mis à jour !', 'success');
-  } catch(e) { showToast('Erreur de sauvegarde.', 'error'); }
+  if (!pages.length) { showToast('Ajoutez au moins une page.','error'); return; }
+  j.title=document.getElementById('edit-title').value.trim()||j.title;
+  j.excerpt=document.getElementById('edit-excerpt').value.trim();
+  j.pages=pages; j.author=document.getElementById('edit-author').value.trim();
+  j.tags=document.getElementById('edit-tags').value.trim(); j.date=document.getElementById('edit-date').value||j.date;
+  j.readTime=document.getElementById('edit-readtime').value.trim(); j.category=document.getElementById('edit-category').value;
+  j.mood=document.getElementById('edit-mood').value;
+  try { await saveDB(); closeEditModal(); currentPage=0; renderHome(); showToast('Journal mis à jour !','success'); }
+  catch(e) { showToast('Erreur de sauvegarde.','error'); }
 }
-
 function loadManageList() {
   document.getElementById('manage-list-loading').style.display = 'none';
   const list = document.getElementById('manage-list');
   list.innerHTML = '';
-  const sorted = [...db.journals].sort(function(a,b){return b.date.localeCompare(a.date);});
-  if (!sorted.length) { list.innerHTML = '<li style="color:var(--muted);font-size:0.85rem;">Aucun journal</li>'; return; }
-  sorted.forEach(function(j) {
+  const sorted = [...db.journals].sort((a,b)=>b.date.localeCompare(a.date));
+  if (!sorted.length) { list.innerHTML='<li style="color:var(--muted);">Aucun journal</li>'; return; }
+  sorted.forEach(j => {
     const li = document.createElement('li');
     const pub = isPublished(j);
     li.innerHTML =
-      '<div>' +
-        '<span class="admin-list-title">' + escHtml(j.title) + '</span>' +
-        '<br>' +
-        '<span class="admin-list-date">' + formatDateFr(j.date) + ' · ' + (pub ? '<span style="color:green;font-weight:500;">Publié</span>' : '<span style="color:var(--gold);">Programmé</span>') + '</span>' +
-      '</div>' +
-      '<div class="admin-list-actions">' +
-        '<button class="btn-primary" style="padding:0.35rem 0.8rem;font-size:0.78rem;" onclick="editFromManage(\'' + j.id + '\')">Modifier</button>' +
-        '<button class="btn-danger" onclick="deleteJournal(\'' + j.id + '\')">Suppr.</button>' +
-      '</div>';
+      '<div><span class="admin-list-title">'+escHtml(j.title)+'</span><br><span class="admin-list-date">'+formatDateFr(j.date)+' · '+(pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>')+'</span></div>' +
+      '<div class="admin-list-actions"><button class="btn-primary" style="padding:.35rem .8rem;font-size:.78rem;" onclick="editFromManage(\''+j.id+'\')">Modifier</button><button class="btn-danger" onclick="deleteJournal(\''+j.id+'\')">Suppr.</button></div>';
     list.appendChild(li);
   });
 }
-
 async function deleteJournal(id) {
   if (!confirm('Supprimer ce journal définitivement ?')) return;
-  db.journals = db.journals.filter(function(j) { return j.id !== id; });
-  db.comments = db.comments.filter(function(c) { return c.journalId !== id; });
-  await saveDB();
-  loadManageList();
-  renderHome();
-  showToast('Journal supprimé.');
+  db.journals = db.journals.filter(j=>j.id!==id);
+  db.comments = db.comments.filter(c=>c.journalId!==id);
+  await saveDB(); loadManageList(); renderHome(); showToast('Journal supprimé.');
 }
-
-function editFromManage(id) {
-  currentJournalId = id;
-  showPage('home');
-  openEditModal();
-}
-
+function editFromManage(id) { currentJournalId=id; showPage('home'); openEditModal(); }
 function loadModeration() {
   const list = document.getElementById('mod-list');
-  list.style.display = 'flex';
-  list.style.flexDirection = 'column';
-  list.style.gap = '0';
-  const allComments = (db.comments || []).filter(function(c) { return !c.isReply; });
+  const all = (db.comments||[]).filter(c=>!c.isReply);
   list.innerHTML = '';
-  if (!allComments.length) { document.getElementById('mod-empty').style.display = 'block'; return; }
+  if (!all.length) { document.getElementById('mod-empty').style.display='block'; return; }
   document.getElementById('mod-empty').style.display = 'none';
-  const recent = [...allComments].sort(function(a,b){return new Date(b.date)-new Date(a.date);}).slice(0,30);
-  recent.forEach(function(c) {
-    const j = db.journals.find(function(x){return x.id===c.journalId;});
-    const replies = (db.comments||[]).filter(function(r){return r.parentId===c.id;});
+  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c => {
+    const j = db.journals.find(x=>x.id===c.journalId);
+    const replies = (db.comments||[]).filter(r=>r.parentId===c.id);
     const li = document.createElement('li');
-    li.style.display = 'flex';
-    li.style.flexDirection = 'column';
-    li.style.alignItems = 'stretch';
-    li.style.padding = '0.85rem 0';
-    li.style.borderBottom = '1px solid var(--border)';
-    li.style.gap = '0.5rem';
-
-    const mainRow = document.createElement('div');
-    mainRow.style.display = 'flex';
-    mainRow.style.alignItems = 'center';
-    mainRow.style.justifyContent = 'space-between';
-    mainRow.innerHTML =
-      '<div style="flex:1;">' +
-        '<span style="font-weight:600;">' + escHtml(c.name) + '</span>' +
-        '<span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--muted);margin-left:8px;">' + timeSince(c.date) + '</span>' +
-        '<br>' +
-        '<span style="font-size:0.85rem;color:var(--muted);">Sur : ' + (j ? escHtml(j.title) : '?') + '</span>' +
-        '<br>' +
-        '<span style="font-size:0.9rem;">' + escHtml(c.text.slice(0,100)) + (c.text.length > 100 ? '...' : '') + '</span>' +
-        (replies.length ? '<br><span style="font-family:var(--font-mono);font-size:0.72rem;color:var(--gold);">↩ ' + replies.length + ' réponse(s)</span>' : '') +
-      '</div>' +
-      '<div class="admin-list-actions">' +
-        '<button class="btn-primary" style="padding:0.3rem 0.7rem;font-size:0.75rem;background:var(--gold);border-color:var(--gold);" onclick="toggleModReply(\'' + c.id + '\', \'' + c.journalId + '\')">↩ Répondre</button>' +
-        '<button class="btn-danger" onclick="deleteCommentAdmin(\'' + c.id + '\')">Suppr.</button>' +
-      '</div>';
-
+    li.style.cssText = 'display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;';
+    row.innerHTML =
+      '<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br>' +
+      '<span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br>' +
+      '<span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>' +
+      (replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'') +
+      '</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\',\''+c.journalId+'\')">↩ Répondre</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
     const replyBox = document.createElement('div');
-    replyBox.id = 'mod-reply-' + c.id;
+    replyBox.id = 'mod-reply-'+c.id;
     replyBox.style.display = 'none';
-    replyBox.style.padding = '0.6rem';
-    replyBox.style.background = 'var(--parchment-dark)';
-    replyBox.style.borderRadius = '4px';
-    replyBox.innerHTML =
-      '<textarea id="mod-reply-text-' + c.id + '" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:0.5rem 0.75rem;font-family:var(--font-body);font-size:0.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:0.4rem;" placeholder="Votre réponse..."></textarea>' +
-      '<div style="display:flex;gap:0.4rem;">' +
-        '<button class="reply-submit" onclick="submitModReply(\'' + c.id + '\', \'' + c.journalId + '\')">Publier →</button>' +
-        '<button class="reply-cancel" onclick="toggleModReply(\'' + c.id + '\')">Annuler</button>' +
-      '</div>';
-
-    li.appendChild(mainRow);
-    li.appendChild(replyBox);
+    replyBox.style.cssText = 'display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';
+    replyBox.innerHTML = '<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
+    li.appendChild(row); li.appendChild(replyBox);
     list.appendChild(li);
   });
 }
-
-function toggleModReply(commentId, jid) {
-  const box = document.getElementById('mod-reply-' + commentId);
-  if (!box) return;
-  const isOpen = box.style.display !== 'none';
-  box.style.display = isOpen ? 'none' : 'block';
-  if (!isOpen) {
-    const ta = document.getElementById('mod-reply-text-' + commentId);
-    if (ta) ta.focus();
-  }
-}
-
+function toggleModReply(id) { const b=document.getElementById('mod-reply-'+id); if(!b)return; b.style.display=b.style.display==='none'?'block':'none'; if(b.style.display==='block'){const ta=document.getElementById('mod-reply-text-'+id);if(ta)ta.focus();} }
 async function submitModReply(parentId, jid) {
-  const ta = document.getElementById('mod-reply-text-' + parentId);
-  if (!ta) return;
-  const text = ta.value.trim();
-  if (!text) { showToast('Veuillez écrire une réponse.', 'error'); return; }
-  const reply = {
-    id: Date.now().toString(),
-    journalId: jid,
-    parentId: parentId,
-    name: db.settings.siteName || 'La Rédaction',
-    text: text,
-    rating: 0,
-    date: new Date().toISOString(),
-    flagged: false,
-    isReply: true
-  };
+  const ta = document.getElementById('mod-reply-text-'+parentId);
+  const text = ta ? ta.value.trim() : '';
+  if (!text) { showToast('Veuillez écrire une réponse.','error'); return; }
+  const reply = { id:Date.now().toString(), journalId:jid, parentId, name:db.settings.siteName||'La Rédaction', text, rating:0, date:new Date().toISOString(), flagged:false, isReply:true };
   db.comments.push(reply);
-  try {
-    await saveDB();
-    toggleModReply(parentId);
-    loadModeration();
-    showToast('Réponse publiée !', 'success');
-  } catch(e) { showToast('Erreur lors de la publication.', 'error'); db.comments.pop(); }
+  try { await saveDB(); toggleModReply(parentId); loadModeration(); showToast('Réponse publiée !','success'); }
+  catch(e) { showToast('Erreur.','error'); db.comments.pop(); }
 }
-
 async function deleteCommentAdmin(id) {
   if (!confirm('Supprimer cet avis (et ses réponses) ?')) return;
-  db.comments = db.comments.filter(function(c){return c.id!==id && c.parentId!==id;});
-  await saveDB();
-  loadModeration();
-  if (currentJournalId) renderComments(currentJournalId, 'comment-list');
-  showToast('Avis supprimé.');
+  db.comments = db.comments.filter(c=>c.id!==id&&c.parentId!==id);
+  await saveDB(); loadModeration(); if(currentJournalId) renderComments(currentJournalId,'comment-list'); showToast('Avis supprimé.');
 }
-
-function applyBranding() {
-  const name = db.settings.siteName || 'CapNews';
-  const tagline = db.settings.tagline || 'Réflexions du quotidien';
-  const hour = db.settings.pubHour ?? 18;
-  const hourStr = String(hour).padStart(2,'0') + 'h00';
-
-  document.title = name;
-
-  // 🔥 Nouvelle logique de formatage du logo
-  function formatLogo(name) {
-    name = name.trim();
-
-    // 👉 Cas 1 : plusieurs mots
-    if (name.includes(' ')) {
-      const words = name.split(' ');
-
-      return (
-        escHtml(words[0]) + ' ' +
-        '<span>' + escHtml(words[1] || '') + '</span>' +
-        (words.length > 2 ? ' ' + escHtml(words.slice(2).join(' ')) : '')
-      );
-    }
-
-    // 👉 Cas 2 : un seul mot (CamelCase)
-    const parts = name.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])/g);
-
-    if (!parts) return escHtml(name);
-
-    return parts
-      .map((part, index) => {
-        if (index === 1) {
-          return '<span>' + escHtml(part) + '</span>';
-        }
-        return escHtml(part);
-      })
-      .join('');
-  }
-
-  const logo = document.getElementById('site-logo');
-  if (logo) {
-    logo.innerHTML = formatLogo(name);
-  }
-
-  const tgl = document.getElementById('site-tagline');
-  if (tgl) tgl.textContent = tagline + ' · Édition numérique';
-
-  const pubMeta = document.getElementById('site-pub-meta');
-  if (pubMeta) pubMeta.textContent = 'Publication quotidienne · ' + hourStr;
-
-  const footerName = document.getElementById('footer-name');
-  if (footerName) footerName.textContent = name;
-
-  const footerTag = document.getElementById('footer-tagline');
-  if (footerTag) footerTag.textContent = 'Publication quotidienne à ' + hourStr;
-
-  const aboutTitle = document.getElementById('about-title');
-  if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
-
-  const aboutDesc = document.getElementById('about-desc');
-  if (aboutDesc) {
-    aboutDesc.textContent =
-      name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain. Pour embellir ou motiver votre journée !';
-  }
-
-  const aboutTagQ = document.getElementById('about-tagline-quote');
-  if (aboutTagQ) {
-    aboutTagQ.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
-  }
-
-  const lockedSub = document.getElementById('locked-subtitle');
-  if (lockedSub) {
-    lockedSub.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
-  }
-
-  const lockedTitle = document.getElementById('locked-title');
-  if (lockedTitle) {
-    lockedTitle.textContent = "L'édition de ce jour n'est pas encore publiée";
-  }
-}
-
 function loadSettings() {
-  document.getElementById('setting-sitename').value = db.settings.siteName || 'CapNews';
-  document.getElementById('setting-tagline').value = db.settings.tagline || 'Réflexions du quotidien';
-  document.getElementById('setting-hour').value = db.settings.pubHour ?? 18;
+  document.getElementById('setting-sitename').value = db.settings.siteName||'CapNews';
+  document.getElementById('setting-tagline').value = db.settings.tagline||'Réflexions du quotidien';
+  document.getElementById('setting-hour').value = db.settings.pubHour??18;
 }
-
 async function saveSettings() {
-  db.settings.siteName = document.getElementById('setting-sitename').value.trim() || 'CapNews';
-  db.settings.tagline = document.getElementById('setting-tagline').value.trim() || 'Réflexions du quotidien';
-  db.settings.pubHour = parseInt(document.getElementById('setting-hour').value) || 18;
-  const newpw = document.getElementById('setting-newpw').value.trim();
-  if (newpw) db.settings.adminPwHash = simpleHash(newpw);
-  try {
-    await saveDB();
-    applyBranding();
-    showToast('Paramètres sauvegardés !', 'success');
-    document.getElementById('setting-newpw').value = '';
-  } catch(e) { showToast('Erreur de sauvegarde.', 'error'); }
+  db.settings.siteName = document.getElementById('setting-sitename').value.trim()||'CapNews';
+  db.settings.tagline  = document.getElementById('setting-tagline').value.trim();
+  db.settings.pubHour  = parseInt(document.getElementById('setting-hour').value)||18;
+  const np = document.getElementById('setting-newpw').value.trim();
+  if (np) db.settings.adminPwHash = simpleHash(np);
+  try { await saveDB(); applyBranding(); showToast('Paramètres sauvegardés !','success'); document.getElementById('setting-newpw').value=''; }
+  catch(e) { showToast('Erreur de sauvegarde.','error'); }
 }
 
-// ─── COUNTDOWN ───────────────────────────────────────────────────────
-function startCountdown() {
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+// ─── BRANDING ─────────────────────────────────────────────────
+function applyBranding() {
+  const name = db.settings.siteName||'CapNews';
+  const tagline = db.settings.tagline||'Réflexions du quotidien';
+  const hour = db.settings.pubHour??18;
+  const hourStr = pad(hour) + 'h00';
+  document.title = name;
+  function formatLogo(n) {
+    n = n.trim();
+    if (n.includes(' ')) { const w=n.split(' '); return escHtml(w[0])+' <span>'+escHtml(w[1]||'')+'</span>'+(w.length>2?' '+escHtml(w.slice(2).join(' ')):''); }
+    const parts = n.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])/g);
+    if (!parts) return escHtml(n);
+    return parts.map((p,i)=>i===1?'<span>'+escHtml(p)+'</span>':escHtml(p)).join('');
+  }
+  const logo = document.getElementById('site-logo'); if(logo) logo.innerHTML = formatLogo(name);
+  const tgl = document.getElementById('site-tagline'); if(tgl) tgl.textContent = tagline + ' · Édition numérique';
+  const pm = document.getElementById('site-pub-meta'); if(pm) pm.textContent = 'Publication quotidienne · ' + hourStr;
+  const fn = document.getElementById('footer-name'); if(fn) fn.textContent = name;
+  const ft = document.getElementById('footer-tagline'); if(ft) ft.textContent = 'Publication quotidienne à ' + hourStr;
+  const at = document.getElementById('about-title'); if(at) at.textContent = 'À propos de ' + name;
+  const ad = document.getElementById('about-desc'); if(ad) ad.textContent = name + ' est une publication numérique indépendante. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
+  const aq = document.getElementById('about-tagline-quote'); if(aq) aq.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
+  const ls = document.getElementById('locked-subtitle'); if(ls) ls.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
 }
 
+// ─── COUNTDOWN ────────────────────────────────────────────────
+function startCountdown() { updateCountdown(); setInterval(updateCountdown, 1000); }
 function updateCountdown() {
-  const now = new Date();
-  const pubHour = getPubHour();
+  const now = new Date(), pub = new Date();
+  pub.setHours(getPubHour(),0,0,0);
+  if (now >= pub) pub.setDate(pub.getDate()+1);
+  const diff = pub - now;
   const j = getTodayJournal();
-
   if (j && isPublished(j)) {
     document.getElementById('countdown-banner').classList.add('published');
     document.getElementById('countdown-text').textContent = '✓ Le journal du jour est disponible !';
     document.getElementById('countdown-timer').textContent = '';
-    const lc = document.getElementById('locked-countdown');
-    if (lc) lc.textContent = '';
+    const lc = document.getElementById('locked-countdown'); if(lc) lc.textContent='';
     return;
   }
-
   document.getElementById('countdown-banner').classList.remove('published');
-  const pub = new Date(); pub.setHours(pubHour,0,0,0);
-  if (now >= pub) pub.setDate(pub.getDate()+1);
-  const diff = pub - now;
-  const h = Math.floor(diff/3600000);
-  const m = Math.floor((diff%3600000)/60000);
-  const s = Math.floor((diff%60000)/1000);
-  const str = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
-  document.getElementById('countdown-text').textContent = j ? 'Publication dans :' : 'Chargement...' + String(pubHour).padStart(2,'0') + 'h dans :';
-  document.getElementById('countdown-timer').textContent = str;
-  const lc = document.getElementById('locked-countdown');
-  if (lc) lc.textContent = str;
+  const h=Math.floor(diff/3600000), m=Math.floor((diff%3600000)/60000), s=Math.floor((diff%60000)/1000);
+  document.getElementById('countdown-text').textContent = 'Prochain journal dans :';
+  document.getElementById('countdown-timer').textContent = pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+  const lc = document.getElementById('locked-countdown'); if(lc) lc.textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
 }
 
-// ─── UTILS ────────────────────────────────────────────────────────────
-function updateDateDisplay() {
-  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
-  document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
-  setInterval(function() {
-    document.getElementById('date-display').textContent = new Date().toLocaleDateString('fr-FR', opts);
-  }, 60000);
-}
-
-function formatDateFr(dateStr) {
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
-}
-
-function timeSince(iso) {
-  const d = new Date(iso);
-  const now = new Date();
-  const diff = Math.floor((now-d)/1000);
-  if (diff < 60) return 'à l\'instant';
-  if (diff < 3600) return 'il y a ' + Math.floor(diff/60) + ' min';
-  if (diff < 86400) return 'il y a ' + Math.floor(diff/3600) + 'h';
-  if (diff < 604800) return 'il y a ' + Math.floor(diff/86400) + ' jour' + (Math.floor(diff/86400)>1?'s':'');
-  return d.toLocaleDateString('fr-FR');
-}
-
-function moodClass(m) {
-  return m === 'positive' || m === 'energetic' ? 'mood-good' : m === 'melancholic' ? 'mood-bad' : 'mood-neutral';
-}
-function moodLabel(m) {
-  return { positive:'😊 Optimiste', neutral:'😐 Neutre', melancholic:'🌧️ Mélancolique', energetic:'⚡ Énergique', pensive:'🤔 Pensif' }[m] || m;
-}
-
-function escHtml(str) {
-  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-function pad(n) { return String(n).padStart(2,'0'); }
-
-function simpleHash(str) {
-  let hash = 5381;
-  for (let i=0;i<str.length;i++) hash = ((hash<<5)+hash)+str.charCodeAt(i);
-  return (hash>>>0).toString(36);
-}
-
-let toastTimer = null;
-function showToast(msg, type) {
-  type = type || '';
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.className = 'toast ' + type;
-  t.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() { t.classList.remove('show'); }, 3200);
-}
+// ─── KEYBOARD ─────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key==='Escape') { closeModal(); closeEditModal(); hideCtxMenu(); }
+  if (e.key==='ArrowRight' && !e.target.matches('input,textarea,[contenteditable]')) bookNext();
+  if (e.key==='ArrowLeft'  && !e.target.matches('input,textarea,[contenteditable]')) bookPrev();
+});
 </script>
 </body>
 </html>
