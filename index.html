@@ -1205,7 +1205,7 @@
         <p style="margin-bottom:1rem;font-style:italic;font-size:1.15rem;border-left:3px solid var(--gold);padding-left:1rem;color:var(--ink);" id="about-tagline-quote">
           Chaque jour à 18h00, un nouveau regard sur le monde.
         </p>
-        <p style="margin-bottom:1rem;" id="about-desc">CapNews est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain. Pour embellir ou motiver votre journée !</p>
+        <p style="margin-bottom:1rem;" id="about-desc">Aucun nom de journal défini.</p>
         <p style="margin-bottom:1rem;">Les journaux sont rédigés en amont par nos administrateurs, puis publiés automatiquement à l'heure configurée. Chaque édition est accompagnée d'une thématique, d'une humeur du jour et d'un résumé éditorial.</p>
         <p style="margin-bottom:1rem;">Les lecteurs sont invités à déposer leurs réactions, leurs notes et leurs avis. Ces contributions alimentent une conversation continue autour des sujets traités.</p>
         <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé, avec ses statistiques et l'ensemble des avis de la communauté.</p>
@@ -2503,7 +2503,7 @@ function applyBranding() {
   const aboutTitle = document.getElementById('about-title');
   if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
   const aboutDesc = document.getElementById('about-desc');
-  if (aboutDesc) aboutDesc.textContent = name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
+  if (aboutDesc) aboutDesc.textContent = name + ' est une publication numérique indépendante, animée par une équipe de rédacteurs passionnés. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain. Pour embellir ou motiver votre journée !';
   const aboutTagQ = document.getElementById('about-tagline-quote');
   if (aboutTagQ) aboutTagQ.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
   const lockedSub = document.getElementById('locked-subtitle');
