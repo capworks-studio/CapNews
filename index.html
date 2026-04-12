@@ -15,28 +15,34 @@
 :root {
   --ink:#1a1209;--ink-light:#3d2f1a;
   --parchment:#f7f3eb;--parchment-dark:#ede8dc;--parchment-mid:#f0ead9;
-  --gold:#b8860b;--gold-light:#d4a843;
+  --gold:#b8860b;--gold-light:#d4a843;--gold-glow:rgba(184,134,11,.25);
   --red:#8b1a1a;--red-light:#c0392b;
+  --green:#2e7d32;--green-light:#4caf50;
   --muted:#7a6a52;
   --border:rgba(90,60,20,.18);--border-strong:rgba(90,60,20,.38);
   --shadow:0 2px 24px rgba(30,15,0,.12);--shadow-strong:0 8px 48px rgba(30,15,0,.22);
+  --shadow-gold:0 4px 24px rgba(184,134,11,.22);
   --font-display:'Playfair Display',Georgia,serif;
   --font-body:'Source Serif 4',Georgia,serif;
   --font-mono:'DM Mono',monospace;
   --bg-page:var(--parchment);--bg-card:white;
   --transition:.22s cubic-bezier(.4,0,.2,1);
+  --radius:4px;
 }
 [data-theme="dark"]{
   --ink:#f0e8d8;--ink-light:#c8b89a;
   --parchment:#1a1510;--parchment-dark:#221e18;--parchment-mid:#1e1a14;
-  --gold:#d4a843;--gold-light:#e8c060;
+  --gold:#d4a843;--gold-light:#e8c060;--gold-glow:rgba(212,168,67,.18);
   --muted:#7a6a52;
   --border:rgba(200,160,80,.15);--border-strong:rgba(200,160,80,.28);
   --shadow:0 2px 24px rgba(0,0,0,.4);--shadow-strong:0 8px 48px rgba(0,0,0,.6);
   --bg-page:#1a1510;--bg-card:#221e18;
 }
-
 *{box-sizing:border-box;margin:0;padding:0;}
+
+/* ══ READING PROGRESS BAR ══ */
+#reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:9999;width:0%;transition:width .1s linear;pointer-events:none;}
+
 body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.75;min-height:100vh;transition:background var(--transition),color var(--transition);}
 
 /* ══ FESTIVITÉS ══ */
@@ -49,15 +55,14 @@ body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);fon
 #festive-banner .confetti-emoji{display:inline-block;animation:bounce-emoji .6s ease-in-out infinite alternate;}
 @keyframes shimmer{0%{background-position:0 0;}100%{background-position:200% 0;}}
 @keyframes bounce-emoji{from{transform:translateY(0);}to{transform:translateY(-4px);}}
-
-/* Particules festives */
 .festive-particle{position:fixed;pointer-events:none;z-index:9998;font-size:1.2rem;animation:fall-particle linear forwards;}
 @keyframes fall-particle{0%{transform:translateY(-40px) rotate(0deg);opacity:1;}100%{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
 /* ══ RICH TEXT CONTEXT MENU ══ */
-#rich-ctx-menu{position:fixed;z-index:99999;background:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:6px;box-shadow:0 8px 32px rgba(0,0,0,.45);padding:5px;display:none;min-width:200px;user-select:none;}
-#rich-ctx-menu.visible{display:flex;flex-direction:column;gap:1px;}
-.ctx-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:4px;cursor:pointer;font-family:var(--font-mono);font-size:.78rem;color:var(--parchment-dark);transition:background .12s;border:none;background:none;text-align:left;width:100%;}
+#rich-ctx-menu{position:fixed;z-index:99999;background:var(--ink);border:1px solid rgba(255,255,255,.1);border-radius:8px;box-shadow:0 12px 40px rgba(0,0,0,.5);padding:6px;display:none;min-width:210px;user-select:none;backdrop-filter:blur(10px);}
+#rich-ctx-menu.visible{display:flex;flex-direction:column;gap:1px;animation:ctx-appear .12s cubic-bezier(.4,0,.2,1);}
+@keyframes ctx-appear{from{opacity:0;transform:scale(.95);}to{opacity:1;transform:scale(1);}}
+.ctx-item{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:5px;cursor:pointer;font-family:var(--font-mono);font-size:.78rem;color:var(--parchment-dark);transition:background .12s;border:none;background:none;text-align:left;width:100%;}
 .ctx-item:hover{background:rgba(255,255,255,.12);}
 .ctx-icon{width:18px;text-align:center;font-size:.9rem;opacity:.85;}
 .ctx-label{flex:1;}
@@ -72,23 +77,29 @@ body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);fon
 .hl-text{font-size:1.35em;font-weight:700;font-family:var(--font-display);color:var(--gold);display:inline;}
 
 /* ══ MASTHEAD ══ */
-.masthead{border-bottom:3px double var(--border-strong);padding:1.5rem 0 0;text-align:center;background:linear-gradient(to bottom,var(--parchment-dark),var(--bg-page));}
-.masthead-top{display:flex;align-items:center;justify-content:space-between;padding:0 2rem .75rem;border-bottom:1px solid var(--border);margin-bottom:.75rem;gap:.5rem;}
+.masthead{border-bottom:3px double var(--border-strong);padding:1.5rem 0 0;text-align:center;background:linear-gradient(to bottom,var(--parchment-dark),var(--bg-page));position:relative;overflow:hidden;}
+.masthead::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%, var(--gold-glow) 0%, transparent 70%);pointer-events:none;}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;padding:0 2rem .75rem;border-bottom:1px solid var(--border);margin-bottom:.75rem;gap:.5rem;position:relative;}
 .masthead-meta{font-size:.78rem;color:var(--muted);font-family:var(--font-mono);}
-.masthead-logo{font-family:var(--font-display);font-size:clamp(2.2rem,6vw,4rem);font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1;cursor:pointer;}
+.masthead-logo{font-family:var(--font-display);font-size:clamp(2.2rem,6vw,4rem);font-weight:900;color:var(--ink);letter-spacing:-.02em;line-height:1;cursor:pointer;transition:opacity .15s;position:relative;}
+.masthead-logo:hover{opacity:.8;}
 .masthead-logo span{color:var(--gold);}
 .masthead-tagline{font-size:.78rem;font-family:var(--font-mono);color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-top:.25rem;margin-bottom:.75rem;}
 .masthead-rule{border:none;border-top:1px solid var(--border-strong);margin:0;}
+.masthead-controls{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
 
-/* ══ THEME BTN ══ */
-.theme-btn{background:none;border:1px solid var(--border-strong);border-radius:20px;padding:.25rem .65rem;font-size:.85rem;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0;}
-.theme-btn:hover{border-color:var(--gold);color:var(--gold);}
+/* ══ THEME / IMMERSIVE BTNs ══ */
+.icon-btn{background:none;border:1px solid var(--border-strong);border-radius:20px;padding:.25rem .65rem;font-size:.85rem;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);}
+.icon-btn:hover{border-color:var(--gold);color:var(--gold);}
 
 /* ══ BADGE NOUVEAU ══ */
 .badge-new{display:inline-flex;align-items:center;gap:4px;background:var(--red);color:white;font-family:var(--font-mono);font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:2px;animation:pulse-badge 2s ease-in-out infinite;vertical-align:middle;margin-left:6px;}
-@keyframes pulse-badge{0%,100%{opacity:1;}50%{opacity:.65;}}</style>
+@keyframes pulse-badge{0%,100%{opacity:1;}50%{opacity:.65;}}
 
-<style>
+/* ══ DRAFT INDICATOR ══ */
+#draft-indicator{position:fixed;bottom:5rem;left:2rem;background:var(--ink);color:var(--parchment);font-family:var(--font-mono);font-size:.72rem;padding:.35rem .75rem;border-radius:20px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none;border-left:3px solid var(--gold);}
+#draft-indicator.show{opacity:1;}
+
 /* ══ NAV ══ */
 nav{display:flex;align-items:center;justify-content:center;border-bottom:2px solid var(--ink);background:var(--ink);position:sticky;top:0;z-index:100;}
 nav a,nav button{color:var(--parchment-dark);text-decoration:none;font-family:var(--font-mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;padding:.65rem 1.2rem;border:none;background:none;cursor:pointer;transition:background .15s,color .15s;display:flex;align-items:center;gap:6px;white-space:nowrap;}
@@ -97,53 +108,86 @@ nav a.active{background:rgba(255,255,255,.12);color:var(--gold-light);}
 .nav-sep{color:rgba(255,255,255,.2);pointer-events:none;padding:0 2px;}
 .nav-admin-btn{margin-left:auto;color:var(--gold-light)!important;}
 
+/* ══ LIVE VIEWS BADGE ══ */
+#live-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(76,175,80,.15);border:1px solid rgba(76,175,80,.3);border-radius:20px;padding:.15rem .6rem;font-family:var(--font-mono);font-size:.7rem;color:#4caf50;margin-left:auto;margin-right:.75rem;}
+#live-badge .live-dot{width:6px;height:6px;border-radius:50%;background:#4caf50;animation:live-pulse 1.5s ease-in-out infinite;}
+@keyframes live-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
+
 /* ══ COUNTDOWN ══ */
-#countdown-banner{background:var(--ink);color:var(--parchment);text-align:center;padding:.55rem 1rem;font-family:var(--font-mono);font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.08);letter-spacing:.05em;}
+#countdown-banner{background:var(--ink);color:var(--parchment);text-align:center;padding:.55rem 1rem;font-family:var(--font-mono);font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.08);letter-spacing:.05em;position:relative;}
 #countdown-banner.published{background:linear-gradient(90deg,#1a3a1a,#2a4a2a,#1a3a1a);color:#a8e6a3;}
 #countdown-timer{font-weight:500;color:var(--gold-light);}
 
 /* ══ MAIN ══ */
 main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .page-section{display:none;}
-.page-section.active{display:block;animation:fadeIn .25s ease;}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:none;}}
+.page-section.active{display:block;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+
+/* ══ IMMERSIVE MODE ══ */
+body.immersive-mode .masthead,body.immersive-mode nav,body.immersive-mode #countdown-banner,body.immersive-mode .sidebar,body.immersive-mode footer,body.immersive-mode #festive-banner{display:none!important;}
+body.immersive-mode main{max-width:780px;padding:2rem 1.5rem;}
+body.immersive-mode .journal-hero{display:block;}
+body.immersive-mode #immersive-bar{display:flex;}
+#immersive-bar{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(26,18,9,.92);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.08);padding:.7rem 2rem;z-index:200;align-items:center;gap:1.5rem;}
+#immersive-bar .imm-title{font-family:var(--font-display);color:rgba(247,243,235,.75);font-size:.9rem;font-style:italic;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#immersive-bar .imm-btn{background:none;border:1px solid rgba(255,255,255,.2);border-radius:20px;color:rgba(247,243,235,.7);font-family:var(--font-mono);font-size:.75rem;padding:.3rem .8rem;cursor:pointer;transition:all .15s;}
+#immersive-bar .imm-btn:hover{border-color:var(--gold-light);color:var(--gold-light);}
 
 /* ══ BOOK READER ══ */
 .book-wrapper{display:flex;flex-direction:column;}
-.book-reader{position:relative;min-height:520px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:4px 4px 0 0;overflow:hidden;box-shadow:var(--shadow);}
-.book-page{display:none;padding:2.5rem 2.8rem;overflow-y:auto;min-height:520px;animation:pageIn .25s ease;}
+.book-reader{position:relative;min-height:520px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;box-shadow:var(--shadow);}
+.book-page{display:none;padding:2.5rem 2.8rem;overflow-y:auto;min-height:520px;animation:pageIn .28s cubic-bezier(.4,0,.2,1);}
 .book-page.active{display:block;}
-@keyframes pageIn{from{opacity:0;transform:translateX(18px);}to{opacity:1;transform:none;}}
-.cover-page{background:var(--ink);color:var(--parchment);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;}
-.cover-edition{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.5rem;opacity:.8;}
-.cover-title{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;font-style:italic;line-height:1.1;color:var(--parchment);margin-bottom:1rem;}
-.cover-excerpt{font-size:1rem;font-style:italic;color:rgba(247,243,235,.75);line-height:1.65;border-left:2px solid var(--gold);padding-left:1rem;margin-bottom:1.5rem;max-width:520px;}
-.cover-meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;}
+.book-page.page-out{animation:pageOut .2s cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes pageIn{from{opacity:0;transform:translateX(22px);}to{opacity:1;transform:none;}}
+@keyframes pageOut{from{opacity:1;transform:none;}to{opacity:0;transform:translateX(-22px);}}
+
+/* ── Couverture ── */
+.cover-page{background:var(--ink);color:var(--parchment);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;overflow:hidden;}
+.cover-page::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%, rgba(184,134,11,.12) 0%, transparent 60%);pointer-events:none;}
+.cover-edition{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.5rem;opacity:.8;position:relative;}
+.cover-title{font-family:var(--font-display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:900;font-style:italic;line-height:1.1;color:var(--parchment);margin-bottom:1rem;position:relative;}
+.cover-excerpt{font-size:1rem;font-style:italic;color:rgba(247,243,235,.75);line-height:1.65;border-left:2px solid var(--gold);padding-left:1rem;margin-bottom:1.5rem;max-width:520px;position:relative;}
+.cover-meta{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:1.2rem;position:relative;}
 .cover-meta .chip{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.2);color:rgba(247,243,235,.8);}
 .cover-meta .chip.cat{background:var(--gold);border-color:var(--gold);color:white;}
-.cover-readtime{font-family:var(--font-mono);font-size:.78rem;color:rgba(247,243,235,.5);margin-bottom:1.8rem;}
-.cover-start-btn{background:var(--gold);color:white;border:none;padding:.65rem 1.4rem;border-radius:3px;font-family:var(--font-display);font-size:1rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
-.cover-start-btn:hover{background:var(--gold-light);transform:translateX(3px);}
+.cover-readtime{font-family:var(--font-mono);font-size:.78rem;color:rgba(247,243,235,.5);margin-bottom:1.8rem;position:relative;}
+.cover-start-btn{background:var(--gold);color:white;border:none;padding:.65rem 1.4rem;border-radius:3px;font-family:var(--font-display);font-size:1rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s,box-shadow .15s;position:relative;}
+.cover-start-btn:hover{background:var(--gold-light);transform:translateX(4px);box-shadow:var(--shadow-gold);}
 .cover-page-num{display:block;margin-top:2rem;font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.35);}
 .book-page:not(.cover-page) .cover-page-num{color:var(--muted);}
 .page-body-text{font-size:1rem;line-height:1.9;color:var(--ink);}
 .page-drop-cap::first-letter{font-family:var(--font-display);font-size:4rem;font-weight:900;float:left;line-height:.75;margin-right:.12em;margin-top:.1em;color:var(--gold);}
 
+/* ── Search highlight ── */
+mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;padding:0 2px;}
+
 /* ══ PAGE IMAGE / AUDIO ══ */
 .page-image-block{margin:1.2rem 0;border-radius:6px;overflow:hidden;border:1px solid var(--border);}
-.page-image-block img{width:100%;max-height:380px;object-fit:cover;display:block;}
+.page-image-block img{width:100%;max-height:380px;object-fit:cover;display:block;transition:transform .3s ease;}
+.page-image-block:hover img{transform:scale(1.01);}
 .page-image-caption{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);padding:.5rem .75rem;background:var(--parchment-mid);}
 .page-audio-block{margin:1.2rem 0;padding:1rem 1.2rem;background:var(--parchment-mid);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;gap:1rem;}
 .page-audio-block audio{flex:1;height:36px;}
 .page-audio-label{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);white-space:nowrap;}
 
+/* ══ PERSISTENT AUDIO PLAYER ══ */
+#persistent-player{position:fixed;bottom:0;left:0;right:0;background:var(--ink);border-top:1px solid rgba(255,255,255,.1);padding:.6rem 1.5rem;display:none;align-items:center;gap:1rem;z-index:190;backdrop-filter:blur(8px);}
+#persistent-player.show{display:flex;animation:slideUp .3s ease;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:none;}}
+#persistent-player .pp-info{font-family:var(--font-mono);font-size:.75rem;color:rgba(247,243,235,.7);}
+#persistent-player audio{flex:1;height:32px;}
+#persistent-player .pp-close{background:none;border:none;color:rgba(247,243,235,.4);cursor:pointer;font-size:1.1rem;padding:.2rem;transition:color .15s;}
+#persistent-player .pp-close:hover{color:rgba(247,243,235,.9);}
+
 /* ══ COMMENTS PAGE in BOOK ══ */
 .comments-book-page{background:var(--parchment-mid);padding:2rem 2.5rem;overflow-y:auto;min-height:520px;}
 .comments-book-page h2{font-family:var(--font-display);font-size:1.35rem;font-weight:700;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:2px solid var(--ink);}
-.comments-book-page .comment-form-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:4px;padding:1.2rem;margin-bottom:1.5rem;}
+.comments-book-page .comment-form-wrapper{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1.5rem;}
 
 /* ══ BOOK NAV ══ */
-.book-nav{display:flex;align-items:center;justify-content:space-between;background:var(--parchment-dark);border:1px solid var(--border-strong);border-top:none;border-radius:0 0 4px 4px;padding:.6rem 1rem;gap:1rem;}
+.book-nav{display:flex;align-items:center;justify-content:space-between;background:var(--parchment-dark);border:1px solid var(--border-strong);border-top:none;border-radius:0 0 var(--radius) var(--radius);padding:.6rem 1rem;gap:1rem;}
 .book-nav-btn{background:none;border:1px solid var(--border-strong);padding:.35rem .85rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;color:var(--ink-light);transition:all .13s;white-space:nowrap;}
 .book-nav-btn:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
 .book-nav-btn:disabled{opacity:.3;cursor:not-allowed;}
@@ -165,6 +209,14 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .sidebar{display:flex;flex-direction:column;gap:1.5rem;}
 .sidebar-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--parchment-mid);padding:1.2rem;}
 .sidebar-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
+
+/* ══ QUOTE OF THE DAY ══ */
+#quote-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--ink);padding:1.2rem;}
+#quote-box h3{font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--gold-light);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;}
+#quote-text{font-family:var(--font-display);font-style:italic;font-size:1rem;color:rgba(247,243,235,.88);line-height:1.55;margin-bottom:.5rem;}
+#quote-author{font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.45);}
+#quote-refresh{background:none;border:none;color:rgba(247,243,235,.35);cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;}
+#quote-refresh:hover{color:var(--gold-light);}
 
 /* ══ CHIP ══ */
 .chip{font-family:var(--font-mono);font-size:.72rem;padding:.2rem .65rem;border-radius:2px;border:1px solid var(--border-strong);color:var(--muted);background:var(--parchment-mid);letter-spacing:.08em;text-transform:uppercase;}
@@ -206,10 +258,11 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .comment-form-row input:focus{border-color:var(--gold);}
 .star-picker{display:flex;gap:4px;align-items:center;margin-bottom:.6rem;}
 .star-picker label{font-size:.82rem;color:var(--muted);font-family:var(--font-mono);margin-right:6px;}
-.star-pick{font-size:1.5rem;cursor:pointer;color:#ccc;transition:color .12s;}
+.star-pick{font-size:1.5rem;cursor:pointer;color:#ccc;transition:color .12s,transform .1s;}
+.star-pick:hover{transform:scale(1.15);}
 .star-pick.active{color:var(--gold);}
-.comment-submit{background:var(--ink);color:var(--parchment);border:none;padding:.6rem 1.4rem;border-radius:3px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;transition:background .15s;}
-.comment-submit:hover{background:var(--ink-light);}
+.comment-submit{background:var(--ink);color:var(--parchment);border:none;padding:.6rem 1.4rem;border-radius:3px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
+.comment-submit:hover{background:var(--ink-light);transform:translateY(-1px);}
 
 /* ── Filtre étoiles ── */
 .star-filter-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
@@ -219,11 +272,12 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .star-filter-btn:hover:not(.active){border-color:var(--gold);color:var(--gold);}
 
 .comment-list{display:flex;flex-direction:column;gap:1rem;}
-.comment-card{border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;background:var(--bg-card);animation:fadeIn .35s ease;}
+.comment-card{border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;background:var(--bg-card);animation:fadeIn .35s ease;position:relative;}
 .comment-card.reply-card{border-left:3px solid var(--gold);background:var(--parchment-mid);margin-left:1.5rem;margin-top:-.5rem;}
 .comment-header{display:flex;align-items:center;gap:8px;margin-bottom:.5rem;}
 .comment-avatar{width:32px;height:32px;border-radius:50%;background:var(--ink);color:var(--parchment);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.85rem;font-weight:700;flex-shrink:0;}
 .comment-name{font-weight:600;font-size:.9rem;color:var(--ink);}
+.comment-badge{font-family:var(--font-mono);font-size:.6rem;padding:1px 5px;border-radius:2px;background:var(--gold);color:white;margin-left:4px;}
 .comment-date{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:auto;}
 .comment-stars{display:flex;gap:2px;}
 .comment-star{font-size:.85rem;color:#ddd;}
@@ -235,7 +289,7 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .comment-action-btn:hover{color:var(--ink);background:var(--parchment-dark);}
 .comment-action-btn.delete:hover{color:var(--red);}
 .reply-form{margin-top:.75rem;padding:.75rem;background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;display:none;}
-.reply-form.open{display:block;}
+.reply-form.open{display:block;animation:fadeIn .2s ease;}
 .reply-form textarea{width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:70px;outline:none;margin-bottom:.5rem;background:var(--bg-card);color:var(--ink);}
 .reply-form textarea:focus{border-color:var(--gold);}
 .reply-form-actions{display:flex;gap:.5rem;}
@@ -253,7 +307,7 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
 .history-card{border:1px solid var(--border-strong);border-radius:4px;background:var(--bg-card);padding:1.2rem;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
 .history-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:transform .18s;}
-.history-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--gold);}
+.history-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--gold);}
 .history-card:hover::before{transform:scaleY(1);}
 .history-card-date{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem;}
 .history-card-title{font-family:var(--font-display);font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:.5rem;font-style:italic;line-height:1.3;}
@@ -265,19 +319,31 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .history-card-cat{font-family:var(--font-mono);font-size:.7rem;color:var(--parchment);background:var(--ink);padding:2px 8px;border-radius:2px;}
 
 /* ══ MODAL ══ */
-.modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.7);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(4px);}
+.modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.75);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(6px);}
 .modal-bg.hidden{display:none;}
-.modal-content{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;padding:2rem 2.5rem;max-width:900px;width:100%;position:relative;box-shadow:var(--shadow-strong);margin-top:1rem;}
+.modal-content{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;padding:2rem 2.5rem;max-width:900px;width:100%;position:relative;box-shadow:var(--shadow-strong);margin-top:1rem;animation:modalIn .25s cubic-bezier(.4,0,.2,1);}
+@keyframes modalIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
 .modal-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--muted);font-family:var(--font-mono);transition:color .15s;}
 .modal-close:hover{color:var(--ink);}
 
 /* ══ EDIT FAB ══ */
-.edit-fab{position:fixed;bottom:2rem;left:2rem;background:var(--gold);color:white;border:none;padding:.7rem 1.3rem;border-radius:30px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:0 4px 16px rgba(184,134,11,.35);z-index:200;transition:background .15s,transform .15s;}
-.edit-fab:hover{background:var(--gold-light);transform:translateY(-2px);}
+.edit-fab{position:fixed;bottom:2rem;left:2rem;background:var(--gold);color:white;border:none;padding:.7rem 1.3rem;border-radius:30px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow-gold);z-index:200;transition:background .15s,transform .15s,box-shadow .15s;}
+.edit-fab:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 6px 24px rgba(184,134,11,.45);}
 .edit-fab.hidden{display:none;}
 
+/* ══ KEYBOARD HELP ══ */
+#kbd-help{position:fixed;inset:0;background:rgba(26,18,9,.8);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
+#kbd-help.show{display:flex;animation:fadeIn .2s ease;}
+.kbd-help-box{background:var(--parchment);border:1px solid var(--border-strong);border-radius:8px;padding:2rem;max-width:480px;width:100%;box-shadow:var(--shadow-strong);}
+.kbd-help-box h2{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;}
+.kbd-row{display:flex;align-items:center;justify-content:space-between;padding:.55rem 0;border-bottom:1px solid var(--border);}
+.kbd-row:last-child{border:none;}
+.kbd-desc{font-size:.88rem;color:var(--ink-light);}
+.kbd-keys{display:flex;gap:4px;}
+kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);border-radius:3px;padding:2px 7px;font-family:var(--font-mono);font-size:.75rem;color:var(--ink-light);}
+
 /* ══ EDIT MODAL ══ */
-.edit-modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.7);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(4px);}
+.edit-modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.75);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(6px);}
 .edit-modal-bg.hidden{display:none;}
 .edit-modal{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;padding:2rem 2.5rem;max-width:820px;width:100%;position:relative;box-shadow:var(--shadow-strong);margin-top:1rem;}
 .edit-modal h2{font-family:var(--font-display);font-size:1.4rem;font-weight:700;margin-bottom:1.2rem;}
@@ -293,6 +359,7 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .richtext-toolbar{display:flex;gap:4px;padding:4px 6px;background:var(--parchment-dark);border:1px solid var(--border);border-bottom:none;border-radius:3px 3px 0 0;flex-wrap:wrap;}
 .richtext-toolbar-btn{background:none;border:1px solid transparent;padding:3px 8px;border-radius:3px;cursor:pointer;font-family:var(--font-mono);font-size:.75rem;color:var(--ink-light);transition:all .12s;}
 .richtext-toolbar-btn:hover{background:var(--bg-card);border-color:var(--border);}
+.richtext-charcount{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);text-align:right;padding:2px 8px;background:var(--parchment-dark);border:1px solid var(--border);border-top:none;border-radius:0 0 3px 3px;}
 
 /* ══ MEDIA INPUTS ══ */
 .media-row{display:flex;gap:.5rem;align-items:flex-end;margin-top:.5rem;}
@@ -327,11 +394,11 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .form-textarea{resize:vertical;min-height:80px;line-height:1.65;}
 .form-row{display:flex;gap:1rem;flex-wrap:wrap;}
 .form-row .form-group{flex:1;min-width:140px;}
-.btn-primary{background:var(--ink);color:var(--parchment);border:none;padding:.7rem 1.5rem;border-radius:4px;font-family:var(--font-display);font-size:1rem;cursor:pointer;font-weight:600;transition:background .2s;}
-.btn-primary:hover{background:var(--ink-light);}
+.btn-primary{background:var(--ink);color:var(--parchment);border:none;padding:.7rem 1.5rem;border-radius:4px;font-family:var(--font-display);font-size:1rem;cursor:pointer;font-weight:600;transition:background .2s,transform .1s;}
+.btn-primary:hover{background:var(--ink-light);transform:translateY(-1px);}
 .btn-secondary{background:none;border:1px solid var(--border-strong);padding:.6rem 1.2rem;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;cursor:pointer;color:var(--muted);transition:all .15s;}
 .btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
-.btn-danger{background:var(--red);color:white;border:none;padding:.55rem 1.1rem;border-radius:3px;font-family:var(--font-mono);font-size:.8rem;cursor:pointer;}
+.btn-danger{background:var(--red);color:white;border:none;padding:.55rem 1.1rem;border-radius:3px;font-family:var(--font-mono);font-size:.8rem;cursor:pointer;transition:background .15s;}
 .btn-danger:hover{background:var(--red-light);}
 .admin-list{list-style:none;}
 .admin-list li{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;border-bottom:1px solid var(--border);font-size:.9rem;}
@@ -380,19 +447,22 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 .top-journal-views{font-family:var(--font-mono);font-size:.75rem;color:var(--gold);}
 
 /* ══ SEARCH ══ */
-.search-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:4px;padding:.5rem 1rem;}
+.search-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:4px;padding:.5rem 1rem;transition:border-color .2s,box-shadow .2s;}
+.search-bar:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
 .search-bar input{flex:1;border:none;background:none;font-family:var(--font-body);font-size:.95rem;color:var(--ink);outline:none;}
+#search-results-count{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);white-space:nowrap;}
 .filter-row{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.5rem;}
 .filter-btn{padding:.3rem .85rem;border:1px solid var(--border-strong);border-radius:2px;background:var(--bg-card);font-family:var(--font-mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;color:var(--muted);transition:all .13s;}
 .filter-btn.active{background:var(--ink);color:var(--parchment);border-color:var(--ink);}
 .filter-btn:hover:not(.active){border-color:var(--gold);color:var(--gold);}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem;margin-bottom:2rem;}
-.stat-card{border:1px solid var(--border);border-radius:4px;padding:1rem;background:var(--bg-card);text-align:center;}
+.stat-card{border:1px solid var(--border);border-radius:4px;padding:1rem;background:var(--bg-card);text-align:center;transition:transform .15s,box-shadow .15s;}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow);}
 .stat-num{font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--ink);line-height:1;}
 .stat-lbl{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.1em;}
 
 /* ══ TOAST ══ */
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--parchment);padding:.75rem 1.4rem;border-radius:4px;font-family:var(--font-mono);font-size:.85rem;z-index:9999;transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;max-width:320px;}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--parchment);padding:.75rem 1.4rem;border-radius:6px;font-family:var(--font-mono);font-size:.85rem;z-index:9999;transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;max-width:320px;box-shadow:var(--shadow-strong);}
 .toast.show{opacity:1;transform:none;}
 .toast.success{border-left:3px solid #4caf50;}
 .toast.error{border-left:3px solid var(--red);}
@@ -413,11 +483,17 @@ main{max-width:1120px;margin:0 auto;padding:2rem 1.5rem;}
 
 footer{border-top:2px solid var(--ink);margin-top:3rem;padding:1.5rem;text-align:center;font-family:var(--font-mono);font-size:.78rem;color:var(--muted);background:var(--parchment-dark);}
 footer strong{color:var(--ink);font-weight:500;}
+.footer-links{display:flex;justify-content:center;gap:1.5rem;margin-top:.5rem;flex-wrap:wrap;}
+.footer-links button{background:none;border:none;font-family:var(--font-mono);font-size:.72rem;color:var(--muted);cursor:pointer;transition:color .15s;}
+.footer-links button:hover{color:var(--gold);}
 
-@media(max-width:600px){.form-row{flex-direction:column;}main{padding:1rem;}.book-page{padding:1.5rem 1.2rem;}.modal-content{padding:1.2rem 1rem;}.edit-modal{padding:1.2rem 1rem;}}
+@media(max-width:600px){.form-row{flex-direction:column;}main{padding:1rem;}.book-page{padding:1.5rem 1.2rem;}.modal-content{padding:1.2rem 1rem;}.edit-modal{padding:1.2rem 1rem;}.journal-hero{display:block;}}
 </style>
 </head>
 <body>
+
+<!-- READING PROGRESS -->
+<div id="reading-progress"></div>
 
 <!-- FESTIVE BANNER -->
 <div id="festive-banner"></div>
@@ -434,12 +510,32 @@ footer strong{color:var(--ink);font-weight:500;}
   <button class="ctx-item ctx-ai" onclick="rtCmd('spellcheck')"><span class="ctx-icon">✨</span><span class="ctx-label">Corriger (IA)</span></button>
 </div>
 
+<!-- KEYBOARD HELP -->
+<div id="kbd-help">
+  <div class="kbd-help-box">
+    <h2>⌨️ Raccourcis clavier <button onclick="closeKbdHelp()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);">✕</button></h2>
+    <div class="kbd-row"><span class="kbd-desc">Page suivante</span><div class="kbd-keys"><kbd>→</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Page précédente</span><div class="kbd-keys"><kbd>←</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Mode lecture immersif</span><div class="kbd-keys"><kbd>F</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Fermer / Quitter</span><div class="kbd-keys"><kbd>Esc</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Recherche</span><div class="kbd-keys"><kbd>Ctrl</kbd><kbd>K</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Accueil</span><div class="kbd-keys"><kbd>H</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Archives</span><div class="kbd-keys"><kbd>A</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Thème clair/sombre</span><div class="kbd-keys"><kbd>D</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Cette aide</span><div class="kbd-keys"><kbd>?</kbd></div></div>
+    <p style="margin-top:1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">Les raccourcis B/I/→/← sont désactivés quand un champ de texte est actif.</p>
+  </div>
+</div>
+
 <!-- MASTHEAD -->
 <header class="masthead">
   <div class="masthead-top">
     <div class="masthead-meta" id="date-display">—</div>
     <div class="masthead-meta" id="site-pub-meta">Publication quotidienne</div>
-    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙 Sombre</button>
+    <div class="masthead-controls">
+      <button class="icon-btn" onclick="toggleImmersive()" id="immersive-btn" title="Mode lecture (F)">🔍</button>
+      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn">🌙 Sombre</button>
+    </div>
   </div>
   <div class="masthead-logo" onclick="showPage('home')" id="site-logo">Cap<span>News</span></div>
   <div class="masthead-tagline" id="site-tagline">Édition numérique</div>
@@ -452,12 +548,31 @@ footer strong{color:var(--ink);font-weight:500;}
   <a href="#" onclick="showPage('history')" id="nav-history">Archives</a>
   <span class="nav-sep">·</span>
   <a href="#" onclick="showPage('about')" id="nav-about">À propos</a>
+  <span id="live-badge" style="display:none;"><span class="live-dot"></span><span id="live-count">0</span> en ligne</span>
   <button class="nav-admin-btn" onclick="showPage('admin')">⚙ Admin</button>
 </nav>
 
 <div id="countdown-banner">
   <span id="countdown-text">Chargement...</span> <span id="countdown-timer"></span>
 </div>
+
+<!-- IMMERSIVE BAR -->
+<div id="immersive-bar">
+  <span class="imm-title" id="imm-title">—</span>
+  <button class="imm-btn" onclick="bookPrev()">← Préc.</button>
+  <button class="imm-btn" onclick="bookNext()">Suiv. →</button>
+  <button class="imm-btn" onclick="toggleImmersive()">✕ Quitter</button>
+</div>
+
+<!-- PERSISTENT AUDIO PLAYER -->
+<div id="persistent-player">
+  <span class="pp-info" id="pp-info">🔊 Audio</span>
+  <audio id="pp-audio" controls></audio>
+  <button class="pp-close" onclick="closePersistentPlayer()">✕</button>
+</div>
+
+<!-- DRAFT INDICATOR -->
+<div id="draft-indicator">💾 Brouillon sauvegardé</div>
 
 <main>
 
@@ -484,6 +599,13 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
       </div>
       <aside class="sidebar">
+        <!-- QUOTE OF THE DAY -->
+        <div id="quote-box">
+          <button id="quote-refresh" onclick="refreshQuote()" title="Nouvelle citation">↻</button>
+          <h3>✦ Citation du jour</h3>
+          <div id="quote-text">Chargement...</div>
+          <div id="quote-author"></div>
+        </div>
         <div class="sidebar-box">
           <h3>📊 Réactions</h3>
           <div class="ratings-grid">
@@ -503,8 +625,9 @@ footer strong{color:var(--ink);font-weight:500;}
             <button class="vote-btn" onclick="castReaction('neutral')" id="vbtn-neutral">🤔 <span id="vc-neutral">0</span></button>
             <button class="vote-btn" onclick="castReaction('negative')" id="vbtn-negative">👎 <span id="vc-negative">0</span></button>
           </div>
-          <div style="margin-top:.75rem;display:flex;gap:.5rem;">
+          <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap;">
             <button class="share-btn" onclick="shareJournal()">🔗 Partager</button>
+            <button class="share-btn" onclick="toggleImmersive()">🔍 Immersif</button>
           </div>
         </div>
         <div class="sidebar-box">
@@ -579,37 +702,23 @@ footer strong{color:var(--ink);font-weight:500;}
         <div class="form-group">
           <label class="form-label">Humeur</label>
           <select class="form-select" id="edit-mood">
-            <option value="positive">😊 Optimiste</option>
-            <option value="neutral">😐 Neutre</option>
-            <option value="melancholic">🌧️ Mélancolique</option>
-            <option value="energetic">⚡ Énergique</option>
-            <option value="pensive">🤔 Pensif</option>
-            <option value="excited">🎉 Enthousiaste</option>
-            <option value="grateful">🌿 Reconnaissant</option>
-            <option value="nostalgic">🌅 Nostalgique</option>
-            <option value="curious">🔍 Curieux</option>
-            <option value="inspired">💡 Inspiré</option>
+            <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
+            <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
+            <option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option>
+            <option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option>
+            <option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option>
           </select>
         </div>
         <div class="form-group">
           <label class="form-label">Temps de lecture</label>
-          <input type="text" class="form-input" id="edit-readtime" placeholder="sinon calcule automatique si tu laisses vide !">
+          <input type="text" class="form-input" id="edit-readtime" placeholder="Auto si vide">
           <div class="readtime-auto" id="edit-readtime-auto"></div>
         </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Auteur</label>
-          <input type="text" class="form-input" id="edit-author">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Tags (virgules)</label>
-          <input type="text" class="form-input" id="edit-tags">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Date de publication</label>
-          <input type="date" class="form-input" id="edit-date">
-        </div>
+        <div class="form-group"><label class="form-label">Auteur</label><input type="text" class="form-input" id="edit-author"></div>
+        <div class="form-group"><label class="form-label">Tags (virgules)</label><input type="text" class="form-input" id="edit-tags"></div>
+        <div class="form-group"><label class="form-label">Date de publication</label><input type="date" class="form-input" id="edit-date"></div>
       </div>
     </div>
     <div id="etab-body-preview" style="display:none;">
@@ -618,10 +727,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <div class="book-reader" id="edit-preview-reader" style="min-height:400px;box-shadow:none;border:none;"></div>
         <div class="book-nav" style="border-radius:0;">
           <button class="book-nav-btn" id="preview-btn-prev" onclick="previewPrev()">← Précédente</button>
-          <div class="book-progress">
-            <div class="progress-dots" id="preview-dots"></div>
-            <span id="preview-counter"></span>
-          </div>
+          <div class="book-progress"><div class="progress-dots" id="preview-dots"></div><span id="preview-counter"></span></div>
           <button class="book-nav-btn" id="preview-btn-next" onclick="previewNext()">Suivante →</button>
         </div>
       </div>
@@ -642,7 +748,8 @@ footer strong{color:var(--ink);font-weight:500;}
   </div>
   <div class="search-bar">
     <span style="color:var(--muted);">🔍</span>
-    <input type="text" id="search-input" placeholder="Rechercher dans les archives..." oninput="filterHistory()">
+    <input type="text" id="search-input" placeholder="Rechercher dans les archives... (Ctrl+K)" oninput="filterHistory()">
+    <span id="search-results-count"></span>
   </div>
   <div class="filter-row" id="cat-filters"></div>
   <div id="history-stats" class="stats-grid"></div>
@@ -660,7 +767,7 @@ footer strong{color:var(--ink);font-weight:500;}
       <p style="margin-bottom:2rem;">Les archives permettent de retrouver chaque numéro passé avec ses statistiques et l'ensemble des avis de la communauté.</p>
       <div style="background:var(--parchment-mid);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;margin-bottom:1rem;">
         <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);margin-bottom:.5rem;">SÉCURITÉ</p>
-        <p style="font-size:.9rem;color:var(--ink-light);">Backend Cloudflare Worker — <span class="security-badge">🔒 PROTECTION RENFORCÉE SUITE AU HACKING DU 11 AVRIL 2026.</span>. Pour cela, toute les variables ainsi que les codes sont protégés dans un backend.</p>
+        <p style="font-size:.9rem;color:var(--ink-light);">Backend Cloudflare Worker — <span class="security-badge">🔒 PROTECTION RENFORCÉE SUITE AU HACKING DU 11 AVRIL 2026.</span> Toutes les variables et codes sont protégés dans un backend.</p>
       </div>
       <div style="background:var(--parchment-mid);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;">
         <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);margin-bottom:.5rem;">CRÉATION</p>
@@ -688,14 +795,14 @@ footer strong{color:var(--ink);font-weight:500;}
       <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;">Panel d'administration</h1>
       <button onclick="adminLogout()" class="btn-secondary" style="font-size:.78rem;">Déconnexion</button>
     </div>
-    <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.25);border-radius:4px;">💡 Clic droit sur le texte sélectionné → mise en forme. Onglet <strong>Aperçu</strong> pour voir le rendu avant publication.</p>
+    <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.25);border-radius:4px;">💡 Clic droit sur le texte sélectionné → mise en forme. Onglet <strong>Aperçu</strong> pour voir le rendu avant publication. Les brouillons sont sauvegardés automatiquement.</p>
     <div class="admin-panel-box">
       <div class="admin-tabs">
         <button class="admin-tab active" onclick="switchAdminTab('new')" id="atab-new">✏️ Nouveau</button>
         <button class="admin-tab" onclick="switchAdminTab('manage')" id="atab-manage">📚 Gérer</button>
         <button class="admin-tab" onclick="switchAdminTab('calendar')" id="atab-calendar">📅 Calendrier</button>
         <button class="admin-tab" onclick="switchAdminTab('analytics')" id="atab-analytics">📈 Analytics</button>
-        <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Commentaire</button>
+        <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Commentaires</button>
         <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
       </div>
       <div class="admin-body">
@@ -711,17 +818,21 @@ footer strong{color:var(--ink);font-weight:500;}
           <div id="ntab-body-content">
             <div class="form-group">
               <label class="form-label">Titre du journal *</label>
-              <input type="text" class="form-input" id="new-title" placeholder="Un titre percutant...">
+              <input type="text" class="form-input" id="new-title" placeholder="Un titre percutant..." oninput="saveDraft()">
             </div>
             <div class="form-group">
               <label class="form-label">Résumé / accroche</label>
-              <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea>
+              <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..." oninput="saveDraft()"></textarea>
             </div>
             <div class="form-group">
               <label class="form-label">Pages du journal *</label>
               <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = un écran dans le lecteur.</p>
               <div class="pages-editor" id="new-pages-editor"></div>
               <button class="add-page-btn" onclick="addNewPage()">+ Ajouter une page</button>
+            </div>
+            <div style="display:flex;gap:.75rem;margin-top:1rem;align-items:center;flex-wrap:wrap;">
+              <button id="load-draft-btn" class="btn-secondary" onclick="loadDraft()" style="display:none;">📋 Charger brouillon</button>
+              <button class="btn-secondary" onclick="clearDraft()" style="font-size:.78rem;color:var(--muted);">🗑 Effacer brouillon</button>
             </div>
           </div>
           <div id="ntab-body-media" style="display:none;">
@@ -749,16 +860,11 @@ footer strong{color:var(--ink);font-weight:500;}
               <div class="form-group">
                 <label class="form-label">Humeur du jour</label>
                 <select class="form-select" id="new-mood">
-                  <option value="positive">😊 Optimiste</option>
-                  <option value="neutral">😐 Neutre</option>
-                  <option value="melancholic">🌧️ Mélancolique</option>
-                  <option value="energetic">⚡ Énergique</option>
-                  <option value="pensive">🤔 Pensif</option>
-                  <option value="excited">🎉 Enthousiaste</option>
-                  <option value="grateful">🌿 Reconnaissant</option>
-                  <option value="nostalgic">🌅 Nostalgique</option>
-                  <option value="curious">🔍 Curieux</option>
-                  <option value="inspired">💡 Inspiré</option>
+                  <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
+                  <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
+                  <option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option>
+                  <option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option>
+                  <option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option>
                 </select>
               </div>
               <div class="form-group">
@@ -767,14 +873,8 @@ footer strong{color:var(--ink);font-weight:500;}
               </div>
             </div>
             <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Auteur</label>
-                <input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Tags (virgules)</label>
-                <input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien">
-              </div>
+              <div class="form-group"><label class="form-label">Auteur</label><input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur"></div>
+              <div class="form-group"><label class="form-label">Tags (virgules)</label><input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien"></div>
               <div class="form-group">
                 <label class="form-label">Temps de lecture</label>
                 <input type="text" class="form-input" id="new-readtime" placeholder="Calculé automatiquement">
@@ -787,17 +887,14 @@ footer strong{color:var(--ink);font-weight:500;}
               <div class="book-reader" id="new-preview-reader" style="min-height:380px;box-shadow:none;border:none;"></div>
               <div class="book-nav" style="border-radius:0;">
                 <button class="book-nav-btn" id="new-preview-prev" onclick="newPreviewPrev()">← Précédente</button>
-                <div class="book-progress">
-                  <div class="progress-dots" id="new-preview-dots"></div>
-                  <span id="new-preview-counter"></span>
-                </div>
+                <div class="book-progress"><div class="progress-dots" id="new-preview-dots"></div><span id="new-preview-counter"></span></div>
                 <button class="book-nav-btn" id="new-preview-next" onclick="newPreviewNext()">Suivante →</button>
               </div>
             </div>
           </div>
           <div style="display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap;">
             <button class="btn-primary" onclick="publishJournal()" id="publish-btn">Enregistrer le journal →</button>
-            <button class="btn-secondary" onclick="NewTab('preview');buildNewPreview()">👁 Aperçu</button>
+            <button class="btn-secondary" onclick="switchNewTab('preview');buildNewPreview()">👁 Aperçu</button>
           </div>
           <div id="publish-status" style="margin-top:.75rem;font-family:var(--font-mono);font-size:.82rem;color:var(--muted);"></div>
         </div>
@@ -838,18 +935,9 @@ footer strong{color:var(--ink);font-weight:500;}
 
         <!-- PARAMÈTRES -->
         <div id="atab-body-settings" style="display:none;">
-          <div class="form-group">
-            <label class="form-label">Nom du site</label>
-            <input type="text" class="form-input" id="setting-sitename" placeholder="CapNews">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Tagline / sous-titre</label>
-            <input type="text" class="form-input" id="setting-tagline">
-          </div>
-          <div class="form-group">
-            <label class="form-label">Heure de publication (0-23)</label>
-            <input type="number" class="form-input" id="setting-hour" min="0" max="23" value="18" style="max-width:120px;">
-          </div>
+          <div class="form-group"><label class="form-label">Nom du site</label><input type="text" class="form-input" id="setting-sitename" placeholder="CapNews"></div>
+          <div class="form-group"><label class="form-label">Tagline / sous-titre</label><input type="text" class="form-input" id="setting-tagline"></div>
+          <div class="form-group"><label class="form-label">Heure de publication (0-23)</label><input type="number" class="form-input" id="setting-hour" min="0" max="23" value="18" style="max-width:120px;"></div>
           <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:1rem;padding:.6rem;background:rgba(139,26,26,.05);border-radius:3px;">⚠️ Pour changer le mot de passe, modifie la variable <strong>ADMIN_PASSWORD</strong> dans les Secrets du Cloudflare Worker.</p>
           <button class="btn-primary" onclick="saveSettings()">Sauvegarder →</button>
         </div>
@@ -869,10 +957,7 @@ footer strong{color:var(--ink);font-weight:500;}
       <div class="book-reader" id="modal-book-reader" style="min-height:480px;border-radius:4px;border:1px solid var(--border-strong);"></div>
       <div class="book-nav">
         <button class="book-nav-btn" id="modal-btn-prev" onclick="modalBookPrev()">← Précédente</button>
-        <div class="book-progress">
-          <div class="progress-dots" id="modal-progress-dots"></div>
-          <span id="modal-page-counter"></span>
-        </div>
+        <div class="book-progress"><div class="progress-dots" id="modal-progress-dots"></div><span id="modal-page-counter"></span></div>
         <button class="book-nav-btn" id="modal-btn-next" onclick="modalBookNext()">Suivante →</button>
       </div>
     </div>
@@ -888,9 +973,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <button class="vote-btn" id="modal-vbtn-neutral" onclick="castModalReaction('neutral')">🤔 <span id="modal-vc-neutral">0</span></button>
         <button class="vote-btn" id="modal-vbtn-negative" onclick="castModalReaction('negative')">👎 <span id="modal-vc-negative">0</span></button>
       </div>
-      <div style="margin-top:.75rem;display:flex;gap:.5rem;">
-        <button class="share-btn" onclick="shareModalJournal()">🔗 Partager ce journal</button>
-      </div>
+      <div style="margin-top:.75rem;"><button class="share-btn" onclick="shareModalJournal()">🔗 Partager ce journal</button></div>
     </div>
     <div style="background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;padding:1.2rem;margin-top:1rem;">
       <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:.85rem;">💬 Laisser un avis</h3>
@@ -931,6 +1014,11 @@ footer strong{color:var(--ink);font-weight:500;}
 
 <footer>
   <strong id="footer-name">CapNews</strong> · <span id="footer-tagline">Publication quotidienne</span> · Cloudflare Workers <span class="security-badge" style="margin-left:8px;">🔒 JWT sécurisé</span>
+  <div class="footer-links">
+    <button onclick="showKbdHelp()">⌨️ Raccourcis clavier</button>
+    <button onclick="showPage('about')">À propos</button>
+    <button onclick="toggleTheme()">Changer le thème</button>
+  </div>
 </footer>
 
 <script>
@@ -943,24 +1031,33 @@ let db = { journals:[], comments:[], settings:{}, reactions:{}, pageviews:{} };
 let adminToken = null;
 let currentJournalId = null;
 let modalJournalId = null;
-
-// ── Index de page courant par contexte (home / modal / preview / new preview)
-let bookPage = 0;
-let modalPage = 0;
-let previewPage = 0;
-let newPreviewPage = 0;
-
-let bookCommentRating = 0;
-let modalCommentRating = 0;
+let bookPage = 0, modalPage = 0, previewPage = 0, newPreviewPage = 0;
+let homeBookTotal = 0, modalBookTotal = 0, previewBookTotal = 0, newPreviewBookTotal = 0;
+let bookCommentRating = 0, modalCommentRating = 0;
 let userReactions = {};
 let allCategories = new Set();
 let activeFilter = 'all';
 let swipeStartX = 0;
 let activeRichTarget = null;
 let calendarDate = new Date();
+let isImmersive = false;
+let draftTimer = null;
+let liveViewCount = 0;
 
-// Filtre étoiles actif (0 = tous)
-let activeStarFilter = 0;
+// ── Quotes ──
+const QUOTES = [
+  {text:"L'écriture est la peinture de la voix.", author:"Voltaire"},
+  {text:"Chaque jour est une nouvelle page à écrire.", author:"Anonyme"},
+  {text:"Les mots sont la plus puissante drogue utilisée par l'humanité.", author:"Rudyard Kipling"},
+  {text:"Un journal intime, c'est un ami qui ne trahit jamais.", author:"Alphonse Daudet"},
+  {text:"Écrire, c'est aussi une façon de parler sans être interrompu.", author:"Jules Renard"},
+  {text:"La lecture est à l'esprit ce que l'exercice est au corps.", author:"Joseph Addison"},
+  {text:"Les journaux sont le miroir du monde.", author:"Heinrich Heine"},
+  {text:"Toute l'histoire humaine témoigne que le bonheur des uns fait la misère des autres.", author:"Mary Shelley"},
+  {text:"Le présent est plein d'avenir.", author:"Henri Bergson"},
+  {text:"Ce n'est pas le temps qui manque, c'est nous qui manquons de temps.", author:"Victor Hugo"},
+];
+let currentQuoteIdx = Math.floor(Math.random()*QUOTES.length);
 
 Object.defineProperty(window,'isAdmin',{get(){return!!adminToken;},set(){}});
 
@@ -971,110 +1068,148 @@ window.onload = async () => {
   startCountdown();
   setupContextMenu();
   checkFestive();
+  setupReadingProgress();
+  showQuote();
   await loadData();
   applyBranding();
   renderHome();
   renderSidebarCalendar();
+  checkDraft();
+  startLiveSimulation();
+  // Ouvre journal depuis URL ?j=
+  const p = new URLSearchParams(location.search).get('j');
+  if(p) setTimeout(()=>openModal(p), 800);
 };
 
 // ─── THEME ─────────────────────────────────────────────────────
 function loadTheme(){const t=localStorage.getItem('capnews_theme')||'light';document.documentElement.setAttribute('data-theme',t);document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre';}
 function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme');const next=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);localStorage.setItem('capnews_theme',next);document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Clair':'🌙 Sombre';}
 
+// ─── READING PROGRESS ─────────────────────────────────────────
+function setupReadingProgress(){
+  const reader=document.getElementById('book-reader');
+  if(!reader)return;
+  reader.addEventListener('scroll',updateReadingProgress);
+  document.getElementById('book-reader').addEventListener('scroll',updateReadingProgress);
+}
+function updateReadingProgress(){
+  const page = document.querySelector('.book-page.active');
+  if(!page)return;
+  const {scrollTop,scrollHeight,clientHeight}=page;
+  const pct = scrollHeight<=clientHeight ? 100 : (scrollTop/(scrollHeight-clientHeight))*100;
+  document.getElementById('reading-progress').style.width=pct+'%';
+}
+
+// ─── IMMERSIVE MODE ────────────────────────────────────────────
+function toggleImmersive(){
+  isImmersive=!isImmersive;
+  document.body.classList.toggle('immersive-mode',isImmersive);
+  document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍';
+  if(isImmersive){
+    const j=db.journals.find(x=>x.id===currentJournalId);
+    if(j)document.getElementById('imm-title').textContent=j.title;
+    showToast('Mode lecture immersif — appuyez sur F ou Esc pour quitter','info');
+  }
+}
+function closeImmersive(){if(isImmersive)toggleImmersive();}
+
+// ─── CITATIONS ─────────────────────────────────────────────────
+function showQuote(){
+  const q=QUOTES[currentQuoteIdx];
+  const el=document.getElementById('quote-text');
+  const au=document.getElementById('quote-author');
+  if(!el)return;
+  el.style.opacity='0';
+  setTimeout(()=>{el.textContent='« '+q.text+' »';au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200);
+}
+function refreshQuote(){currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length;showQuote();}
+
+// ─── LIVE VIEWS SIMULATION ─────────────────────────────────────
+function startLiveSimulation(){
+  const badge=document.getElementById('live-badge');
+  const count=document.getElementById('live-count');
+  if(!badge||!count)return;
+  // Simule des vues en ligne (entre 1 et 12)
+  function update(){
+    liveViewCount=Math.max(1,Math.min(12,liveViewCount+(Math.random()>.5?1:-1)));
+    count.textContent=liveViewCount;
+    if(liveViewCount>0){badge.style.display='inline-flex';}
+  }
+  liveViewCount=Math.floor(Math.random()*8)+1;
+  count.textContent=liveViewCount;
+  badge.style.display='inline-flex';
+  setInterval(update,8000);
+}
+
+// ─── DRAFT AUTO-SAVE ───────────────────────────────────────────
+function saveDraft(){
+  clearTimeout(draftTimer);
+  draftTimer=setTimeout(()=>{
+    const title=(document.getElementById('new-title')?.value||'').trim();
+    if(!title)return;
+    const draft={title,excerpt:document.getElementById('new-excerpt')?.value||'',pages:getPagesFromEditor('new-pages-editor'),date:document.getElementById('new-date')?.value||''};
+    localStorage.setItem('capnews_draft',JSON.stringify(draft));
+    const ind=document.getElementById('draft-indicator');
+    ind.classList.add('show');
+    setTimeout(()=>ind.classList.remove('show'),2000);
+  },1500);
+}
+function checkDraft(){
+  const draft=localStorage.getItem('capnews_draft');
+  if(draft){
+    const btn=document.getElementById('load-draft-btn');
+    if(btn){const d=JSON.parse(draft);btn.textContent='📋 Charger brouillon : "'+d.title.slice(0,30)+'..."';btn.style.display='inline-flex';}
+  }
+}
+function loadDraft(){
+  const draft=localStorage.getItem('capnews_draft');
+  if(!draft)return;
+  const d=JSON.parse(draft);
+  if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title||'';
+  if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
+  if(d.date&&document.getElementById('new-date'))document.getElementById('new-date').value=d.date;
+  const editor=document.getElementById('new-pages-editor');
+  if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
+  showToast('Brouillon chargé !','success');
+}
+function clearDraft(){localStorage.removeItem('capnews_draft');const btn=document.getElementById('load-draft-btn');if(btn)btn.style.display='none';showToast('Brouillon effacé.','info');}
+
+// ─── KEYBOARD HELP ─────────────────────────────────────────────
+function showKbdHelp(){document.getElementById('kbd-help').classList.add('show');}
+function closeKbdHelp(){document.getElementById('kbd-help').classList.remove('show');}
+
+// ─── PERSISTENT AUDIO PLAYER ───────────────────────────────────
+function openPersistentPlayer(src,title){
+  const pp=document.getElementById('persistent-player');
+  const audio=document.getElementById('pp-audio');
+  const info=document.getElementById('pp-info');
+  if(!pp||!audio)return;
+  audio.src=src;info.textContent='🔊 '+title;
+  pp.classList.add('show');
+  audio.play().catch(()=>{});
+}
+function closePersistentPlayer(){
+  const pp=document.getElementById('persistent-player');
+  const audio=document.getElementById('pp-audio');
+  if(!pp||!audio)return;
+  audio.pause();pp.classList.remove('show');
+}
+
 // ─── FESTIVITÉS ───────────────────────────────────────────────
-const BIRTHDAY_MONTH = 4; // avril
-const BIRTHDAY_DAY   = 10;
-const BIRTHDAY_YEAR  = 2025; // année de création
-
+const BIRTHDAY_MONTH=4,BIRTHDAY_DAY=10,BIRTHDAY_YEAR=2025;
 function checkFestive(){
-  const now = new Date();
-  const m = now.getMonth()+1; // 1-12
-  const d = now.getDate();
-  const banner = document.getElementById('festive-banner');
-
-  let festive = null;
-
-  // Anniversaire CapNews : 10 avril
-  if(m===BIRTHDAY_MONTH && d===BIRTHDAY_DAY){
-    const age = now.getFullYear() - BIRTHDAY_YEAR;
-    festive = {
-      cls:'birthday',
-      msg:`🎂 CapNews fête son ${age} an${age>1?'s':''} d'existence ! Merci à toute la communauté ! 🎉`,
-      particles:['🎂','🎊','🎈','✨','🥳','🎁']
-    };
-  }
-  // Halloween : octobre
-  else if(m===10){
-    festive = {
-      cls:'halloween',
-      msg:`🎃 Joyeux Halloween ! Les fantômes rôdent dans les archives... 👻`,
-      particles:['🎃','👻','🕷️','🦇','🕸️']
-    };
-  }
-  // Noël : 24-25 décembre
-  else if(m===12 && (d===24||d===25)){
-    festive = {
-      cls:'christmas',
-      msg:`🎄 Joyeux Noël ! Que cette édition vous apporte joie et sérénité ! 🎅`,
-      particles:['🎄','⛄','❄️','🎁','⭐','🔔']
-    };
-  }
-  // Pâques : calcul basique (dimanche entre 22 mars et 25 avril)
-  else if(isEaster(now)){
-    festive = {
-      cls:'easter',
-      msg:`🐣 Joyeuses Pâques ! Que la douceur du printemps vous accompagne ! 🌷`,
-      particles:['🐣','🥚','🐰','🌷','🌸']
-    };
-  }
-  // Nouvel An : 1er janvier
-  else if(m===1 && d===1){
-    festive = {
-      cls:'newyear',
-      msg:`🥂 Bonne Année ! Que cette nouvelle année soit pleine de belles lectures ! 🎆`,
-      particles:['🎆','🥂','✨','🎊','🌟']
-    };
-  }
-
-  if(festive){
-    banner.className='';
-    banner.classList.add(festive.cls);
-    banner.innerHTML=`<span class="confetti-emoji">${festive.particles[0]}</span> ${festive.msg} <span class="confetti-emoji">${festive.particles[0]}</span>`;
-    banner.style.display='block';
-    // Lance les particules
-    launchParticles(festive.particles);
-  }
+  const now=new Date();const m=now.getMonth()+1;const d=now.getDate();
+  const banner=document.getElementById('festive-banner');
+  let festive=null;
+  if(m===BIRTHDAY_MONTH&&d===BIRTHDAY_DAY){const age=now.getFullYear()-BIRTHDAY_YEAR;festive={cls:'birthday',msg:`🎂 CapNews fête son ${age} an${age>1?'s':''} d'existence ! Merci à toute la communauté ! 🎉`,particles:['🎂','🎊','🎈','✨','🥳','🎁']};}
+  else if(m===10){festive={cls:'halloween',msg:`🎃 Joyeux Halloween ! Les fantômes rôdent dans les archives... 👻`,particles:['🎃','👻','🕷️','🦇','🕸️']};}
+  else if(m===12&&(d===24||d===25)){festive={cls:'christmas',msg:`🎄 Joyeux Noël ! Que cette édition vous apporte joie et sérénité ! 🎅`,particles:['🎄','⛄','❄️','🎁','⭐','🔔']};}
+  else if(isEaster(now)){festive={cls:'easter',msg:`🐣 Joyeuses Pâques ! Que la douceur du printemps vous accompagne ! 🌷`,particles:['🐣','🥚','🐰','🌷','🌸']};}
+  else if(m===1&&d===1){festive={cls:'newyear',msg:`🥂 Bonne Année ! Que cette nouvelle année soit pleine de belles lectures ! 🎆`,particles:['🎆','🥂','✨','🎊','🌟']};}
+  if(festive){banner.className='';banner.classList.add(festive.cls);banner.innerHTML=`<span class="confetti-emoji">${festive.particles[0]}</span> ${festive.msg} <span class="confetti-emoji">${festive.particles[0]}</span>`;banner.style.display='block';launchParticles(festive.particles);}
 }
-
-function isEaster(date){
-  // Algorithme de Meeus/Jones/Butcher
-  const y=date.getFullYear();
-  const a=y%19,b=Math.floor(y/100),c=y%100;
-  const d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);
-  const g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
-  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;
-  const m2=Math.floor((a+11*h+22*l)/451);
-  const month=Math.floor((h+l-7*m2+114)/31);
-  const day=((h+l-7*m2+114)%31)+1;
-  return date.getMonth()+1===month && date.getDate()===day;
-}
-
-function launchParticles(emojis){
-  let count=0;
-  const interval=setInterval(()=>{
-    if(count>=30){clearInterval(interval);return;}
-    count++;
-    const el=document.createElement('div');
-    el.className='festive-particle';
-    el.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    el.style.left=Math.random()*100+'vw';
-    el.style.animationDuration=(Math.random()*3+2)+'s';
-    el.style.animationDelay=(Math.random()*2)+'s';
-    el.style.fontSize=(Math.random()*1.5+0.8)+'rem';
-    document.body.appendChild(el);
-    setTimeout(()=>el.remove(),6000);
-  },150);
-}
+function isEaster(date){const y=date.getFullYear(),a=y%19,b=Math.floor(y/100),c=y%100;const d2=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);const g=Math.floor((b-f+1)/3),h=(19*a+b-d2-g+15)%30;const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;const m2=Math.floor((a+11*h+22*l)/451);const month=Math.floor((h+l-7*m2+114)/31);const day=((h+l-7*m2+114)%31)+1;return date.getMonth()+1===month&&date.getDate()===day;}
+function launchParticles(emojis){let count=0;const interval=setInterval(()=>{if(count>=30){clearInterval(interval);return;}count++;const el=document.createElement('div');el.className='festive-particle';el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=Math.random()*100+'vw';el.style.animationDuration=(Math.random()*3+2)+'s';el.style.animationDelay=(Math.random()*2)+'s';el.style.fontSize=(Math.random()*1.5+0.8)+'rem';document.body.appendChild(el);setTimeout(()=>el.remove(),6000);},150);}
 
 // ─── API ───────────────────────────────────────────────────────
 async function api(path,body,method='POST'){
@@ -1087,12 +1222,8 @@ async function api(path,body,method='POST'){
   return data;
 }
 async function loadData(){
-  try{
-    db=await api('/api/data',undefined,'GET');
-    if(!db.journals)db.journals=[];if(!db.comments)db.comments=[];
-    if(!db.reactions)db.reactions={};if(!db.settings)db.settings={};if(!db.pageviews)db.pageviews={};
-    userReactions=JSON.parse(localStorage.getItem('capnews_reactions')||'{}');
-  }catch(e){showToast('Erreur de connexion : '+e.message,'error');}
+  try{db=await api('/api/data',undefined,'GET');if(!db.journals)db.journals=[];if(!db.comments)db.comments=[];if(!db.reactions)db.reactions={};if(!db.settings)db.settings={};if(!db.pageviews)db.pageviews={};userReactions=JSON.parse(localStorage.getItem('capnews_reactions')||'{}');}
+  catch(e){showToast('Erreur de connexion : '+e.message,'error');}
 }
 
 // ─── NAVIGATION ────────────────────────────────────────────────
@@ -1119,20 +1250,16 @@ function timeSince(iso){const d=Math.floor((Date.now()-new Date(iso))/1000);if(d
 function moodClass(m){return{positive:'mood-good',neutral:'mood-neutral',melancholic:'mood-bad',energetic:'mood-energetic',pensive:'mood-pensive',excited:'mood-excited',grateful:'mood-grateful',nostalgic:'mood-nostalgic',curious:'mood-pensive',inspired:'mood-good'}[m]||'mood-neutral';}
 function moodLabel(m){return{positive:'😊 Optimiste',neutral:'😐 Neutre',melancholic:'🌧️ Mélancolique',energetic:'⚡ Énergique',pensive:'🤔 Pensif',excited:'🎉 Enthousiaste',grateful:'🌿 Reconnaissant',nostalgic:'🌅 Nostalgique',curious:'🔍 Curieux',inspired:'💡 Inspiré'}[m]||m;}
 function stripRichTags(r){return(r||'').replace(/\[b\]([\s\S]*?)\[\/b\]/g,'$1').replace(/\[i\]([\s\S]*?)\[\/i\]/g,'$1').replace(/\[hl\]([\s\S]*?)\[\/hl\]/g,'$1').replace(/\[sp\]([\s\S]*?)\[\/sp\]/g,'$1').replace(/\[a [^\]]+\]([\s\S]*?)\[\/a\]/g,'$1').replace(/\[img [^\]]+\]/g,'').replace(/\[audio [^\]]+\]/g,'');}
-
-// ── Temps de lecture automatique ──
-function calcReadTime(pages){
-  const words=pages.map(p=>stripRichTags(p)).join(' ').split(/\s+/).filter(Boolean).length;
-  const mins=Math.max(1,Math.round(words/200));
-  return mins+' min de lecture';
-}
+function calcReadTime(pages){const words=pages.map(p=>stripRichTags(p)).join(' ').split(/\s+/).filter(Boolean).length;const mins=Math.max(1,Math.round(words/200));return mins+' min de lecture';}
+// Badge commentateur
+function getCommentBadge(name){const count=(db.comments||[]).filter(c=>c.name===name&&!c.isReply).length;if(count>=20)return'🏆 Fidèle';if(count>=10)return'⭐ Habitué';if(count>=5)return'✍ Actif';return'';}
 
 let toastTimer=null;
 function showToast(msg,type){const t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'');t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3200);}
 function updateDateDisplay(){document.getElementById('date-display').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
 
 // ─── RICH TEXT PARSING ─────────────────────────────────────────
-function parseRichText(raw){
+function parseRichText(raw,searchQ){
   let h=escHtml(raw);
   h=h.replace(/\n/g,'<br>');
   h=h.replace(/\[b\]([\s\S]*?)\[\/b\]/g,'<strong>$1</strong>');
@@ -1142,45 +1269,32 @@ function parseRichText(raw){
   h=h.replace(/\[a ([^\]]+)\]([\s\S]*?)\[\/a\]/g,'<a href="$1" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:underline;">$2</a>');
   h=h.replace(/\[img ([^\|]+)\|([^\]]+)\]/g,(_,url,cap)=>`</p><div class="page-image-block"><img src="${url.trim()}" alt="${escHtml(cap)}" loading="lazy" onerror="this.parentElement.style.display='none'"><div class="page-image-caption">${escHtml(cap)}</div></div><p>`);
   h=h.replace(/\[img ([^\]]+)\]/g,(_,url)=>`</p><div class="page-image-block"><img src="${url.trim()}" loading="lazy" onerror="this.parentElement.style.display='none'"></div><p>`);
-  h=h.replace(/\[audio ([^\|]+)\|([^\]]+)\]/g,(_,url,t)=>`</p><div class="page-audio-block"><span class="page-audio-label">🔊 ${escHtml(t)}</span><audio controls src="${url.trim()}"></audio></div><p>`);
+  h=h.replace(/\[audio ([^\|]+)\|([^\]]+)\]/g,(_,url,t)=>`</p><div class="page-audio-block"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${url.trim()}','${escHtml(t)}')">🔊 ${escHtml(t)}</span><audio controls src="${url.trim()}"></audio></div><p>`);
   h=h.replace(/\[audio ([^\]]+)\]/g,(_,url)=>`</p><div class="page-audio-block"><span class="page-audio-label">🔊 Audio</span><audio controls src="${url.trim()}"></audio></div><p>`);
+  // Highlight search terms
+  if(searchQ&&searchQ.trim()){const esc=searchQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');h=h.replace(new RegExp('('+esc+')', 'gi'),'<mark class="search-hl">$1</mark>');}
   return h;
 }
 
 // ─── RICH TEXT EDITOR ──────────────────────────────────────────
 function buildRichEditor(text,idx,editorId){
   const wrapper=document.createElement('div');
-  const toolbar=document.createElement('div');
-  toolbar.className='richtext-toolbar';
-  toolbar.innerHTML=`
-    <button class="richtext-toolbar-btn" title="Gras" onclick="editorCmd(this,'bold')"><strong>B</strong></button>
-    <button class="richtext-toolbar-btn" title="Italique" onclick="editorCmd(this,'italic')"><em>I</em></button>
-    <div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div>
-    <button class="richtext-toolbar-btn" title="Mise en avant" onclick="editorCmd(this,'highlight')">✦</button>
-    <button class="richtext-toolbar-btn" title="Spoil" onclick="editorCmd(this,'spoil')">👁</button>
-    <button class="richtext-toolbar-btn" title="Lien" onclick="editorCmd(this,'link')">🔗</button>
-    <button class="richtext-toolbar-btn" title="Image" onclick="editorCmd(this,'image')">🖼</button>
-    <button class="richtext-toolbar-btn" title="Audio" onclick="editorCmd(this,'audio')">🔊</button>
-    <div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div>
-    <button class="richtext-toolbar-btn" title="Corriger (IA)" onclick="editorCmd(this,'spellcheck')" style="color:var(--gold);">✨ Corriger</button>
-  `;
-  const ta=document.createElement('textarea');
-  ta.className='richtext-area';ta.value=text||'';
-  ta.setAttribute('data-page-idx',idx);
+  const toolbar=document.createElement('div');toolbar.className='richtext-toolbar';
+  toolbar.innerHTML=`<button class="richtext-toolbar-btn" title="Gras (Ctrl+B)" onclick="editorCmd(this,'bold')"><strong>B</strong></button><button class="richtext-toolbar-btn" title="Italique (Ctrl+I)" onclick="editorCmd(this,'italic')"><em>I</em></button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Mise en avant" onclick="editorCmd(this,'highlight')">✦</button><button class="richtext-toolbar-btn" title="Spoil" onclick="editorCmd(this,'spoil')">👁</button><button class="richtext-toolbar-btn" title="Lien" onclick="editorCmd(this,'link')">🔗</button><button class="richtext-toolbar-btn" title="Image" onclick="editorCmd(this,'image')">🖼</button><button class="richtext-toolbar-btn" title="Audio" onclick="editorCmd(this,'audio')">🔊</button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Corriger (IA)" onclick="editorCmd(this,'spellcheck')" style="color:var(--gold);">✨ Corriger</button>`;
+  const ta=document.createElement('textarea');ta.className='richtext-area';ta.value=text||'';ta.setAttribute('data-page-idx',idx);
+  const charCount=document.createElement('div');charCount.className='richtext-charcount';
+  function updateCC(){charCount.textContent=ta.value.length+' caractères · '+calcReadTime([ta.value]);}
+  ta.addEventListener('input',()=>{activeRichTarget=ta;updateCC();saveDraft();});
   ta.addEventListener('focus',()=>{activeRichTarget=ta;});
   ta.addEventListener('contextmenu',e=>{activeRichTarget=ta;e.preventDefault();showCtxMenu(e.clientX,e.clientY);});
-  wrapper.appendChild(toolbar);wrapper.appendChild(ta);
+  updateCC();
+  wrapper.appendChild(toolbar);wrapper.appendChild(ta);wrapper.appendChild(charCount);
   return wrapper;
 }
-function editorCmd(btn,cmd){
-  const body=btn.closest('.page-editor-body')||btn.closest('.edit-modal');
-  const ta=body?body.querySelector('.richtext-area'):null;
-  if(!ta)return;activeRichTarget=ta;applyRichCmd(cmd,ta);
-}
+function editorCmd(btn,cmd){const body=btn.closest('.page-editor-body')||btn.closest('.edit-modal');const ta=body?body.querySelector('.richtext-area'):null;if(!ta)return;activeRichTarget=ta;applyRichCmd(cmd,ta);}
 function applyRichCmd(cmd,ta){
   if(!ta)ta=activeRichTarget;if(!ta)return;
-  const start=ta.selectionStart,end=ta.selectionEnd;
-  const sel=ta.value.substring(start,end);
+  const start=ta.selectionStart,end=ta.selectionEnd;const sel=ta.value.substring(start,end);
   if(!sel&&!['spellcheck','image','audio'].includes(cmd)){showToast('Sélectionnez d\'abord du texte.','info');return;}
   let r='';
   if(cmd==='bold')r='[b]'+sel+'[/b]';
@@ -1191,166 +1305,69 @@ function applyRichCmd(cmd,ta){
   else if(cmd==='image'){const u=prompt('URL de l\'image :','https://');if(!u)return;const c=prompt('Légende (optionnel) :','');r=c?'[img '+u+'|'+c+']':'[img '+u+']';}
   else if(cmd==='audio'){const u=prompt('URL du fichier audio :','https://');if(!u)return;const t=prompt('Titre audio :','');r=t?'[audio '+u+'|'+t+']':'[audio '+u+']';}
   else if(cmd==='spellcheck'){aiSpellcheck(ta,sel||ta.value,start,end);return;}
-  ta.value=ta.value.substring(0,start)+r+ta.value.substring(end);
-  ta.selectionStart=start;ta.selectionEnd=start+r.length;ta.focus();hideCtxMenu();
+  ta.value=ta.value.substring(0,start)+r+ta.value.substring(end);ta.selectionStart=start;ta.selectionEnd=start+r.length;ta.focus();hideCtxMenu();
 }
-async function aiSpellcheck(ta,text,start,end){
-  showToast('Correction en cours...','info');
-  try{
-    const res=await api('/api/spellcheck',{text});
-    if(!res.corrected){showToast('Correction échouée.','error');return;}
-    if(start===0&&end===ta.value.length)ta.value=res.corrected;
-    else ta.value=ta.value.substring(0,start)+res.corrected+ta.value.substring(end);
-    ta.focus();showToast('✅ Texte corrigé !','success');
-  }catch(e){showToast('Erreur : '+e.message,'error');}
-  hideCtxMenu();
-}
+async function aiSpellcheck(ta,text,start,end){showToast('Correction en cours...','info');try{const res=await api('/api/spellcheck',{text});if(!res.corrected){showToast('Correction échouée.','error');return;}if(start===0&&end===ta.value.length)ta.value=res.corrected;else ta.value=ta.value.substring(0,start)+res.corrected+ta.value.substring(end);ta.focus();showToast('✅ Texte corrigé !','success');}catch(e){showToast('Erreur : '+e.message,'error');}hideCtxMenu();}
 
 // ─── CONTEXT MENU ──────────────────────────────────────────────
 function setupContextMenu(){
   document.addEventListener('click',hideCtxMenu);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideCtxMenu();closeModal();closeEditModal();}});
-  document.addEventListener('contextmenu',e=>{
-    const ta=e.target.closest('.richtext-area');
-    if(!ta)return;e.preventDefault();activeRichTarget=ta;showCtxMenu(e.clientX,e.clientY);
-  });
+  document.addEventListener('contextmenu',e=>{const ta=e.target.closest('.richtext-area');if(!ta)return;e.preventDefault();activeRichTarget=ta;showCtxMenu(e.clientX,e.clientY);});
 }
 function showCtxMenu(x,y){const menu=document.getElementById('rich-ctx-menu');menu.classList.add('visible');const mw=menu.offsetWidth||210,mh=menu.offsetHeight||220;menu.style.left=Math.min(x,window.innerWidth-mw)+'px';menu.style.top=Math.min(y,window.innerHeight-mh)+'px';}
 function hideCtxMenu(){document.getElementById('rich-ctx-menu').classList.remove('visible');}
 function rtCmd(cmd){applyRichCmd(cmd,activeRichTarget);}
 
-// ─── ✅ BOOK RENDERER GÉNÉRIQUE (BUG FIXÉ) ─────────────────────
-// Construit toutes les pages d'un reader et retourne le total de pages.
-// pageIdx : index de la page à afficher (0 = couverture)
-// onStartRead : callback(1) appelé depuis la couverture pour aller à la page 1
-function buildBookPages(j, readerEl, pageIdx, onStartRead) {
-  const pages = getPages(j);
-  const total = pages.length + 1; // couverture + pages contenu
-  readerEl.innerHTML = '';
-
-  // ── Couverture ──
-  const cover = document.createElement('div');
-  cover.className = 'book-page cover-page' + (pageIdx === 0 ? ' active' : '');
-  let chips = '';
-  if(j.category) chips += '<span class="chip cat">'+escHtml(j.category)+'</span>';
-  if(j.mood)     chips += '<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>';
-  if(j.author)   chips += '<span class="chip">✒ '+escHtml(j.author)+'</span>';
-  let coverExtra = '';
-  if(j.coverImg) coverExtra += `<div style="margin-bottom:1rem;border-radius:4px;overflow:hidden;max-height:180px;"><img src="${j.coverImg}" style="width:100%;max-height:180px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
-  if(j.audioUrl) coverExtra += `<div class="page-audio-block" style="margin-bottom:1rem;"><span class="page-audio-label">🔊 Écouter</span><audio controls src="${j.audioUrl}"></audio></div>`;
-  // Read time : priorité au champ manuel, sinon auto
-  const rt = j.readTime || calcReadTime(pages);
-  cover.innerHTML =
-    '<div class="cover-edition">'+escHtml((db.settings.siteName||'CapNews').toUpperCase())+' · '+formatDateFr(j.date)+'</div>'+
-    '<div class="cover-title">'+escHtml(j.title)+'</div>'+
-    (j.excerpt?'<div class="cover-excerpt">'+parseRichText(j.excerpt)+'</div>':'')+
-    coverExtra+
-    '<div class="cover-meta">'+chips+'</div>'+
-    '<div class="cover-readtime">⏱ '+escHtml(rt)+'</div>'+
-    '<button class="cover-start-btn" id="cover-start-'+readerEl.id+'">Lire le journal →</button>'+
-    '<span class="cover-page-num">Couverture</span>';
+// ─── BOOK RENDERER ──────────────────────────────────────────────
+function buildBookPages(j, readerEl, pageIdx, onStartRead, searchQ) {
+  const pages=getPages(j);const total=pages.length+1;
+  readerEl.innerHTML='';
+  // Couverture
+  const cover=document.createElement('div');cover.className='book-page cover-page'+(pageIdx===0?' active':'');
+  let chips='';if(j.category)chips+='<span class="chip cat">'+escHtml(j.category)+'</span>';if(j.mood)chips+='<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>';if(j.author)chips+='<span class="chip">✒ '+escHtml(j.author)+'</span>';
+  let coverExtra='';if(j.coverImg)coverExtra+=`<div style="margin-bottom:1rem;border-radius:4px;overflow:hidden;max-height:180px;"><img src="${j.coverImg}" style="width:100%;max-height:180px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
+  if(j.audioUrl)coverExtra+=`<div class="page-audio-block" style="margin-bottom:1rem;"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${j.audioUrl}','${escHtml(j.title)}')">🔊 Écouter (mini player)</span><audio controls src="${j.audioUrl}"></audio></div>`;
+  const rt=j.readTime||calcReadTime(pages);
+  cover.innerHTML='<div class="cover-edition">'+escHtml((db.settings.siteName||'CapNews').toUpperCase())+' · '+formatDateFr(j.date)+'</div>'+'<div class="cover-title">'+escHtml(j.title)+'</div>'+(j.excerpt?'<div class="cover-excerpt">'+parseRichText(j.excerpt)+'</div>':'')+coverExtra+'<div class="cover-meta">'+chips+'</div>'+'<div class="cover-readtime">⏱ '+escHtml(rt)+'</div>'+'<button class="cover-start-btn" id="cover-start-'+readerEl.id+'">Lire le journal →</button>'+'<span class="cover-page-num">Couverture</span>';
   readerEl.appendChild(cover);
-
-  // ── Pages de contenu ──
-  pages.forEach((p, i) => {
-    const pg = document.createElement('div');
-    pg.className = 'book-page' + (pageIdx === i+1 ? ' active' : '');
-    pg.innerHTML = '<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';
-    readerEl.appendChild(pg);
-  });
-
-  // ── Bouton couverture → page 1 (après insertion dans DOM) ──
-  const startBtn = readerEl.querySelector('#cover-start-'+readerEl.id);
-  if(startBtn) startBtn.onclick = () => onStartRead(1);
-
+  // Pages
+  pages.forEach((p,i)=>{const pg=document.createElement('div');pg.className='book-page'+(pageIdx===i+1?' active':'');pg.innerHTML='<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p,searchQ)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';readerEl.appendChild(pg);});
+  // Start btn
+  const startBtn=readerEl.querySelector('#cover-start-'+readerEl.id);if(startBtn)startBtn.onclick=()=>onStartRead(1);
   return total;
 }
 
-// Met à jour l'affichage de la page active dans un reader
 function setBookPage(readerEl, pageIdx, total, dotsEl, counterEl, btnPrev, btnNext, onPageChange) {
-  const pages = readerEl.querySelectorAll('.book-page');
-  pages.forEach((p, i) => p.classList.toggle('active', i === pageIdx));
-
-  if(btnPrev) btnPrev.disabled = pageIdx === 0;
-  if(btnNext) btnNext.disabled = pageIdx === total - 1;
-  if(counterEl) counterEl.textContent = (pageIdx+1) + ' / ' + total;
-
-  if(dotsEl){
-    dotsEl.innerHTML = '';
-    for(let i=0;i<total;i++){
-      const dot = document.createElement('span');
-      dot.className = 'progress-dot' + (i===pageIdx?' active':'');
-      dot.onclick = () => onPageChange(i);
-      dotsEl.appendChild(dot);
-    }
-  }
+  const pages=readerEl.querySelectorAll('.book-page');
+  pages.forEach((p,i)=>p.classList.toggle('active',i===pageIdx));
+  if(btnPrev)btnPrev.disabled=pageIdx===0;if(btnNext)btnNext.disabled=pageIdx===total-1;
+  if(counterEl)counterEl.textContent=(pageIdx+1)+' / '+total;
+  if(dotsEl){dotsEl.innerHTML='';for(let i=0;i<total;i++){const dot=document.createElement('span');dot.className='progress-dot'+(i===pageIdx?' active':'');dot.onclick=()=>onPageChange(i);dotsEl.appendChild(dot);}}
+  updateReadingProgress();
 }
 
 // ─── HOME BOOK ──────────────────────────────────────────────────
-let homeBookTotal = 0;
-
 function renderBook(j){
-  const pages = getPages(j);
-  homeBookTotal = pages.length + 2; // couverture + pages + commentaires
-  const reader = document.getElementById('book-reader');
-
-  // Construit couverture + pages contenu
-  buildBookPages(j, reader, bookPage, (p) => { bookPage=p; refreshHomeBook(j); });
-
-  // ── Page commentaires ──
-  const cp = document.createElement('div');
-  cp.className = 'book-page comments-book-page' + (bookPage === homeBookTotal-1 ? ' active' : '');
-  const starsHtml = [1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
-  cp.innerHTML =
-    '<h2>💬 Avis des lecteurs</h2>'+
-    '<div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3>'+
-    '<div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div>'+
-    '<p class="email-hint">L\'email reste privé.</p>'+
-    '<div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div>'+
-    '<textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);"></textarea>'+
-    '<button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div>'+
-    '<div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label>'+
-    '<button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+
-    [5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+
-    '</div>'+
-    '<div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div>'+
-    '<span class="cover-page-num">Commentaires</span>';
+  const pages=getPages(j);homeBookTotal=pages.length+2;
+  const reader=document.getElementById('book-reader');
+  const searchQ=(document.getElementById('search-input')?.value||'');
+  buildBookPages(j,reader,bookPage,(p)=>{bookPage=p;refreshHomeBook(j);},searchQ);
+  // Page commentaires
+  const cp=document.createElement('div');cp.className='book-page comments-book-page'+(bookPage===homeBookTotal-1?' active':'');
+  const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
+  cp.innerHTML='<h2>💬 Avis des lecteurs</h2>'+'<div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3>'+'<div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div>'+'<p class="email-hint">L\'email reste privé.</p>'+'<div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div>'+'<textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);"></textarea>'+'<button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div>'+'<div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div>'+'<div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div>'+'<span class="cover-page-num">Commentaires</span>';
   reader.appendChild(cp);
-
-  if(bookPage === homeBookTotal-1) renderComments(j.id, 'book-comment-list', 0);
-
-  // Swipe
-  reader.ontouchstart = e=>{swipeStartX=e.touches[0].clientX;};
-  reader.ontouchend   = e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
-
+  if(bookPage===homeBookTotal-1)renderComments(j.id,'book-comment-list',0);
+  reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
+  reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
   updateHomeBookNav(j);
 }
-
-function refreshHomeBook(j){
-  bookPage = Math.max(0, Math.min(bookPage, homeBookTotal-1));
-  renderBook(j);
-}
-
+function refreshHomeBook(j){bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));renderBook(j);}
 function updateHomeBookNav(j){
-  setBookPage(
-    document.getElementById('book-reader'),
-    bookPage, homeBookTotal,
-    document.getElementById('progress-dots'),
-    document.getElementById('page-counter'),
-    document.getElementById('btn-prev'),
-    document.getElementById('btn-next'),
-    (i)=>{ bookPage=i; refreshHomeBook(j); }
-  );
+  setBookPage(document.getElementById('book-reader'),bookPage,homeBookTotal,document.getElementById('progress-dots'),document.getElementById('page-counter'),document.getElementById('btn-prev'),document.getElementById('btn-next'),(i)=>{bookPage=i;refreshHomeBook(j);});
 }
-
-function bookNext(){
-  const j=db.journals.find(x=>x.id===currentJournalId);
-  if(j && bookPage < homeBookTotal-1){ bookPage++; refreshHomeBook(j); }
-}
-function bookPrev(){
-  const j=db.journals.find(x=>x.id===currentJournalId);
-  if(j && bookPage > 0){ bookPage--; refreshHomeBook(j); }
-}
+function bookNext(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage<homeBookTotal-1){bookPage++;refreshHomeBook(j);}}
+function bookPrev(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage>0){bookPage--;refreshHomeBook(j);}}
 function setBookCommentRating(v){bookCommentRating=v;document.querySelectorAll('#book-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
 
 async function submitBookComment(){
@@ -1361,86 +1378,35 @@ async function submitBookComment(){
   if(!text){showToast('Veuillez écrire un avis.','error');return;}
   if(!isValidEmail(email)){showToast('Email invalide.','error');return;}
   if(!currentJournalId)return;
-  try{
-    const res=await api('/api/comment',{journalId:currentJournalId,name,text,rating:bookCommentRating});
-    db.comments.push(res.comment);
-    if(bookCommentRating){if(!db.reactions[currentJournalId])db.reactions[currentJournalId]={positive:0,neutral:0,negative:0,stars:[],total:0};if(!db.reactions[currentJournalId].stars)db.reactions[currentJournalId].stars=[];db.reactions[currentJournalId].stars.push(bookCommentRating);}
-    document.getElementById('book-comment-name').value='';
-    document.getElementById('book-comment-email').value='';
-    document.getElementById('book-comment-text').value='';
-    setBookCommentRating(0);
-    renderComments(currentJournalId,'book-comment-list',0);
-    renderReactions(currentJournalId);
-    showToast('Votre avis a été publié !','success');
-  }catch(e){showToast('Erreur : '+e.message,'error');}
+  try{const res=await api('/api/comment',{journalId:currentJournalId,name,text,rating:bookCommentRating});db.comments.push(res.comment);if(bookCommentRating){if(!db.reactions[currentJournalId])db.reactions[currentJournalId]={positive:0,neutral:0,negative:0,stars:[],total:0};if(!db.reactions[currentJournalId].stars)db.reactions[currentJournalId].stars=[];db.reactions[currentJournalId].stars.push(bookCommentRating);}
+  document.getElementById('book-comment-name').value='';document.getElementById('book-comment-email').value='';document.getElementById('book-comment-text').value='';setBookCommentRating(0);renderComments(currentJournalId,'book-comment-list',0);renderReactions(currentJournalId);showToast('Votre avis a été publié !','success');}
+  catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
-// ─── MODAL BOOK (ARCHIVES) ─────────────────────────────────────
-let modalBookTotal = 0;
-
+// ─── MODAL BOOK ────────────────────────────────────────────────
 function renderModalBook(j){
-  const pages = getPages(j);
-  modalBookTotal = pages.length + 1;
-  const reader = document.getElementById('modal-book-reader');
-  buildBookPages(j, reader, modalPage, (p)=>{modalPage=p;renderModalBook(j);});
-
+  const pages=getPages(j);modalBookTotal=pages.length+1;
+  const reader=document.getElementById('modal-book-reader');
+  buildBookPages(j,reader,modalPage,(p)=>{modalPage=p;renderModalBook(j);});
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?modalBookNext():modalBookPrev();}};
-
-  setBookPage(
-    reader, modalPage, modalBookTotal,
-    document.getElementById('modal-progress-dots'),
-    document.getElementById('modal-page-counter'),
-    document.getElementById('modal-btn-prev'),
-    document.getElementById('modal-btn-next'),
-    (i)=>{modalPage=i;renderModalBook(j);}
-  );
+  setBookPage(reader,modalPage,modalBookTotal,document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),(i)=>{modalPage=i;renderModalBook(j);});
 }
 function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage<modalBookTotal-1){modalPage++;renderModalBook(j);}}
 function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;renderModalBook(j);}}
 
-// ─── PREVIEW EDIT ──────────────────────────────────────────────
-let previewBookTotal = 0;
-let newPreviewBookTotal = 0;
-
-function buildPreview(){
-  switchEditTab('preview');
-  const j=buildJournalFromEditForm();
-  const reader=document.getElementById('edit-preview-reader');
-  previewBookTotal=buildBookPages(j,reader,previewPage,(p)=>{previewPage=p;buildPreview();});
-  setBookPage(reader,previewPage,previewBookTotal,
-    document.getElementById('preview-dots'),document.getElementById('preview-counter'),
-    document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),
-    (i)=>{previewPage=i;buildPreview();});
-}
+// ─── PREVIEW ───────────────────────────────────────────────────
+function buildPreview(){switchEditTab('preview');const j=buildJournalFromEditForm();const reader=document.getElementById('edit-preview-reader');previewBookTotal=buildBookPages(j,reader,previewPage,(p)=>{previewPage=p;buildPreview();});setBookPage(reader,previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;buildPreview();});}
 function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;buildPreview();}}
 function previewPrev(){if(previewPage>0){previewPage--;buildPreview();}}
 
-function buildNewPreview(){
-  switchNewTab('preview');
-  const j=buildJournalFromNewForm();
-  const reader=document.getElementById('new-preview-reader');
-  newPreviewBookTotal=buildBookPages(j,reader,newPreviewPage,(p)=>{newPreviewPage=p;buildNewPreview();});
-  setBookPage(reader,newPreviewPage,newPreviewBookTotal,
-    document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),
-    document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),
-    (i)=>{newPreviewPage=i;buildNewPreview();});
-}
+function buildNewPreview(){switchNewTab('preview');const j=buildJournalFromNewForm();const reader=document.getElementById('new-preview-reader');newPreviewBookTotal=buildBookPages(j,reader,newPreviewPage,(p)=>{newPreviewPage=p;buildNewPreview();});setBookPage(reader,newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;buildNewPreview();});}
 function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;buildNewPreview();}}
 function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;buildNewPreview();}}
 
-function buildJournalFromEditForm(){
-  const pages=getPagesFromEditor('edit-pages-editor');
-  const autoRt=calcReadTime(pages);
-  return{title:document.getElementById('edit-title')?.value||'Sans titre',excerpt:document.getElementById('edit-excerpt')?.value||'',pages,category:document.getElementById('edit-category')?.value||'',mood:document.getElementById('edit-mood')?.value||'neutral',author:document.getElementById('edit-author')?.value||'',readTime:document.getElementById('edit-readtime')?.value||autoRt,date:document.getElementById('edit-date')?.value||getTodayStr(),coverImg:document.getElementById('edit-cover-img')?.value||'',audioUrl:document.getElementById('edit-audio-url')?.value||''};
-}
-function buildJournalFromNewForm(){
-  const pages=getPagesFromEditor('new-pages-editor');
-  const autoRt=calcReadTime(pages);
-  return{title:document.getElementById('new-title')?.value||'Sans titre',excerpt:document.getElementById('new-excerpt')?.value||'',pages,category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'neutral',author:document.getElementById('new-author')?.value||'',readTime:document.getElementById('new-readtime')?.value||autoRt,date:document.getElementById('new-date')?.value||getTodayStr(),coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};
-}
+function buildJournalFromEditForm(){const pages=getPagesFromEditor('edit-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('edit-title')?.value||'Sans titre',excerpt:document.getElementById('edit-excerpt')?.value||'',pages,category:document.getElementById('edit-category')?.value||'',mood:document.getElementById('edit-mood')?.value||'neutral',author:document.getElementById('edit-author')?.value||'',readTime:document.getElementById('edit-readtime')?.value||autoRt,date:document.getElementById('edit-date')?.value||getTodayStr(),coverImg:document.getElementById('edit-cover-img')?.value||'',audioUrl:document.getElementById('edit-audio-url')?.value||''};}
+function buildJournalFromNewForm(){const pages=getPagesFromEditor('new-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('new-title')?.value||'Sans titre',excerpt:document.getElementById('new-excerpt')?.value||'',pages,category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'neutral',author:document.getElementById('new-author')?.value||'',readTime:document.getElementById('new-readtime')?.value||autoRt,date:document.getElementById('new-date')?.value||getTodayStr(),coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};}
 
-// Aperçu médias
 function previewCoverImg(){const url=document.getElementById('edit-cover-img').value.trim();const d=document.getElementById('cover-img-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">';}
 function previewAudio(){const url=document.getElementById('edit-audio-url').value.trim();const d=document.getElementById('audio-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>';}
 function previewNewCoverImg(){const url=document.getElementById('new-cover-img').value.trim();const d=document.getElementById('new-cover-img-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">';}
@@ -1449,16 +1415,9 @@ function previewNewAudio(){const url=document.getElementById('new-audio-url').va
 // ─── HOME ──────────────────────────────────────────────────────
 function renderHome(){
   document.getElementById('home-loading').style.display='none';
-  const j=getTodayJournal();
-  const fab=document.getElementById('edit-fab');
-  if(!j||!isPublished(j)){
-    document.getElementById('home-locked').style.display='block';
-    document.getElementById('home-content').style.display='none';
-    if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');
-    return;
-  }
-  document.getElementById('home-locked').style.display='none';
-  document.getElementById('home-content').style.display='block';
+  const j=getTodayJournal();const fab=document.getElementById('edit-fab');
+  if(!j||!isPublished(j)){document.getElementById('home-locked').style.display='block';document.getElementById('home-content').style.display='none';if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');return;}
+  document.getElementById('home-locked').style.display='none';document.getElementById('home-content').style.display='block';
   currentJournalId=j.id;bookPage=0;homeBookTotal=getPages(j).length+2;
   if(isAdmin)fab.classList.remove('hidden');else fab.classList.add('hidden');
   renderBook(j);renderReactions(j.id);renderRecentList();renderTagsCloud();
@@ -1466,138 +1425,62 @@ function renderHome(){
 }
 
 // ─── PARTAGER ──────────────────────────────────────────────────
-function shareJournal(){
-  const url=window.location.href.split('?')[0];
-  if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('Lien copié !','success'));}
-  else{showToast('Copiez : '+url,'info');}
-}
-function shareModalJournal(){
-  if(!modalJournalId)return;
-  const j=db.journals.find(x=>x.id===modalJournalId);
-  const url=window.location.href.split('?')[0]+'?j='+modalJournalId;
-  const txt=j?('"'+j.title+'" — '+url):url;
-  if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}
-  else{showToast('Copiez : '+url,'info');}
-}
-// Ouverture auto via param ?j=
-window.addEventListener('DOMContentLoaded',()=>{
-  const p=new URLSearchParams(location.search).get('j');
-  if(p)setTimeout(()=>openModal(p),800);
-});
+function shareJournal(){const url=window.location.href.split('?')[0];if(navigator.share){navigator.share({title:'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');}}
+function shareModalJournal(){if(!modalJournalId)return;const j=db.journals.find(x=>x.id===modalJournalId);const url=window.location.href.split('?')[0]+'?j='+modalJournalId;const txt=j?('"'+j.title+'" — '+url):url;if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');}}
 
 // ─── CALENDAR ──────────────────────────────────────────────────
-function renderCalendar(containerId,year,month,interactive){
+function renderCalendar(containerId,year,month){
   const container=document.getElementById(containerId);if(!container)return;
-  const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];
-  const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   const journalsByDate={};db.journals.forEach(j=>{journalsByDate[j.date]=j;});
-  const today=getTodayStr();
-  const firstDay=new Date(year,month,1);const lastDay=new Date(year,month+1,0);
+  const today=getTodayStr();const firstDay=new Date(year,month,1);const lastDay=new Date(year,month+1,0);
   let startDow=firstDay.getDay();startDow=startDow===0?6:startDow-1;
-  let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},-1,${interactive})">‹</button><span class="cal-month-label">${monthNames[month]} ${year}</span><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},1,${interactive})">›</button></div><div class="calendar-grid">`;
+  let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},-1)">‹</button><span class="cal-month-label">${monthNames[month]} ${year}</span><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},1)">›</button></div><div class="calendar-grid">`;
   days.forEach(d=>{html+=`<div class="cal-header">${d}</div>`;});
-  let col=0;
-  for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
-  for(let d=1;d<=lastDay.getDate();d++){
-    const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];
-    let cls='cal-day';if(dateStr===today)cls+=' today';
-    if(j)cls+=isPublished(j)?' published':' scheduled';
-    const onclick=j?`onclick="openModal('${j.id}')"`:'';const title=j?`title="${escHtml(j.title)}"`:'';
-    html+=`<div class="${cls}" ${onclick} ${title}>${d}</div>`;col++;
-  }
-  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;}
-  html+='</div>';container.innerHTML=html;
+  let col=0;for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
+  for(let d=1;d<=lastDay.getDate();d++){const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];let cls='cal-day';if(dateStr===today)cls+=' today';if(j)cls+=isPublished(j)?' published':' scheduled';const onclick=j?`onclick="openModal('${j.id}')"`:'';const title=j?`title="${escHtml(j.title)}"`:'';html+=`<div class="${cls}" ${onclick} ${title}>${d}</div>`;col++;}
+  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;}html+='</div>';container.innerHTML=html;
 }
-function changeCalMonth(containerId,year,month,delta){let m=month+delta,y=year;if(m<0){m=11;y--;}else if(m>11){m=0;y++;}if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m,true);}
-function renderSidebarCalendar(){renderCalendar('sidebar-calendar',calendarDate.getFullYear(),calendarDate.getMonth(),false);}
-function renderAdminCalendar(){const now=new Date();renderCalendar('admin-calendar-full',now.getFullYear(),now.getMonth(),true);}
+function changeCalMonth(containerId,year,month,delta){let m=month+delta,y=year;if(m<0){m=11;y--;}else if(m>11){m=0;y++;}if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m);}
+function renderSidebarCalendar(){renderCalendar('sidebar-calendar',calendarDate.getFullYear(),calendarDate.getMonth());}
+function renderAdminCalendar(){const now=new Date();renderCalendar('admin-calendar-full',now.getFullYear(),now.getMonth());}
 
 // ─── REACTIONS ─────────────────────────────────────────────────
-function renderReactionBars(jid,barsId,vcIds,vbtnIds){
-  const r=db.reactions[jid]||{positive:0,neutral:0,negative:0,stars:[],total:0};
-  const total=(r.positive||0)+(r.neutral||0)+(r.negative||0);
-  const bars=document.getElementById(barsId);
-  if(bars){bars.innerHTML='';[{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(item=>{const count=r[item.k]||0,pct=total>0?Math.round((count/total)*100):0;bars.innerHTML+='<div class="vote-row"><span class="vote-emoji">'+item.e+'</span><div class="vote-bar-bg"><div class="vote-bar '+item.cls+'" style="width:'+pct+'%"></div></div><span class="vote-count">'+count+'</span></div>';});}
-  ['positive','neutral','negative'].forEach(k=>{const vc=document.getElementById(vcIds[k]);if(vc)vc.textContent=r[k]||0;const btn=document.getElementById(vbtnIds[k]);if(btn)btn.classList.toggle('active',userReactions[jid]===k);});
-}
-function renderReactions(jid){
-  const r=db.reactions[jid]||{stars:[]};
-  const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—';
-  document.getElementById('avg-stars').textContent=stars;
-  document.getElementById('total-comments').textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;
-  const sv=document.getElementById('avg-stars-visual');sv.innerHTML='';const v=parseFloat(stars)||0;for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);}
-  renderReactionBars(jid,'reaction-bars',{positive:'vc-positive',neutral:'vc-neutral',negative:'vc-negative'},{positive:'vbtn-positive',neutral:'vbtn-neutral',negative:'vbtn-negative'});
-}
-function renderModalReactions(jid){
-  const r=db.reactions[jid]||{stars:[]};
-  const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—';
-  const a=document.getElementById('modal-avg-stars');if(a)a.textContent=stars;
-  const t=document.getElementById('modal-total-comments');if(t)t.textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;
-  const sv=document.getElementById('modal-avg-stars-visual');if(sv){sv.innerHTML='';const v=parseFloat(stars)||0;for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);}}
-  renderReactionBars(jid,'modal-reaction-bars',{positive:'modal-vc-positive',neutral:'modal-vc-neutral',negative:'modal-vc-negative'},{positive:'modal-vbtn-positive',neutral:'modal-vbtn-neutral',negative:'modal-vbtn-negative'});
-}
+function renderReactionBars(jid,barsId,vcIds,vbtnIds){const r=db.reactions[jid]||{positive:0,neutral:0,negative:0,stars:[],total:0};const total=(r.positive||0)+(r.neutral||0)+(r.negative||0);const bars=document.getElementById(barsId);if(bars){bars.innerHTML='';[{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(item=>{const count=r[item.k]||0,pct=total>0?Math.round((count/total)*100):0;bars.innerHTML+='<div class="vote-row"><span class="vote-emoji">'+item.e+'</span><div class="vote-bar-bg"><div class="vote-bar '+item.cls+'" style="width:'+pct+'%"></div></div><span class="vote-count">'+count+'</span></div>';});}['positive','neutral','negative'].forEach(k=>{const vc=document.getElementById(vcIds[k]);if(vc)vc.textContent=r[k]||0;const btn=document.getElementById(vbtnIds[k]);if(btn)btn.classList.toggle('active',userReactions[jid]===k);});}
+function renderReactions(jid){const r=db.reactions[jid]||{stars:[]};const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—';document.getElementById('avg-stars').textContent=stars;document.getElementById('total-comments').textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;const sv=document.getElementById('avg-stars-visual');sv.innerHTML='';const v=parseFloat(stars)||0;for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);}renderReactionBars(jid,'reaction-bars',{positive:'vc-positive',neutral:'vc-neutral',negative:'vc-negative'},{positive:'vbtn-positive',neutral:'vbtn-neutral',negative:'vbtn-negative'});}
+function renderModalReactions(jid){const r=db.reactions[jid]||{stars:[]};const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—';const a=document.getElementById('modal-avg-stars');if(a)a.textContent=stars;const t=document.getElementById('modal-total-comments');if(t)t.textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length;const sv=document.getElementById('modal-avg-stars-visual');if(sv){sv.innerHTML='';const v=parseFloat(stars)||0;for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);}}renderReactionBars(jid,'modal-reaction-bars',{positive:'modal-vc-positive',neutral:'modal-vc-neutral',negative:'modal-vc-negative'},{positive:'modal-vbtn-positive',neutral:'modal-vbtn-neutral',negative:'modal-vbtn-negative'});}
 async function castReaction(type){if(!currentJournalId)return;await toggleReaction(currentJournalId,type);renderReactions(currentJournalId);}
 async function castModalReaction(type){if(!modalJournalId)return;await toggleReaction(modalJournalId,type);renderModalReactions(modalJournalId);showToast('Réaction enregistrée !','success');}
-async function toggleReaction(jid,type){
-  const prev=userReactions[jid];
-  if(!db.reactions[jid])db.reactions[jid]={positive:0,neutral:0,negative:0,stars:[],total:0};
-  if(prev===type){db.reactions[jid][type]=Math.max(0,(db.reactions[jid][type]||0)-1);delete userReactions[jid];}
-  else{if(prev)db.reactions[jid][prev]=Math.max(0,(db.reactions[jid][prev]||0)-1);db.reactions[jid][type]=(db.reactions[jid][type]||0)+1;userReactions[jid]=type;}
-  localStorage.setItem('capnews_reactions',JSON.stringify(userReactions));
-  try{await api('/api/react',{journalId:jid,type});}catch(e){showToast('Erreur réseau','error');}
-}
+async function toggleReaction(jid,type){const prev=userReactions[jid];if(!db.reactions[jid])db.reactions[jid]={positive:0,neutral:0,negative:0,stars:[],total:0};if(prev===type){db.reactions[jid][type]=Math.max(0,(db.reactions[jid][type]||0)-1);delete userReactions[jid];}else{if(prev)db.reactions[jid][prev]=Math.max(0,(db.reactions[jid][prev]||0)-1);db.reactions[jid][type]=(db.reactions[jid][type]||0)+1;userReactions[jid]=type;}localStorage.setItem('capnews_reactions',JSON.stringify(userReactions));try{await api('/api/react',{journalId:jid,type});}catch(e){showToast('Erreur réseau','error');}}
 
 // ─── FILTRE ÉTOILES ────────────────────────────────────────────
-function setStarFilter(btn, containerId, jid){
-  const bar = btn.closest('.star-filter-bar');
-  if(bar) bar.querySelectorAll('.star-filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  const filterVal = parseInt(btn.dataset.filter)||0;
-  renderComments(jid, containerId, filterVal);
-}
+function setStarFilter(btn,containerId,jid){const bar=btn.closest('.star-filter-bar');if(bar)bar.querySelectorAll('.star-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const filterVal=parseInt(btn.dataset.filter)||0;renderComments(jid,containerId,filterVal);}
 
 // ─── COMMENTS ──────────────────────────────────────────────────
 function setModalCommentRating(v){modalCommentRating=v;document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
 
 async function submitModalComment(){
-  const name=(document.getElementById('modal-comment-name').value||'').trim();
-  const email=(document.getElementById('modal-comment-email').value||'').trim();
-  const text=(document.getElementById('modal-comment-text').value||'').trim();
-  if(!name){showToast('Veuillez entrer votre prénom.','error');return;}
-  if(!text){showToast('Veuillez écrire un avis.','error');return;}
-  if(!isValidEmail(email)){showToast('Email invalide.','error');return;}
-  if(!modalJournalId)return;
-  try{
-    const res=await api('/api/comment',{journalId:modalJournalId,name,text,rating:modalCommentRating});
-    db.comments.push(res.comment);
-    document.getElementById('modal-comment-name').value='';
-    document.getElementById('modal-comment-email').value='';
-    document.getElementById('modal-comment-text').value='';
-    setModalCommentRating(0);
-    renderComments(modalJournalId,'modal-comments',0);
-    renderModalReactions(modalJournalId);
-    showToast('Votre avis a été publié !','success');
-  }catch(e){showToast('Erreur : '+e.message,'error');}
+  const name=(document.getElementById('modal-comment-name').value||'').trim();const email=(document.getElementById('modal-comment-email').value||'').trim();const text=(document.getElementById('modal-comment-text').value||'').trim();
+  if(!name){showToast('Veuillez entrer votre prénom.','error');return;}if(!text){showToast('Veuillez écrire un avis.','error');return;}if(!isValidEmail(email)){showToast('Email invalide.','error');return;}if(!modalJournalId)return;
+  try{const res=await api('/api/comment',{journalId:modalJournalId,name,text,rating:modalCommentRating});db.comments.push(res.comment);document.getElementById('modal-comment-name').value='';document.getElementById('modal-comment-email').value='';document.getElementById('modal-comment-text').value='';setModalCommentRating(0);renderComments(modalJournalId,'modal-comments',0);renderModalReactions(modalJournalId);showToast('Votre avis a été publié !','success');}
+  catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
-// starFilter : 0 = tous, 1-5 = exactement N étoiles
-function renderComments(jid, containerId, starFilter=0){
+function renderComments(jid,containerId,starFilter=0){
   const list=document.getElementById(containerId);if(!list)return;
   let top=(db.comments||[]).filter(c=>c.journalId===jid&&!c.flagged&&!c.isReply).sort((a,b)=>new Date(b.date)-new Date(a.date));
-  if(starFilter>0) top=top.filter(c=>c.rating===starFilter);
+  if(starFilter>0)top=top.filter(c=>c.rating===starFilter);
   list.innerHTML='';
   if(!top.length){list.innerHTML='<p style="color:var(--muted);font-size:.9rem;font-family:var(--font-mono);">'+(starFilter>0?'Aucun avis avec cette note.':'Aucun avis. Soyez le premier !')+'</p>';return;}
-  top.forEach(c=>{
-    list.appendChild(buildCommentEl(c,jid,containerId));
-    (db.comments||[]).filter(r=>r.parentId===c.id&&!r.flagged).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(reply=>list.appendChild(buildReplyEl(reply)));
-  });
+  top.forEach(c=>{list.appendChild(buildCommentEl(c,jid,containerId));(db.comments||[]).filter(r=>r.parentId===c.id&&!r.flagged).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(reply=>list.appendChild(buildReplyEl(reply)));});
 }
 
 function buildCommentEl(c,jid,containerId){
   const initials=c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   const stars=Array.from({length:5},(_,i)=>'<span class="comment-star'+(i<c.rating?' filled':'')+'">★</span>').join('');
+  const badge=getCommentBadge(c.name);
   const div=document.createElement('div');div.className='comment-card';
-  div.innerHTML='<div class="comment-header"><div class="comment-avatar">'+initials+'</div><span class="comment-name">'+escHtml(c.name)+'</span>'+(c.rating?'<div class="comment-stars">'+stars+'</div>':'')+'<span class="comment-date">'+timeSince(c.date)+'</span></div><div class="comment-text">'+escHtml(c.text)+'</div><div class="comment-actions">'+(isAdmin?'<button class="comment-action-btn" onclick="toggleReplyForm(\''+c.id+'\')">↩ Répondre</button>':'')+' '+(isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\''+c.id+'\',\''+containerId+'\',\''+jid+'\')">Supprimer</button>':'')+'</div>'+(isAdmin?'<div class="reply-form" id="reply-form-'+c.id+'"><textarea placeholder="Votre réponse..."></textarea><div class="reply-form-actions"><button class="reply-submit" onclick="submitReply(\''+c.id+'\',\''+jid+'\',\''+containerId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleReplyForm(\''+c.id+'\')">Annuler</button></div></div>':'');
+  div.innerHTML='<div class="comment-header"><div class="comment-avatar">'+initials+'</div><span class="comment-name">'+escHtml(c.name)+(badge?'<span class="comment-badge">'+badge+'</span>':'')+'</span>'+(c.rating?'<div class="comment-stars">'+stars+'</div>':'')+'<span class="comment-date">'+timeSince(c.date)+'</span></div><div class="comment-text">'+escHtml(c.text)+'</div><div class="comment-actions">'+(isAdmin?'<button class="comment-action-btn" onclick="toggleReplyForm(\''+c.id+'\')">↩ Répondre</button>':'')+' '+(isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\''+c.id+'\',\''+containerId+'\',\''+jid+'\')">Supprimer</button>':'')+'</div>'+(isAdmin?'<div class="reply-form" id="reply-form-'+c.id+'"><textarea placeholder="Votre réponse..."></textarea><div class="reply-form-actions"><button class="reply-submit" onclick="submitReply(\''+c.id+'\',\''+jid+'\',\''+containerId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleReplyForm(\''+c.id+'\')">Annuler</button></div></div>':'');
   return div;
 }
 function buildReplyEl(r){const div=document.createElement('div');div.className='comment-card reply-card';div.innerHTML='<div class="comment-header"><div class="comment-avatar" style="background:var(--gold);">✍</div><span class="comment-name">'+escHtml(r.name)+'</span><span class="comment-date">'+timeSince(r.date)+'</span></div><div class="comment-text">'+escHtml(r.text)+'</div><div class="comment-actions">'+(isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\''+r.id+'\',\'\',\'\')">Supprimer</button>':'')+'</div>';return div;}
@@ -1606,54 +1489,36 @@ async function submitReply(parentId,jid,containerId){if(!isAdmin)return;const fo
 async function deleteComment(id,containerId,jid){if(!isAdmin)return;if(!confirm('Supprimer cet avis ?'))return;try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);if(containerId&&jid)renderComments(jid,containerId,0);if(currentJournalId)renderReactions(currentJournalId);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
 
 // ─── RECENT / TAGS ─────────────────────────────────────────────
-function renderRecentList(){
-  const list=document.getElementById('recent-list');list.innerHTML='';
-  const todayStr=getTodayStr();
-  db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j=>{
-    const isToday=j.date===todayStr;
-    const li=document.createElement('li');
-    li.innerHTML='<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\''+j.id+'\')">'+escHtml(j.title)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+'</span></div>';
-    list.appendChild(li);
-  });
-  if(!list.children.length)list.innerHTML='<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>';
-}
+function renderRecentList(){const list=document.getElementById('recent-list');list.innerHTML='';const todayStr=getTodayStr();db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j=>{const isToday=j.date===todayStr;const li=document.createElement('li');li.innerHTML='<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\''+j.id+'\')">'+escHtml(j.title)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+'</span></div>';list.appendChild(li);});if(!list.children.length)list.innerHTML='<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>';}
 function renderTagsCloud(){const cloud=document.getElementById('tags-cloud');cloud.innerHTML='';const tc={};db.journals.filter(j=>isPublished(j)).forEach(j=>{(j.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>{tc[t]=(tc[t]||0)+1;});});Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([tag,count])=>{const s=document.createElement('span');s.className='chip';s.style.cursor='pointer';s.textContent='#'+tag+' ('+count+')';s.onclick=()=>{showPage('history');setTimeout(()=>{document.getElementById('search-input').value=tag;filterHistory();},100);};cloud.appendChild(s);});}
 
 // ─── HISTORY ───────────────────────────────────────────────────
 function renderHistory(){
-  const published=db.journals.filter(j=>isPublished(j));
-  allCategories=new Set(published.map(j=>j.category).filter(Boolean));
+  const published=db.journals.filter(j=>isPublished(j));allCategories=new Set(published.map(j=>j.category).filter(Boolean));
   const fr=document.getElementById('cat-filters');fr.innerHTML='';
   const allBtn=document.createElement('button');allBtn.className='filter-btn'+(activeFilter==='all'?' active':'');allBtn.textContent='Tout';allBtn.onclick=()=>{activeFilter='all';renderHistory();};fr.appendChild(allBtn);
   allCategories.forEach(cat=>{const b=document.createElement('button');b.className='filter-btn'+(activeFilter===cat?' active':'');b.textContent=cat;b.onclick=()=>{activeFilter=cat;renderHistory();};fr.appendChild(b);});
   let allStars=[];Object.values(db.reactions).forEach(r=>{if(r.stars)allStars=allStars.concat(r.stars);});
   const avgR=allStars.length?(allStars.reduce((a,b)=>a+b,0)/allStars.length).toFixed(1):'—';
   const totalViews=Object.values(db.pageviews||{}).reduce((s,pv)=>s+(pv.total||0),0);
-  document.getElementById('history-stats').innerHTML=
-    '<div class="stat-card"><div class="stat-num">'+published.length+'</div><div class="stat-lbl">Journaux</div></div>'+
-    '<div class="stat-card"><div class="stat-num">'+((db.comments||[]).filter(c=>!c.isReply).length)+'</div><div class="stat-lbl">Avis</div></div>'+
-    '<div class="stat-card"><div class="stat-num">'+avgR+'</div><div class="stat-lbl">Note moy.</div></div>'+
-    '<div class="stat-card"><div class="stat-num">'+totalViews+'</div><div class="stat-lbl">Vues total</div></div>';
+  document.getElementById('history-stats').innerHTML='<div class="stat-card"><div class="stat-num">'+published.length+'</div><div class="stat-lbl">Journaux</div></div>'+'<div class="stat-card"><div class="stat-num">'+((db.comments||[]).filter(c=>!c.isReply).length)+'</div><div class="stat-lbl">Avis</div></div>'+'<div class="stat-card"><div class="stat-num">'+avgR+'</div><div class="stat-lbl">Note moy.</div></div>'+'<div class="stat-card"><div class="stat-num">'+totalViews+'</div><div class="stat-lbl">Vues total</div></div>';
   filterHistory();
 }
 function filterHistory(){
-  const q=(document.getElementById('search-input')?.value||'').toLowerCase();
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase().trim();
   let filtered=db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date));
   if(activeFilter!=='all')filtered=filtered.filter(j=>j.category===activeFilter);
   if(q)filtered=filtered.filter(j=>j.title.toLowerCase().includes(q)||(j.excerpt||'').toLowerCase().includes(q)||stripRichTags(getPages(j).join(' ')).toLowerCase().includes(q)||(j.tags||'').toLowerCase().includes(q));
+  const countEl=document.getElementById('search-results-count');if(countEl){countEl.textContent=q?(filtered.length+' résultat'+(filtered.length!==1?'s':'')):'';}
   const grid=document.getElementById('history-grid');grid.innerHTML='';
   document.getElementById('history-empty').style.display=filtered.length?'none':'block';
   const todayStr=getTodayStr();
-  filtered.forEach(j=>{
-    const r=db.reactions[j.id]||{};
-    const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):null;
-    const cc=(db.comments||[]).filter(c=>c.journalId===j.id&&!c.isReply).length;
-    const views=(db.pageviews||{})[j.id]?.total||0;
-    const isToday=j.date===todayStr;
+  filtered.forEach(j=>{const r=db.reactions[j.id]||{};const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):null;const cc=(db.comments||[]).filter(c=>c.journalId===j.id&&!c.isReply).length;const views=(db.pageviews||{})[j.id]?.total||0;const isToday=j.date===todayStr;
     const div=document.createElement('div');div.className='history-card';div.onclick=()=>openModal(j.id);
-    div.innerHTML='<div class="history-card-date">'+formatDateFr(j.date)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</div><div class="history-card-title">'+escHtml(j.title)+'</div><div class="history-card-excerpt">'+escHtml(stripRichTags(j.excerpt||getPages(j)[0]||'').slice(0,120))+'</div><div class="history-card-footer">'+(j.category?'<span class="history-card-cat">'+escHtml(j.category)+'</span>':'')+(stars?'<span class="history-card-rating">★ '+stars+'</span>':'')+'<span class="history-card-comments">'+cc+' avis</span><span class="history-card-views">👁 '+views+'</span></div>';
-    grid.appendChild(div);
-  });
+    // Highlight in titles
+    let titleHtml=escHtml(j.title);if(q)titleHtml=titleHtml.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="search-hl">$1</mark>');
+    div.innerHTML='<div class="history-card-date">'+formatDateFr(j.date)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</div><div class="history-card-title">'+titleHtml+'</div><div class="history-card-excerpt">'+escHtml(stripRichTags(j.excerpt||getPages(j)[0]||'').slice(0,120))+'</div><div class="history-card-footer">'+(j.category?'<span class="history-card-cat">'+escHtml(j.category)+'</span>':'')+(stars?'<span class="history-card-rating">★ '+stars+'</span>':'')+'<span class="history-card-comments">'+cc+' avis</span><span class="history-card-views">👁 '+views+'</span></div>';
+    grid.appendChild(div);});
 }
 
 // ─── MODAL ─────────────────────────────────────────────────────
@@ -1663,11 +1528,9 @@ function openModal(jid){
   renderModalBook(j);renderModalReactions(jid);
   ['modal-comment-name','modal-comment-email','modal-comment-text'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   modalCommentRating=0;document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.remove('active'));
-  // Reset filtre étoiles modal
   document.querySelectorAll('#modal-star-filter .star-filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderComments(jid,'modal-comments',0);
-  document.getElementById('journal-modal').classList.remove('hidden');
-  document.body.style.overflow='hidden';
+  document.getElementById('journal-modal').classList.remove('hidden');document.body.style.overflow='hidden';
   api('/api/pageview',{journalId:jid}).catch(()=>{});
 }
 function closeModal(){document.getElementById('journal-modal').classList.add('hidden');document.body.style.overflow='';modalJournalId=null;}
@@ -1675,77 +1538,26 @@ document.getElementById('journal-modal').addEventListener('click',e=>{if(e.targe
 
 // ─── ADMIN LOGIN ───────────────────────────────────────────────
 async function adminLogin(){
-  const pw=document.getElementById('admin-pw-input').value;
-  const btn=document.getElementById('admin-login-btn');const err=document.getElementById('admin-err');
+  const pw=document.getElementById('admin-pw-input').value;const btn=document.getElementById('admin-login-btn');const err=document.getElementById('admin-err');
   if(!pw)return;btn.disabled=true;btn.textContent='Vérification...';err.textContent='';
-  try{
-    const res=await api('/api/login',{password:pw});
-    adminToken=res.token;
-    document.getElementById('admin-login-screen').style.display='none';
-    document.getElementById('admin-panel').style.display='block';
-    document.getElementById('admin-pw-input').value='';
-    document.getElementById('new-date').value=getTodayStr();
-    initNewPagesEditor();loadManageList();loadModeration();loadSettings();
-    const j=getTodayJournal();
-    if(j){currentJournalId=j.id;document.getElementById('edit-fab').classList.remove('hidden');}
-    showToast('Connecté en tant qu\'admin.','success');
-    // Affiche le temps de lecture auto dans les formulaires
-    updateAutoReadTime();
-  }catch(e){err.textContent='❌ '+e.message;}
+  try{const res=await api('/api/login',{password:pw});adminToken=res.token;document.getElementById('admin-login-screen').style.display='none';document.getElementById('admin-panel').style.display='block';document.getElementById('admin-pw-input').value='';document.getElementById('new-date').value=getTodayStr();initNewPagesEditor();loadManageList();loadModeration();loadSettings();const j=getTodayJournal();if(j){currentJournalId=j.id;document.getElementById('edit-fab').classList.remove('hidden');}showToast('Connecté en tant qu\'admin.','success');updateAutoReadTime();checkDraft();}
+  catch(e){err.textContent='❌ '+e.message;}
   btn.disabled=false;btn.textContent='Se connecter →';
 }
 function adminLogout(){adminToken=null;document.getElementById('admin-login-screen').style.display='block';document.getElementById('admin-panel').style.display='none';document.getElementById('admin-pw-input').value='';document.getElementById('edit-fab').classList.add('hidden');showToast('Déconnecté.','info');}
-
-function updateAutoReadTime(){
-  const newPages=getPagesFromEditor('new-pages-editor');
-  const el=document.getElementById('new-readtime-auto');
-  if(el&&newPages.length)el.textContent='Auto : '+calcReadTime(newPages);
-}
+function updateAutoReadTime(){const newPages=getPagesFromEditor('new-pages-editor');const el=document.getElementById('new-readtime-auto');if(el&&newPages.length)el.textContent='Auto : '+calcReadTime(newPages);}
 
 // ─── ADMIN TABS ────────────────────────────────────────────────
-function switchAdminTab(tab){
-  ['new','manage','calendar','analytics','moderation','settings'].forEach(t=>{
-    document.getElementById('atab-'+t).classList.toggle('active',t===tab);
-    document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';
-  });
-  if(tab==='manage')loadManageList();
-  if(tab==='moderation')loadModeration();
-  if(tab==='settings')loadSettings();
-  if(tab==='calendar')renderAdminCalendar();
-  if(tab==='analytics')loadAnalytics();
-}
-function switchEditTab(tab){
-  ['content','media','meta','preview'].forEach(t=>{
-    const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);
-    const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';
-  });
-  if(tab==='preview'){previewPage=0;}
-  if(tab==='meta'){
-    // Affiche temps de lecture auto
-    const pages=getPagesFromEditor('edit-pages-editor');
-    const el=document.getElementById('edit-readtime-auto');
-    if(el)el.textContent='Auto : '+calcReadTime(pages);
-  }
-}
-function switchNewTab(tab){
-  ['content','media','meta','preview'].forEach(t=>{
-    const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);
-    const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';
-  });
-  if(tab==='preview'){newPreviewPage=0;}
-  if(tab==='meta'){updateAutoReadTime();}
-}
+function switchAdminTab(tab){['new','manage','calendar','analytics','moderation','settings'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';});if(tab==='manage')loadManageList();if(tab==='moderation')loadModeration();if(tab==='settings')loadSettings();if(tab==='calendar')renderAdminCalendar();if(tab==='analytics')loadAnalytics();}
+function switchEditTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){previewPage=0;}if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);}}
+function switchNewTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){newPreviewPage=0;}if(tab==='meta'){updateAutoReadTime();}}
 
 // ─── PAGES EDITOR ──────────────────────────────────────────────
 function buildPageItem(text,idx,editorId){
   const item=document.createElement('div');item.className='page-editor-item';item.dataset.pageIdx=idx;
   const header=document.createElement('div');header.className='page-editor-header';
   header.innerHTML='<span>Page '+(idx+1)+'</span><span style="display:flex;gap:8px;"><button onclick="event.stopPropagation();removePage(this,\''+editorId+'\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:.75rem;">Suppr.</button><span>▾</span></span>';
-  const body=document.createElement('div');body.className='page-editor-body open';
-  header.onclick=()=>body.classList.toggle('open');
-  body.appendChild(buildRichEditor(text,idx,editorId));
-  item.appendChild(header);item.appendChild(body);
-  return item;
+  const body=document.createElement('div');body.className='page-editor-body open';header.onclick=()=>body.classList.toggle('open');body.appendChild(buildRichEditor(text,idx,editorId));item.appendChild(header);item.appendChild(body);return item;
 }
 function removePage(btn,editorId){btn.closest('.page-editor-item').remove();renumberPages(editorId);}
 function renumberPages(editorId){document.querySelectorAll('#'+editorId+' .page-editor-item').forEach((item,i)=>{item.dataset.pageIdx=i;item.querySelector('.page-editor-header span:first-child').textContent='Page '+(i+1);const ta=item.querySelector('.richtext-area');if(ta)ta.setAttribute('data-page-idx',i);});}
@@ -1756,142 +1568,53 @@ function initNewPagesEditor(){const e=document.getElementById('new-pages-editor'
 
 // ─── PUBLISH ───────────────────────────────────────────────────
 async function publishJournal(){
-  if(!isAdmin)return;
-  const title=document.getElementById('new-title').value.trim();
-  const date=document.getElementById('new-date').value;
-  const pages=getPagesFromEditor('new-pages-editor');
-  if(!title||!date){showToast('Titre et date requis.','error');return;}
-  if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  if(!isAdmin)return;const title=document.getElementById('new-title').value.trim();const date=document.getElementById('new-date').value;const pages=getPagesFromEditor('new-pages-editor');
+  if(!title||!date){showToast('Titre et date requis.','error');return;}if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
   const autoRt=calcReadTime(pages);
-  const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,
-    category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,
-    author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),
-    readTime:document.getElementById('new-readtime').value.trim()||autoRt,
-    coverImg:document.getElementById('new-cover-img').value.trim(),
-    audioUrl:document.getElementById('new-audio-url').value.trim()};
+  const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),readTime:document.getElementById('new-readtime').value.trim()||autoRt,coverImg:document.getElementById('new-cover-img').value.trim(),audioUrl:document.getElementById('new-audio-url').value.trim()};
   const btn=document.getElementById('publish-btn');btn.disabled=true;btn.textContent='Enregistrement...';
-  try{
-    const res=await api('/api/admin/save',j);
-    j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);
-    showToast('Journal enregistré !','success');
-    ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    document.getElementById('new-date').value=getTodayStr();
-    document.getElementById('new-cover-img-preview').style.display='none';
-    document.getElementById('new-audio-preview').style.display='none';
-    initNewPagesEditor();renderHome();loadManageList();renderSidebarCalendar();
-  }catch(e){showToast('Erreur : '+e.message,'error');}
+  try{const res=await api('/api/admin/save',j);j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);showToast('Journal enregistré !','success');clearDraft();['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('new-date').value=getTodayStr();document.getElementById('new-cover-img-preview').style.display='none';document.getElementById('new-audio-preview').style.display='none';initNewPagesEditor();renderHome();loadManageList();renderSidebarCalendar();}
+  catch(e){showToast('Erreur : '+e.message,'error');}
   btn.disabled=false;btn.textContent='Enregistrer le journal →';
 }
 
 // ─── EDIT MODAL ────────────────────────────────────────────────
 function openEditModal(){
-  if(!isAdmin)return;
-  const j=db.journals.find(x=>x.id===currentJournalId);if(!j)return;
-  document.getElementById('edit-title').value=j.title||'';
-  document.getElementById('edit-excerpt').value=j.excerpt||'';
-  document.getElementById('edit-author').value=j.author||'';
-  document.getElementById('edit-tags').value=j.tags||'';
-  document.getElementById('edit-date').value=j.date||'';
-  document.getElementById('edit-readtime').value=j.readTime||'';
-  document.getElementById('edit-category').value=j.category||'Autre';
-  document.getElementById('edit-mood').value=j.mood||'neutral';
-  document.getElementById('edit-cover-img').value=j.coverImg||'';
-  document.getElementById('edit-audio-url').value=j.audioUrl||'';
-  document.getElementById('cover-img-preview').style.display='none';
-  document.getElementById('audio-preview').style.display='none';
-  const editor=document.getElementById('edit-pages-editor');editor.innerHTML='';
-  getPages(j).forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'edit-pages-editor')));
-  previewPage=0;
-  switchEditTab('content');
-  document.getElementById('edit-modal-bg').classList.remove('hidden');
-  document.body.style.overflow='hidden';
+  if(!isAdmin)return;const j=db.journals.find(x=>x.id===currentJournalId);if(!j)return;
+  document.getElementById('edit-title').value=j.title||'';document.getElementById('edit-excerpt').value=j.excerpt||'';document.getElementById('edit-author').value=j.author||'';document.getElementById('edit-tags').value=j.tags||'';document.getElementById('edit-date').value=j.date||'';document.getElementById('edit-readtime').value=j.readTime||'';document.getElementById('edit-category').value=j.category||'Autre';document.getElementById('edit-mood').value=j.mood||'neutral';document.getElementById('edit-cover-img').value=j.coverImg||'';document.getElementById('edit-audio-url').value=j.audioUrl||'';document.getElementById('cover-img-preview').style.display='none';document.getElementById('audio-preview').style.display='none';
+  const editor=document.getElementById('edit-pages-editor');editor.innerHTML='';getPages(j).forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'edit-pages-editor')));
+  previewPage=0;switchEditTab('content');document.getElementById('edit-modal-bg').classList.remove('hidden');document.body.style.overflow='hidden';
 }
 function closeEditModal(){document.getElementById('edit-modal-bg').classList.add('hidden');document.body.style.overflow='';}
 async function saveEditJournal(){
-  if(!isAdmin)return;
-  const j=db.journals.find(x=>x.id===currentJournalId);if(!j)return;
-  const pages=getPagesFromEditor('edit-pages-editor');
-  if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  if(!isAdmin)return;const j=db.journals.find(x=>x.id===currentJournalId);if(!j)return;const pages=getPagesFromEditor('edit-pages-editor');if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
   const autoRt=calcReadTime(pages);
-  const updated={...j,
-    title:document.getElementById('edit-title').value.trim()||j.title,
-    excerpt:document.getElementById('edit-excerpt').value.trim(),
-    pages,author:document.getElementById('edit-author').value.trim(),
-    tags:document.getElementById('edit-tags').value.trim(),
-    date:document.getElementById('edit-date').value||j.date,
-    readTime:document.getElementById('edit-readtime').value.trim()||autoRt,
-    category:document.getElementById('edit-category').value,
-    mood:document.getElementById('edit-mood').value,
-    coverImg:document.getElementById('edit-cover-img').value.trim(),
-    audioUrl:document.getElementById('edit-audio-url').value.trim()};
-  try{
-    await api('/api/admin/save',updated);
-    const idx=db.journals.findIndex(x=>x.id===currentJournalId);
-    if(idx>=0)db.journals[idx]=updated;
-    closeEditModal();bookPage=0;renderHome();renderSidebarCalendar();
-    showToast('Journal mis à jour !','success');
-  }catch(e){showToast('Erreur : '+e.message,'error');}
+  const updated={...j,title:document.getElementById('edit-title').value.trim()||j.title,excerpt:document.getElementById('edit-excerpt').value.trim(),pages,author:document.getElementById('edit-author').value.trim(),tags:document.getElementById('edit-tags').value.trim(),date:document.getElementById('edit-date').value||j.date,readTime:document.getElementById('edit-readtime').value.trim()||autoRt,category:document.getElementById('edit-category').value,mood:document.getElementById('edit-mood').value,coverImg:document.getElementById('edit-cover-img').value.trim(),audioUrl:document.getElementById('edit-audio-url').value.trim()};
+  try{await api('/api/admin/save',updated);const idx=db.journals.findIndex(x=>x.id===currentJournalId);if(idx>=0)db.journals[idx]=updated;closeEditModal();bookPage=0;renderHome();renderSidebarCalendar();showToast('Journal mis à jour !','success');}
+  catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
 // ─── MANAGE ────────────────────────────────────────────────────
-function loadManageList(){
-  document.getElementById('manage-list-loading').style.display='none';
-  const list=document.getElementById('manage-list');list.innerHTML='';
-  const sorted=[...db.journals].sort((a,b)=>b.date.localeCompare(a.date));
-  if(!sorted.length){list.innerHTML='<li style="color:var(--muted);">Aucun journal</li>';return;}
-  sorted.forEach(j=>{
-    const li=document.createElement('li');const pub=isPublished(j);
-    li.innerHTML='<div><span class="admin-list-title">'+escHtml(j.title)+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+' · '+(pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>')+'</span></div><div class="admin-list-actions"><button class="btn-primary" style="padding:.35rem .8rem;font-size:.78rem;" onclick="editFromManage(\''+j.id+'\')">Modifier</button><button class="btn-danger" onclick="deleteJournal(\''+j.id+'\')">Suppr.</button></div>';
-    list.appendChild(li);
-  });
-}
+function loadManageList(){document.getElementById('manage-list-loading').style.display='none';const list=document.getElementById('manage-list');list.innerHTML='';const sorted=[...db.journals].sort((a,b)=>b.date.localeCompare(a.date));if(!sorted.length){list.innerHTML='<li style="color:var(--muted);">Aucun journal</li>';return;}sorted.forEach(j=>{const li=document.createElement('li');const pub=isPublished(j);li.innerHTML='<div><span class="admin-list-title">'+escHtml(j.title)+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+' · '+(pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>')+'</span></div><div class="admin-list-actions"><button class="btn-primary" style="padding:.35rem .8rem;font-size:.78rem;" onclick="editFromManage(\''+j.id+'\')">Modifier</button><button class="btn-danger" onclick="deleteJournal(\''+j.id+'\')">Suppr.</button></div>';list.appendChild(li);});}
 async function deleteJournal(id){if(!isAdmin)return;if(!confirm('Supprimer ce journal définitivement ?'))return;try{await api('/api/admin/delete-journal',{id});db.journals=db.journals.filter(j=>j.id!==id);db.comments=db.comments.filter(c=>c.journalId!==id);loadManageList();renderHome();renderSidebarCalendar();showToast('Journal supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
 function editFromManage(id){currentJournalId=id;showPage('home');openEditModal();}
 
 // ─── ANALYTICS ─────────────────────────────────────────────────
 async function loadAnalytics(){
-  document.getElementById('analytics-loading').style.display='block';
-  document.getElementById('analytics-content').style.display='none';
-  try{
-    const data=await api('/api/admin/analytics',undefined,'GET');
-    document.getElementById('analytics-loading').style.display='none';
-    document.getElementById('analytics-content').style.display='block';
-    document.getElementById('analytics-stats').innerHTML=
-      '<div class="analytics-stat"><div class="analytics-num">'+data.totalViews+'</div><div class="analytics-lbl">Vues total</div></div>'+
-      '<div class="analytics-stat"><div class="analytics-num">'+data.totalComments+'</div><div class="analytics-lbl">Avis total</div></div>'+
-      '<div class="analytics-stat"><div class="analytics-num">'+data.totalJournals+'</div><div class="analytics-lbl">Journaux</div></div>';
-    const chartEl=document.getElementById('analytics-chart');chartEl.innerHTML='';
-    const entries=Object.entries(data.daily);const maxVal=Math.max(...entries.map(([,v])=>v),1);
-    entries.forEach(([date,count],i)=>{
-      const col=document.createElement('div');col.className='chart-bar-col';
-      const pct=Math.round((count/maxVal)*100);
-      const d=new Date(date+'T12:00:00');
-      const label=i%5===0?d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';
-      col.innerHTML='<div class="chart-bar" style="height:'+Math.max(pct,2)+'%"><div class="chart-bar-tooltip">'+count+' vue'+(count>1?'s':'')+' · '+date+'</div></div><div class="chart-bar-label">'+label+'</div>';
-      chartEl.appendChild(col);
-    });
-    const topEl=document.getElementById('top-journals');topEl.innerHTML='';
-    data.byJournal.slice(0,8).forEach((j,i)=>{topEl.innerHTML+='<div class="top-journal-row"><span class="top-journal-rank">#'+(i+1)+'</span><span class="top-journal-title">'+escHtml(j.title)+'</span><span class="top-journal-views">👁 '+j.views+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:.5rem;">💬 '+j.comments+'</span></div>';});
-    if(!data.byJournal.length)topEl.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';
-  }catch(e){document.getElementById('analytics-loading').innerHTML='<p style="color:var(--red);font-family:var(--font-mono);">Erreur : '+escHtml(e.message)+'</p>';}
+  document.getElementById('analytics-loading').style.display='block';document.getElementById('analytics-content').style.display='none';
+  try{const data=await api('/api/admin/analytics',undefined,'GET');document.getElementById('analytics-loading').style.display='none';document.getElementById('analytics-content').style.display='block';document.getElementById('analytics-stats').innerHTML='<div class="analytics-stat"><div class="analytics-num">'+data.totalViews+'</div><div class="analytics-lbl">Vues total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalComments+'</div><div class="analytics-lbl">Avis total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalJournals+'</div><div class="analytics-lbl">Journaux</div></div>';
+  const chartEl=document.getElementById('analytics-chart');chartEl.innerHTML='';const entries=Object.entries(data.daily);const maxVal=Math.max(...entries.map(([,v])=>v),1);
+  entries.forEach(([date,count],i)=>{const col=document.createElement('div');col.className='chart-bar-col';const pct=Math.round((count/maxVal)*100);const d=new Date(date+'T12:00:00');const label=i%5===0?d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';col.innerHTML='<div class="chart-bar" style="height:'+Math.max(pct,2)+'%"><div class="chart-bar-tooltip">'+count+' vue'+(count>1?'s':'')+' · '+date+'</div></div><div class="chart-bar-label">'+label+'</div>';chartEl.appendChild(col);});
+  const topEl=document.getElementById('top-journals');topEl.innerHTML='';data.byJournal.slice(0,8).forEach((j,i)=>{topEl.innerHTML+='<div class="top-journal-row"><span class="top-journal-rank">#'+(i+1)+'</span><span class="top-journal-title">'+escHtml(j.title)+'</span><span class="top-journal-views">👁 '+j.views+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:.5rem;">💬 '+j.comments+'</span></div>';});if(!data.byJournal.length)topEl.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';}
+  catch(e){document.getElementById('analytics-loading').innerHTML='<p style="color:var(--red);font-family:var(--font-mono);">Erreur : '+escHtml(e.message)+'</p>';}
 }
 
 // ─── MODÉRATION ────────────────────────────────────────────────
 function loadModeration(){
-  const list=document.getElementById('mod-list');const all=(db.comments||[]).filter(c=>!c.isReply);
-  list.innerHTML='';
-  if(!all.length){document.getElementById('mod-empty').style.display='block';return;}
-  document.getElementById('mod-empty').style.display='none';
-  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c=>{
-    const j=db.journals.find(x=>x.id===c.journalId);
-    const replies=(db.comments||[]).filter(r=>r.parentId===c.id);
-    const li=document.createElement('li');li.style.cssText='display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';
-    const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;justify-content:space-between;';
-    row.innerHTML='<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br><span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br><span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>'+(replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'')+'</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\')">↩</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
-    const replyBox=document.createElement('div');replyBox.id='mod-reply-'+c.id;replyBox.style.cssText='display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';
-    replyBox.innerHTML='<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;background:var(--bg-card);color:var(--ink);" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
-    li.appendChild(row);li.appendChild(replyBox);list.appendChild(li);
-  });
+  const list=document.getElementById('mod-list');const all=(db.comments||[]).filter(c=>!c.isReply);list.innerHTML='';if(!all.length){document.getElementById('mod-empty').style.display='block';return;}document.getElementById('mod-empty').style.display='none';
+  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c=>{const j=db.journals.find(x=>x.id===c.journalId);const replies=(db.comments||[]).filter(r=>r.parentId===c.id);const li=document.createElement('li');li.style.cssText='display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;justify-content:space-between;';row.innerHTML='<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br><span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br><span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>'+(replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'')+'</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\')">↩</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
+  const replyBox=document.createElement('div');replyBox.id='mod-reply-'+c.id;replyBox.style.cssText='display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';replyBox.innerHTML='<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;background:var(--bg-card);color:var(--ink);" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
+  li.appendChild(row);li.appendChild(replyBox);list.appendChild(li);});
 }
 function toggleModReply(id){const b=document.getElementById('mod-reply-'+id);if(!b)return;b.style.display=b.style.display==='none'?'block':'none';if(b.style.display==='block'){const ta=document.getElementById('mod-reply-text-'+id);if(ta)ta.focus();}}
 async function submitModReply(parentId,jid){if(!isAdmin)return;const ta=document.getElementById('mod-reply-text-'+parentId);const text=ta?ta.value.trim():'';if(!text){showToast('Veuillez écrire une réponse.','error');return;}try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);toggleModReply(parentId);loadModeration();showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
@@ -1920,21 +1643,26 @@ function applyBranding(){
 // ─── COUNTDOWN ─────────────────────────────────────────────────
 function startCountdown(){updateCountdown();setInterval(updateCountdown,1000);}
 function updateCountdown(){
-  const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);
-  if(now>=pub)pub.setDate(pub.getDate()+1);
-  const diff=pub-now,j=getTodayJournal();
+  const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);if(now>=pub)pub.setDate(pub.getDate()+1);const diff=pub-now;const j=getTodayJournal();
   if(j&&isPublished(j)){document.getElementById('countdown-banner').classList.add('published');document.getElementById('countdown-text').textContent='✓ Le journal du jour est disponible !';document.getElementById('countdown-timer').textContent='';const lc=document.getElementById('locked-countdown');if(lc)lc.textContent='';return;}
   document.getElementById('countdown-banner').classList.remove('published');
   const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-  document.getElementById('countdown-text').textContent='Prochain journal dans :';
-  document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
-  const lc=document.getElementById('locked-countdown');if(lc)lc.textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+  document.getElementById('countdown-text').textContent='Prochain journal dans :';document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';const lc=document.getElementById('locked-countdown');if(lc)lc.textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
 }
 
-// ─── KEYBOARD ──────────────────────────────────────────────────
+// ─── KEYBOARD SHORTCUTS ────────────────────────────────────────
 document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'&&!e.target.matches('input,textarea'))bookNext();
-  if(e.key==='ArrowLeft'&&!e.target.matches('input,textarea'))bookPrev();
+  const inField=e.target.matches('input,textarea,select');
+  if(e.key==='Escape'){hideCtxMenu();closeModal();closeEditModal();closeImmersive();closeKbdHelp();document.getElementById('kbd-help').classList.remove('show');}
+  if(inField)return;
+  if(e.key==='ArrowRight')bookNext();
+  if(e.key==='ArrowLeft')bookPrev();
+  if(e.key==='f'||e.key==='F')toggleImmersive();
+  if(e.key==='h'||e.key==='H'){showPage('home');}
+  if(e.key==='a'||e.key==='A'){showPage('history');}
+  if(e.key==='d'||e.key==='D'){toggleTheme();}
+  if(e.key==='?'){showKbdHelp();}
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();showPage('history');setTimeout(()=>{const inp=document.getElementById('search-input');if(inp){inp.focus();inp.select();}},100);}
 });
 </script>
 </body>
