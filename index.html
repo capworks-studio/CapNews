@@ -875,16 +875,18 @@ function applyRichCmd(cmd, ta) {
 }
 
 async function aiSpellcheck(ta, text, start, end) {
-  showToast('Correction en cours...','info');
+  showToast('Correction en cours...', 'info');
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:'Corrige uniquement les fautes d\'orthographe et de grammaire dans ce texte français. Garde exactement le même style, la même structure et les mêmes balises de mise en forme (comme [b], [i], [sp], [hl], [a url]). Ne reformule pas, ne change pas le contenu. Retourne UNIQUEMENT le texte corrigé, sans explication ni guillemets.\n\nTexte:\n'+text}]})});
-    const data = await res.json();
-    const corrected = data.content?.[0]?.text?.trim();
-    if (!corrected) { showToast('Correction échouée.','error'); return; }
-    if (start===0 && end===ta.value.length) ta.value = corrected;
-    else ta.value = ta.value.substring(0,start)+corrected+ta.value.substring(end);
-    ta.focus(); showToast('✅ Texte corrigé !','success');
-  } catch(e) { showToast('Erreur IA : '+e.message,'error'); }
+    const res = await api('/api/spellcheck', { text });
+    const corrected = res.corrected;
+    if (!corrected) { showToast('Correction échouée.', 'error'); return; }
+    if (start === 0 && end === ta.value.length) ta.value = corrected;
+    else ta.value = ta.value.substring(0, start) + corrected + ta.value.substring(end);
+    ta.focus();
+    showToast('✅ Texte corrigé !', 'success');
+  } catch(e) {
+    showToast('Erreur : ' + e.message, 'error');
+  }
   hideCtxMenu();
 }
 
