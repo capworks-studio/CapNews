@@ -25,7 +25,10 @@
   --font-display:'Playfair Display',Georgia,serif;
   --font-body:'Source Serif 4',Georgia,serif;
   --font-mono:'DM Mono',monospace;
-  --bg-page:var(--parchment);--bg-card:white;
+  --bg-page:var(--parchment);
+  /* bg-card : blanc cassé en clair pour éviter le blanc pur "invisible" */
+  --bg-card:#fefaf3;
+  --text-on-card:#1a1209;
   --transition:.22s cubic-bezier(.4,0,.2,1);
   --radius:4px;
 }
@@ -33,10 +36,11 @@
   --ink:#f0e8d8;--ink-light:#c8b89a;
   --parchment:#1a1510;--parchment-dark:#221e18;--parchment-mid:#1e1a14;
   --gold:#d4a843;--gold-light:#e8c060;--gold-glow:rgba(212,168,67,.18);
-  --muted:#7a6a52;
+  --muted:#8a7a62;
   --border:rgba(200,160,80,.15);--border-strong:rgba(200,160,80,.28);
   --shadow:0 2px 24px rgba(0,0,0,.4);--shadow-strong:0 8px 48px rgba(0,0,0,.6);
   --bg-page:#1a1510;--bg-card:#221e18;
+  --text-on-card:#f0e8d8;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 
@@ -160,6 +164,15 @@ body.immersive-mode #immersive-bar{display:flex;}
 .page-body-text{font-size:1rem;line-height:1.9;color:var(--ink);}
 .page-drop-cap::first-letter{font-family:var(--font-display);font-size:4rem;font-weight:900;float:left;line-height:.75;margin-right:.12em;margin-top:.1em;color:var(--gold);}
 
+/* ══ Force text color on bg-card elements ══ */
+.book-page:not(.cover-page){color:var(--ink);}
+.comment-card{color:var(--ink);}
+.sidebar-box{color:var(--ink);}
+.modal-content{color:var(--ink);}
+.admin-body input,.admin-body textarea,.admin-body select{color:var(--ink);}
+.form-input,.form-select,.form-textarea{color:var(--ink);}
+.richtext-area{color:var(--ink);}
+
 /* ── Search highlight ── */
 mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;padding:0 2px;}
 
@@ -221,13 +234,13 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 /* ══ CHIP ══ */
 .chip{font-family:var(--font-mono);font-size:.72rem;padding:.2rem .65rem;border-radius:2px;border:1px solid var(--border-strong);color:var(--muted);background:var(--parchment-mid);letter-spacing:.08em;text-transform:uppercase;}
 .chip.cat{background:var(--ink);color:var(--parchment-dark);border-color:var(--ink);}
-.chip.mood-good{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7;}
-.chip.mood-neutral{background:#fff8e1;color:#f57f17;border-color:#ffcc80;}
-.chip.mood-bad{background:#ffebee;color:#c62828;border-color:#ef9a9a;}
-.chip.mood-energetic{background:#e3f2fd;color:#1565c0;border-color:#90caf9;}
-.chip.mood-pensive{background:#f3e5f5;color:#6a1b9a;border-color:#ce93d8;}
-.chip.mood-excited{background:#fff3e0;color:#e65100;border-color:#ffb74d;}
-.chip.mood-grateful{background:#f1f8e9;color:#33691e;border-color:#aed581;}
+.chip.mood-good{background:#e8f5e9;color:#1b5e20;border-color:#a5d6a7;}
+.chip.mood-neutral{background:#fff8e1;color:#e65100;border-color:#ffcc80;}
+.chip.mood-bad{background:#ffebee;color:#b71c1c;border-color:#ef9a9a;}
+.chip.mood-energetic{background:#e3f2fd;color:#0d47a1;border-color:#90caf9;}
+.chip.mood-pensive{background:#f3e5f5;color:#4a148c;border-color:#ce93d8;}
+.chip.mood-excited{background:#fff3e0;color:#bf360c;border-color:#ffb74d;}
+.chip.mood-grateful{background:#f1f8e9;color:#1b5e20;border-color:#aed581;}
 .chip.mood-nostalgic{background:#fce4ec;color:#880e4f;border-color:#f48fb1;}
 
 /* ══ REACTIONS ══ */
@@ -1319,27 +1332,32 @@ function hideCtxMenu(){document.getElementById('rich-ctx-menu').classList.remove
 function rtCmd(cmd){applyRichCmd(cmd,activeRichTarget);}
 
 // ─── BOOK RENDERER ──────────────────────────────────────────────
-function buildBookPages(j, readerEl, pageIdx, onStartRead, searchQ) {
+// buildBookPages : construit TOUTES les pages sans jamais poser 'active'.
+// setBookPage s'occupe SEUL de l'activation. Cela évite les conflits de double-toggle.
+function buildBookPages(j, readerEl, onStartRead, searchQ) {
   const pages=getPages(j);const total=pages.length+1;
   readerEl.innerHTML='';
-  // Couverture
-  const cover=document.createElement('div');cover.className='book-page cover-page'+(pageIdx===0?' active':'');
+  // Couverture — pas de classe 'active' ici
+  const cover=document.createElement('div');cover.className='book-page cover-page';
   let chips='';if(j.category)chips+='<span class="chip cat">'+escHtml(j.category)+'</span>';if(j.mood)chips+='<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>';if(j.author)chips+='<span class="chip">✒ '+escHtml(j.author)+'</span>';
   let coverExtra='';if(j.coverImg)coverExtra+=`<div style="margin-bottom:1rem;border-radius:4px;overflow:hidden;max-height:180px;"><img src="${j.coverImg}" style="width:100%;max-height:180px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
   if(j.audioUrl)coverExtra+=`<div class="page-audio-block" style="margin-bottom:1rem;"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${j.audioUrl}','${escHtml(j.title)}')">🔊 Écouter (mini player)</span><audio controls src="${j.audioUrl}"></audio></div>`;
   const rt=j.readTime||calcReadTime(pages);
   cover.innerHTML='<div class="cover-edition">'+escHtml((db.settings.siteName||'CapNews').toUpperCase())+' · '+formatDateFr(j.date)+'</div>'+'<div class="cover-title">'+escHtml(j.title)+'</div>'+(j.excerpt?'<div class="cover-excerpt">'+parseRichText(j.excerpt)+'</div>':'')+coverExtra+'<div class="cover-meta">'+chips+'</div>'+'<div class="cover-readtime">⏱ '+escHtml(rt)+'</div>'+'<button class="cover-start-btn" id="cover-start-'+readerEl.id+'">Lire le journal →</button>'+'<span class="cover-page-num">Couverture</span>';
   readerEl.appendChild(cover);
-  // Pages
-  pages.forEach((p,i)=>{const pg=document.createElement('div');pg.className='book-page'+(pageIdx===i+1?' active':'');pg.innerHTML='<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p,searchQ)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';readerEl.appendChild(pg);});
-  // Start btn
+  // Pages de contenu — pas de classe 'active' non plus
+  pages.forEach((p,i)=>{const pg=document.createElement('div');pg.className='book-page';pg.innerHTML='<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p,searchQ)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';readerEl.appendChild(pg);});
+  // Bouton couverture → page 1
   const startBtn=readerEl.querySelector('#cover-start-'+readerEl.id);if(startBtn)startBtn.onclick=()=>onStartRead(1);
   return total;
 }
 
 function setBookPage(readerEl, pageIdx, total, dotsEl, counterEl, btnPrev, btnNext, onPageChange) {
   const pages=readerEl.querySelectorAll('.book-page');
-  pages.forEach((p,i)=>p.classList.toggle('active',i===pageIdx));
+  pages.forEach((p,i)=>{p.classList.toggle('active',i===pageIdx);});
+  // Scroll to top de la page active
+  const activePg=readerEl.querySelector('.book-page.active');
+  if(activePg)activePg.scrollTop=0;
   if(btnPrev)btnPrev.disabled=pageIdx===0;if(btnNext)btnNext.disabled=pageIdx===total-1;
   if(counterEl)counterEl.textContent=(pageIdx+1)+' / '+total;
   if(dotsEl){dotsEl.innerHTML='';for(let i=0;i<total;i++){const dot=document.createElement('span');dot.className='progress-dot'+(i===pageIdx?' active':'');dot.onclick=()=>onPageChange(i);dotsEl.appendChild(dot);}}
@@ -1351,16 +1369,18 @@ function renderBook(j){
   const pages=getPages(j);homeBookTotal=pages.length+2;
   const reader=document.getElementById('book-reader');
   const searchQ=(document.getElementById('search-input')?.value||'');
-  buildBookPages(j,reader,bookPage,(p)=>{bookPage=p;refreshHomeBook(j);},searchQ);
-  // Page commentaires
-  const cp=document.createElement('div');cp.className='book-page comments-book-page'+(bookPage===homeBookTotal-1?' active':'');
+  // 1. Construit le DOM sans aucun 'active'
+  buildBookPages(j,reader,(p)=>{bookPage=p;refreshHomeBook(j);},searchQ);
+  // 2. Page commentaires (sans 'active' non plus)
+  const cp=document.createElement('div');cp.className='book-page comments-book-page';
   const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
   cp.innerHTML='<h2>💬 Avis des lecteurs</h2>'+'<div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3>'+'<div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div>'+'<p class="email-hint">L\'email reste privé.</p>'+'<div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div>'+'<textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);"></textarea>'+'<button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div>'+'<div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div>'+'<div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div>'+'<span class="cover-page-num">Commentaires</span>';
   reader.appendChild(cp);
+  // 3. setBookPage active la bonne page APRÈS construction complète du DOM
+  updateHomeBookNav(j);
   if(bookPage===homeBookTotal-1)renderComments(j.id,'book-comment-list',0);
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
-  updateHomeBookNav(j);
 }
 function refreshHomeBook(j){bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));renderBook(j);}
 function updateHomeBookNav(j){
@@ -1387,7 +1407,7 @@ async function submitBookComment(){
 function renderModalBook(j){
   const pages=getPages(j);modalBookTotal=pages.length+1;
   const reader=document.getElementById('modal-book-reader');
-  buildBookPages(j,reader,modalPage,(p)=>{modalPage=p;renderModalBook(j);});
+  buildBookPages(j,reader,(p)=>{modalPage=p;renderModalBook(j);});
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?modalBookNext():modalBookPrev();}};
   setBookPage(reader,modalPage,modalBookTotal,document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),(i)=>{modalPage=i;renderModalBook(j);});
@@ -1396,11 +1416,11 @@ function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!
 function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;renderModalBook(j);}}
 
 // ─── PREVIEW ───────────────────────────────────────────────────
-function buildPreview(){switchEditTab('preview');const j=buildJournalFromEditForm();const reader=document.getElementById('edit-preview-reader');previewBookTotal=buildBookPages(j,reader,previewPage,(p)=>{previewPage=p;buildPreview();});setBookPage(reader,previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;buildPreview();});}
+function buildPreview(){switchEditTab('preview');const j=buildJournalFromEditForm();const reader=document.getElementById('edit-preview-reader');previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;buildPreview();});setBookPage(reader,previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;buildPreview();});}
 function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;buildPreview();}}
 function previewPrev(){if(previewPage>0){previewPage--;buildPreview();}}
 
-function buildNewPreview(){switchNewTab('preview');const j=buildJournalFromNewForm();const reader=document.getElementById('new-preview-reader');newPreviewBookTotal=buildBookPages(j,reader,newPreviewPage,(p)=>{newPreviewPage=p;buildNewPreview();});setBookPage(reader,newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;buildNewPreview();});}
+function buildNewPreview(){switchNewTab('preview');const j=buildJournalFromNewForm();const reader=document.getElementById('new-preview-reader');newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;buildNewPreview();});setBookPage(reader,newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;buildNewPreview();});}
 function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;buildNewPreview();}}
 function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;buildNewPreview();}}
 
@@ -1429,6 +1449,9 @@ function shareJournal(){const url=window.location.href.split('?')[0];if(navigato
 function shareModalJournal(){if(!modalJournalId)return;const j=db.journals.find(x=>x.id===modalJournalId);const url=window.location.href.split('?')[0]+'?j='+modalJournalId;const txt=j?('"'+j.title+'" — '+url):url;if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');}}
 
 // ─── CALENDAR ──────────────────────────────────────────────────
+// Le calendrier montre TOUS les journaux (publiés ET programmés).
+// Les journaux programmés (futurs ou pas encore l'heure) s'ouvrent en modal
+// mais le contenu sera visible (comportement souhaitable pour les lecteurs abonnés).
 function renderCalendar(containerId,year,month){
   const container=document.getElementById(containerId);if(!container)return;
   const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
@@ -1438,7 +1461,19 @@ function renderCalendar(containerId,year,month){
   let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},-1)">‹</button><span class="cal-month-label">${monthNames[month]} ${year}</span><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},1)">›</button></div><div class="calendar-grid">`;
   days.forEach(d=>{html+=`<div class="cal-header">${d}</div>`;});
   let col=0;for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
-  for(let d=1;d<=lastDay.getDate();d++){const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];let cls='cal-day';if(dateStr===today)cls+=' today';if(j)cls+=isPublished(j)?' published':' scheduled';const onclick=j?`onclick="openModal('${j.id}')"`:'';const title=j?`title="${escHtml(j.title)}"`:'';html+=`<div class="${cls}" ${onclick} ${title}>${d}</div>`;col++;}
+  for(let d=1;d<=lastDay.getDate();d++){
+    const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];
+    let cls='cal-day';
+    if(dateStr===today)cls+=' today';
+    if(j){
+      // published = hier ou avant, ou aujourd'hui après l'heure de pub
+      cls+=isPublished(j)?' published':' scheduled';
+    }
+    // Tous les journaux sont cliquables (publiés OU programmés)
+    const onclick=j?`onclick="openModal('${j.id}')"`:'';
+    const titleAttr=j?`title="${escHtml(j.title)+(isPublished(j)?'':' (programmé)')}"`:'' ;
+    html+=`<div class="${cls}" ${onclick} ${titleAttr}>${d}</div>`;col++;
+  }
   while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;}html+='</div>';container.innerHTML=html;
 }
 function changeCalMonth(containerId,year,month,delta){let m=month+delta,y=year;if(m<0){m=11;y--;}else if(m>11){m=0;y++;}if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m);}
@@ -1530,6 +1565,11 @@ function openModal(jid){
   modalCommentRating=0;document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('#modal-star-filter .star-filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderComments(jid,'modal-comments',0);
+  // Bandeau "programmé" si pas encore publié
+  let scheduledBanner=document.getElementById('modal-scheduled-banner');
+  if(!scheduledBanner){scheduledBanner=document.createElement('div');scheduledBanner.id='modal-scheduled-banner';scheduledBanner.style.cssText='padding:.6rem 1rem;background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.3);border-radius:4px;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:1rem;text-align:center;';document.querySelector('.modal-content').insertBefore(scheduledBanner,document.querySelector('.modal-content').firstChild);}
+  if(!isPublished(j)){scheduledBanner.style.display='block';scheduledBanner.textContent='🕐 Ce journal est programmé pour le '+formatDateFr(j.date)+' à '+pad(getPubHour())+'h00 — aperçu disponible.';}
+  else{scheduledBanner.style.display='none';}
   document.getElementById('journal-modal').classList.remove('hidden');document.body.style.overflow='hidden';
   api('/api/pageview',{journalId:jid}).catch(()=>{});
 }
