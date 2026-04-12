@@ -6,7 +6,40 @@
 <title>CapNews</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token":"TOKEN_CF_ANALYTICS"}'></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<style>
+/* ══ ABONNEMENT EMAIL ══ */
+.subscribe-box{border:1px solid var(--border-strong);border-radius:3px;background:linear-gradient(135deg,var(--ink) 0%,#2a1f0e 100%);padding:1.2rem;color:var(--parchment);}
+.subscribe-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:.4rem;}
+.subscribe-box p{font-size:.8rem;color:rgba(247,243,235,.6);font-family:var(--font-mono);margin-bottom:.85rem;line-height:1.45;}
+.subscribe-input{width:100%;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--parchment)!important;font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
+.subscribe-input::placeholder{color:rgba(247,243,235,.4)!important;}
+.subscribe-input:focus{border-color:var(--gold-light);}
+.subscribe-btn{width:100%;background:var(--gold);color:white!important;border:none;padding:.55rem;border-radius:3px;font-family:var(--font-display);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
+.subscribe-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+.subscribe-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.subscribe-notice{font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);margin-top:.4rem;text-align:center;}
+
+/* ══ LIRE TOUT (admin) ══ */
+#read-all-modal{position:fixed;inset:0;background:rgba(26,18,9,.85);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(8px);}
+#read-all-modal.show{display:flex;}
+#read-all-inner{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;max-width:740px;width:100%;padding:2.5rem 3rem;box-shadow:var(--shadow-strong);margin-top:1rem;position:relative;}
+#read-all-inner .ra-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--muted);}
+#read-all-inner .ra-close:hover{color:var(--ink);}
+#read-all-title{font-family:var(--font-display);font-size:2rem;font-weight:900;font-style:italic;line-height:1.1;color:var(--ink);margin-bottom:.5rem;}
+#read-all-meta{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+#read-all-body{font-size:1.05rem;line-height:1.95;color:var(--ink);}
+#read-all-body p+p{margin-top:1.2rem;}
+#read-all-body .ra-page-sep{border:none;border-top:1px dashed var(--border-strong);margin:2rem 0;position:relative;}
+#read-all-body .ra-page-sep::after{content:attr(data-label);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--parchment);padding:0 .75rem;font-family:var(--font-mono);font-size:.7rem;color:var(--muted);}
+
+/* ══ THÈMES COULEUR ══ */
+[data-accent="sage"]{--gold:#5a7a4a;--gold-light:#7a9a6a;--gold-glow:rgba(90,122,74,.2);}
+[data-accent="wine"]{--gold:#8b2252;--gold-light:#b03a72;--gold-glow:rgba(139,34,82,.2);}
+[data-accent="ocean"]{--gold:#1a6a8a;--gold-light:#2a8aaa;--gold-glow:rgba(26,106,138,.2);}
+[data-accent="ember"]{--gold:#b8460b;--gold-light:#d4620b;--gold-glow:rgba(184,70,11,.2);}
+</style>
 
 <style>
 /* ══════════════════════════════════════════════════════
@@ -18,7 +51,7 @@
   --gold:#b8860b;--gold-light:#d4a843;--gold-glow:rgba(184,134,11,.25);
   --red:#8b1a1a;--red-light:#c0392b;
   --green:#2e7d32;--green-light:#4caf50;
-  --muted:#7a6a52;
+  --muted:#6a5a42;
   --border:rgba(90,60,20,.18);--border-strong:rgba(90,60,20,.38);
   --shadow:0 2px 24px rgba(30,15,0,.12);--shadow-strong:0 8px 48px rgba(30,15,0,.22);
   --shadow-gold:0 4px 24px rgba(184,134,11,.22);
@@ -26,8 +59,7 @@
   --font-body:'Source Serif 4',Georgia,serif;
   --font-mono:'DM Mono',monospace;
   --bg-page:var(--parchment);
-  /* bg-card : blanc cassé en clair pour éviter le blanc pur "invisible" */
-  --bg-card:#fefaf3;
+  --bg-card:#fdf8f0;
   --text-on-card:#1a1209;
   --transition:.22s cubic-bezier(.4,0,.2,1);
   --radius:4px;
@@ -39,15 +71,16 @@
   --muted:#8a7a62;
   --border:rgba(200,160,80,.15);--border-strong:rgba(200,160,80,.28);
   --shadow:0 2px 24px rgba(0,0,0,.4);--shadow-strong:0 8px 48px rgba(0,0,0,.6);
-  --bg-page:#1a1510;--bg-card:#221e18;
-  --text-on-card:#f0e8d8;
+  --bg-page:#1a1510;--bg-card:#221e18;--text-on-card:#f0e8d8;
 }
-*{box-sizing:border-box;margin:0;padding:0;}
-
-/* ══ READING PROGRESS BAR ══ */
-#reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:9999;width:0%;transition:width .1s linear;pointer-events:none;}
-
+/* Règle universelle anti-blanc-sur-blanc */
+*{color:inherit;}
 body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.75;min-height:100vh;transition:background var(--transition),color var(--transition);}
+input,textarea,select{color:var(--ink)!important;background:var(--bg-card)!important;}
+input::placeholder,textarea::placeholder{color:var(--muted)!important;opacity:1;}
+/* ══ READING PROGRESS BAR ══ */
+*{box-sizing:border-box;margin:0;padding:0;}
+#reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:9999;width:0%;transition:width .1s linear;pointer-events:none;}
 
 /* ══ FESTIVITÉS ══ */
 #festive-banner{display:none;position:relative;text-align:center;padding:.7rem 1rem;font-family:var(--font-mono);font-size:.85rem;letter-spacing:.04em;z-index:50;overflow:hidden;}
@@ -1365,29 +1398,59 @@ function setBookPage(readerEl, pageIdx, total, dotsEl, counterEl, btnPrev, btnNe
 }
 
 // ─── HOME BOOK ──────────────────────────────────────────────────
+// On NE reconstruit le DOM complet QUE lors du premier rendu ou d'un vrai changement de journal.
+// Pour changer de page, on appelle uniquement goToBookPage() qui manipule les classes CSS.
 function renderBook(j){
-  const pages=getPages(j);homeBookTotal=pages.length+2;
+  const pages=getPages(j);
+  homeBookTotal=pages.length+2; // couverture + pages contenu + page commentaires
   const reader=document.getElementById('book-reader');
   const searchQ=(document.getElementById('search-input')?.value||'');
-  // 1. Construit le DOM sans aucun 'active'
-  buildBookPages(j,reader,(p)=>{bookPage=p;refreshHomeBook(j);},searchQ);
-  // 2. Page commentaires (sans 'active' non plus)
+
+  // Construit tout le DOM (sans aucun 'active')
+  buildBookPages(j,reader,(p)=>{bookPage=p;goToBookPage(j);},searchQ);
+
+  // Page commentaires
   const cp=document.createElement('div');cp.className='book-page comments-book-page';
   const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
-  cp.innerHTML='<h2>💬 Avis des lecteurs</h2>'+'<div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3>'+'<div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div>'+'<p class="email-hint">L\'email reste privé.</p>'+'<div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div>'+'<textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);"></textarea>'+'<button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div>'+'<div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div>'+'<div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div>'+'<span class="cover-page-num">Commentaires</span>';
+  cp.innerHTML='<h2>💬 Avis des lecteurs</h2><div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3><div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div><p class="email-hint">L\'email reste privé.</p><div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div><textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);transition:border-color .2s;"></textarea><button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div><div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div><div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div><span class="cover-page-num">Commentaires</span>';
   reader.appendChild(cp);
-  // 3. setBookPage active la bonne page APRÈS construction complète du DOM
-  updateHomeBookNav(j);
-  if(bookPage===homeBookTotal-1)renderComments(j.id,'book-comment-list',0);
+
+  // Swipe mobile
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
+
+  // Activation de la bonne page maintenant que le DOM est complet
+  goToBookPage(j);
 }
-function refreshHomeBook(j){bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));renderBook(j);}
-function updateHomeBookNav(j){
-  setBookPage(document.getElementById('book-reader'),bookPage,homeBookTotal,document.getElementById('progress-dots'),document.getElementById('page-counter'),document.getElementById('btn-prev'),document.getElementById('btn-next'),(i)=>{bookPage=i;refreshHomeBook(j);});
+
+// goToBookPage : active la page bookPage dans le DOM déjà construit.
+// Ne reconstruit JAMAIS le DOM. Ultra-fiable.
+function goToBookPage(j){
+  bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));
+  const reader=document.getElementById('book-reader');
+  setBookPage(
+    reader, bookPage, homeBookTotal,
+    document.getElementById('progress-dots'),
+    document.getElementById('page-counter'),
+    document.getElementById('btn-prev'),
+    document.getElementById('btn-next'),
+    (i)=>{bookPage=i;goToBookPage(j);}
+  );
+  // Charge les commentaires si on est sur la dernière page
+  if(bookPage===homeBookTotal-1){
+    const listEl=document.getElementById('book-comment-list');
+    if(listEl&&!listEl.dataset.loaded){listEl.dataset.loaded='1';renderComments(j.id,'book-comment-list',0);}
+  }
 }
-function bookNext(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage<homeBookTotal-1){bookPage++;refreshHomeBook(j);}}
-function bookPrev(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage>0){bookPage--;refreshHomeBook(j);}}
+
+function bookNext(){
+  const j=db.journals.find(x=>x.id===currentJournalId);
+  if(j&&bookPage<homeBookTotal-1){bookPage++;goToBookPage(j);}
+}
+function bookPrev(){
+  const j=db.journals.find(x=>x.id===currentJournalId);
+  if(j&&bookPage>0){bookPage--;goToBookPage(j);}
+}
 function setBookCommentRating(v){bookCommentRating=v;document.querySelectorAll('#book-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
 
 async function submitBookComment(){
@@ -1407,22 +1470,56 @@ async function submitBookComment(){
 function renderModalBook(j){
   const pages=getPages(j);modalBookTotal=pages.length+1;
   const reader=document.getElementById('modal-book-reader');
-  buildBookPages(j,reader,(p)=>{modalPage=p;renderModalBook(j);});
+  // Build DOM once
+  buildBookPages(j,reader,(p)=>{modalPage=p;goToModalPage(j);});
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?modalBookNext():modalBookPrev();}};
-  setBookPage(reader,modalPage,modalBookTotal,document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),(i)=>{modalPage=i;renderModalBook(j);});
+  goToModalPage(j);
 }
-function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage<modalBookTotal-1){modalPage++;renderModalBook(j);}}
-function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;renderModalBook(j);}}
+function goToModalPage(j){
+  modalPage=Math.max(0,Math.min(modalPage,modalBookTotal-1));
+  setBookPage(document.getElementById('modal-book-reader'),modalPage,modalBookTotal,
+    document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),
+    document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),
+    (i)=>{modalPage=i;goToModalPage(j);});
+}
+function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage<modalBookTotal-1){modalPage++;goToModalPage(j);}}
+function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;goToModalPage(j);}}
 
 // ─── PREVIEW ───────────────────────────────────────────────────
-function buildPreview(){switchEditTab('preview');const j=buildJournalFromEditForm();const reader=document.getElementById('edit-preview-reader');previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;buildPreview();});setBookPage(reader,previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;buildPreview();});}
-function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;buildPreview();}}
-function previewPrev(){if(previewPage>0){previewPage--;buildPreview();}}
+function buildPreview(){
+  switchEditTab('preview');
+  const j=buildJournalFromEditForm();
+  const reader=document.getElementById('edit-preview-reader');
+  previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;goToPreviewPage();});
+  goToPreviewPage();
+}
+function goToPreviewPage(){
+  previewPage=Math.max(0,Math.min(previewPage,previewBookTotal-1));
+  setBookPage(document.getElementById('edit-preview-reader'),previewPage,previewBookTotal,
+    document.getElementById('preview-dots'),document.getElementById('preview-counter'),
+    document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),
+    (i)=>{previewPage=i;goToPreviewPage();});
+}
+function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;goToPreviewPage();}}
+function previewPrev(){if(previewPage>0){previewPage--;goToPreviewPage();}}
 
-function buildNewPreview(){switchNewTab('preview');const j=buildJournalFromNewForm();const reader=document.getElementById('new-preview-reader');newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;buildNewPreview();});setBookPage(reader,newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;buildNewPreview();});}
-function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;buildNewPreview();}}
-function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;buildNewPreview();}}
+function buildNewPreview(){
+  switchNewTab('preview');
+  const j=buildJournalFromNewForm();
+  const reader=document.getElementById('new-preview-reader');
+  newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;goToNewPreviewPage();});
+  goToNewPreviewPage();
+}
+function goToNewPreviewPage(){
+  newPreviewPage=Math.max(0,Math.min(newPreviewPage,newPreviewBookTotal-1));
+  setBookPage(document.getElementById('new-preview-reader'),newPreviewPage,newPreviewBookTotal,
+    document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),
+    document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),
+    (i)=>{newPreviewPage=i;goToNewPreviewPage();});
+}
+function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;goToNewPreviewPage();}}
+function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;goToNewPreviewPage();}}
 
 function buildJournalFromEditForm(){const pages=getPagesFromEditor('edit-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('edit-title')?.value||'Sans titre',excerpt:document.getElementById('edit-excerpt')?.value||'',pages,category:document.getElementById('edit-category')?.value||'',mood:document.getElementById('edit-mood')?.value||'neutral',author:document.getElementById('edit-author')?.value||'',readTime:document.getElementById('edit-readtime')?.value||autoRt,date:document.getElementById('edit-date')?.value||getTodayStr(),coverImg:document.getElementById('edit-cover-img')?.value||'',audioUrl:document.getElementById('edit-audio-url')?.value||''};}
 function buildJournalFromNewForm(){const pages=getPagesFromEditor('new-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('new-title')?.value||'Sans titre',excerpt:document.getElementById('new-excerpt')?.value||'',pages,category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'neutral',author:document.getElementById('new-author')?.value||'',readTime:document.getElementById('new-readtime')?.value||autoRt,date:document.getElementById('new-date')?.value||getTodayStr(),coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};}
@@ -1449,12 +1546,11 @@ function shareJournal(){const url=window.location.href.split('?')[0];if(navigato
 function shareModalJournal(){if(!modalJournalId)return;const j=db.journals.find(x=>x.id===modalJournalId);const url=window.location.href.split('?')[0]+'?j='+modalJournalId;const txt=j?('"'+j.title+'" — '+url):url;if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');}}
 
 // ─── CALENDAR ──────────────────────────────────────────────────
-// Le calendrier montre TOUS les journaux (publiés ET programmés).
-// Les journaux programmés (futurs ou pas encore l'heure) s'ouvrent en modal
-// mais le contenu sera visible (comportement souhaitable pour les lecteurs abonnés).
+// Publiés = visibles pour tous | Programmés = visibles admins seulement
 function renderCalendar(containerId,year,month){
   const container=document.getElementById(containerId);if(!container)return;
-  const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
   const journalsByDate={};db.journals.forEach(j=>{journalsByDate[j.date]=j;});
   const today=getTodayStr();const firstDay=new Date(year,month,1);const lastDay=new Date(year,month+1,0);
   let startDow=firstDay.getDay();startDow=startDow===0?6:startDow-1;
@@ -1463,18 +1559,18 @@ function renderCalendar(containerId,year,month){
   let col=0;for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
   for(let d=1;d<=lastDay.getDate();d++){
     const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];
-    let cls='cal-day';
-    if(dateStr===today)cls+=' today';
-    if(j){
-      // published = hier ou avant, ou aujourd'hui après l'heure de pub
-      cls+=isPublished(j)?' published':' scheduled';
-    }
-    // Tous les journaux sont cliquables (publiés OU programmés)
-    const onclick=j?`onclick="openModal('${j.id}')"`:'';
-    const titleAttr=j?`title="${escHtml(j.title)+(isPublished(j)?'':' (programmé)')}"`:'' ;
+    const pub=j&&isPublished(j);
+    const sched=j&&!pub;
+    let cls='cal-day';if(dateStr===today)cls+=' today';
+    if(pub)cls+=' published';
+    else if(sched&&isAdmin)cls+=' scheduled';
+    const canClick=pub||(sched&&isAdmin);
+    const onclick=canClick?`onclick="openModal('${j.id}')"`:'';
+    const titleAttr=canClick?`title="${escHtml(j.title)+(sched?' (programmé)':'')}"`:'' ;
     html+=`<div class="${cls}" ${onclick} ${titleAttr}>${d}</div>`;col++;
   }
-  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;}html+='</div>';container.innerHTML=html;
+  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;}
+  html+='</div>';container.innerHTML=html;
 }
 function changeCalMonth(containerId,year,month,delta){let m=month+delta,y=year;if(m<0){m=11;y--;}else if(m>11){m=0;y++;}if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m);}
 function renderSidebarCalendar(){renderCalendar('sidebar-calendar',calendarDate.getFullYear(),calendarDate.getMonth());}
