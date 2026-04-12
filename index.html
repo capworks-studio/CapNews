@@ -684,6 +684,15 @@ footer strong{color:var(--ink);font-weight:500;}
           <h3>📰 Derniers journaux</h3>
           <ul class="admin-list" id="recent-list"></ul>
         </div>
+        <div class="subscribe-box">
+          <h3>📬 Recevoir les journaux</h3>
+          <p>Un email à chaque nouvelle publication, directement dans ta boîte.</p>
+          <input class="subscribe-input" id="sub-name" type="text" placeholder="Ton prénom (optionnel)">
+          <input class="subscribe-input" id="sub-email" type="email" placeholder="Ton adresse email *" onkeydown="if(event.key==='Enter')handleSubscribe()">
+          <button class="subscribe-btn" id="sub-btn" onclick="handleSubscribe()">S'abonner →</button>
+          <p class="subscribe-notice">Gratuit. Désabonnement en un clic. Zéro spam.</p>
+          <div id="sub-status" style="margin-top:.5rem;font-family:var(--font-mono);font-size:.75rem;min-height:1rem;"></div>
+        </div>
         <div class="sidebar-box">
           <h3>🏷️ Thèmes</h3>
           <div id="tags-cloud" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
@@ -849,6 +858,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <button class="admin-tab" onclick="switchAdminTab('calendar')" id="atab-calendar">📅 Calendrier</button>
         <button class="admin-tab" onclick="switchAdminTab('analytics')" id="atab-analytics">📈 Analytics</button>
         <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Commentaires</button>
+        <button class="admin-tab" onclick="switchAdminTab('subscribers')" id="atab-subscribers">📬 Abonnés</button>
         <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
       </div>
       <div class="admin-body">
@@ -979,6 +989,41 @@ footer strong{color:var(--ink);font-weight:500;}
           <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis.</p></div>
         </div>
 
+        <!-- ABONNÉS -->
+        <div id="atab-body-subscribers" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
+            <div>
+              <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);">Liste des abonnés aux notifications email.</p>
+              <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-top:.3rem;" id="admin-subs-count">0 abonné</p>
+            </div>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
+              <button class="btn-secondary" onclick="exportSubscribers()">⬇ Exporter CSV</button>
+              <button class="btn-primary" style="background:var(--gold);" onclick="testNotification()">🧪 Tester notif</button>
+            </div>
+          </div>
+          <!-- Config EmailJS -->
+          <div style="background:rgba(184,134,11,.07);border:1px solid rgba(184,134,11,.25);border-radius:4px;padding:1rem;margin-bottom:1.2rem;">
+            <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:.6rem;font-weight:500;">⚙️ Configuration EmailJS</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Public Key</label>
+                <input type="text" class="form-input" id="ejs-pk" placeholder="Collle ta clé publique" style="font-family:var(--font-mono);font-size:.82rem;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Service ID</label>
+                <input type="text" class="form-input" id="ejs-sid" placeholder="service_xxxxxxx" style="font-family:var(--font-mono);font-size:.82rem;">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Template ID</label>
+                <input type="text" class="form-input" id="ejs-tid" placeholder="template_xxxxxxx" style="font-family:var(--font-mono);font-size:.82rem;">
+              </div>
+            </div>
+            <button class="btn-primary" style="font-size:.85rem;padding:.5rem 1.1rem;" onclick="saveEmailJSConfig()">Sauvegarder la config →</button>
+            <p style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);margin-top:.5rem;">Sauvegardé dans localStorage. <a href="https://www.emailjs.com" target="_blank" style="color:var(--gold);">Créer un compte EmailJS →</a></p>
+          </div>
+          <div id="admin-subscribers-list" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
+
         <!-- PARAMÈTRES -->
         <div id="atab-body-settings" style="display:none;">
           <div class="form-group"><label class="form-label">Nom du site</label><input type="text" class="form-input" id="setting-sitename" placeholder="CapNews"></div>
@@ -1070,6 +1115,18 @@ footer strong{color:var(--ink);font-weight:500;}
 <script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const WORKER_URL = 'https://capnews-backend.capkychannel.workers.dev';
+
+// ── EMAILJS CONFIG ────────────────────────────────────────────
+// 1. Crée un compte sur https://www.emailjs.com (gratuit, 200 emails/mois)
+// 2. Connecte ton service email (Gmail, Outlook…)
+// 3. Crée un template avec ces variables :
+//    {{to_email}}, {{to_name}}, {{journal_title}}, {{journal_excerpt}},
+//    {{journal_date}}, {{journal_url}}, {{site_name}}, {{unsubscribe_link}}
+// 4. Remplace les 3 valeurs ci-dessous :
+const EMAILJS_PUBLIC_KEY  = 'TON_PUBLIC_KEY';   // Account > API Keys
+const EMAILJS_SERVICE_ID  = 'TON_SERVICE_ID';   // Email Services > Service ID
+const EMAILJS_TEMPLATE_ID = 'TON_TEMPLATE_ID';  // Email Templates > Template ID
+const SUBS_STORAGE_KEY    = 'capnews_subscribers'; // localStorage key
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // ─── ÉTAT ────────────────────────────────────────────────────
@@ -1116,12 +1173,14 @@ window.onload = async () => {
   checkFestive();
   setupReadingProgress();
   showQuote();
+  initEmailJS();
   await loadData();
   applyBranding();
   renderHome();
   renderSidebarCalendar();
   checkDraft();
   startLiveSimulation();
+  checkUnsubLink();
   // Ouvre journal depuis URL ?j=
   const p = new URLSearchParams(location.search).get('j');
   if(p) setTimeout(()=>openModal(p), 800);
@@ -1169,6 +1228,177 @@ function showQuote(){
   setTimeout(()=>{el.textContent='« '+q.text+' »';au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200);
 }
 function refreshQuote(){currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length;showQuote();}
+
+// ─── EMAILJS — ABONNEMENTS ────────────────────────────────────
+// Les abonnés sont stockés en localStorage côté admin.
+// En production, tu peux les stocker dans Cloudflare KV via le Worker.
+
+function initEmailJS(){
+  if(typeof emailjs === 'undefined') return;
+  emailjs.init(EMAILJS_PUBLIC_KEY);
+}
+
+// Lit la liste des abonnés depuis localStorage
+function getSubscribers(){
+  try { return JSON.parse(localStorage.getItem(SUBS_STORAGE_KEY)||'[]'); }
+  catch { return []; }
+}
+
+// Ajoute un abonné (evite les doublons)
+function addSubscriber(email, name){
+  const subs = getSubscribers();
+  const already = subs.find(s=>s.email.toLowerCase()===email.toLowerCase());
+  if(already) return false;
+  subs.push({email, name: name||'Lecteur', date: new Date().toISOString()});
+  localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(subs));
+  return true;
+}
+
+// Supprime un abonné
+function removeSubscriber(email){
+  const subs = getSubscribers().filter(s=>s.email.toLowerCase()!==email.toLowerCase());
+  localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(subs));
+}
+
+// Formulaire d'abonnement (sidebar)
+async function handleSubscribe(){
+  const emailInput = document.getElementById('sub-email');
+  const nameInput  = document.getElementById('sub-name');
+  const btn        = document.getElementById('sub-btn');
+  const status     = document.getElementById('sub-status');
+
+  const email = (emailInput?.value||'').trim();
+  const name  = (nameInput?.value||'').trim() || 'Lecteur';
+
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
+    status.textContent = '❌ Adresse email invalide.';
+    status.style.color = 'var(--red-light)';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '⏳ Inscription...';
+  status.textContent = '';
+
+  // 1. Enregistre localement
+  const added = addSubscriber(email, name);
+  if(!added){
+    status.textContent = '✓ Vous êtes déjà abonné·e !';
+    status.style.color = 'var(--gold-light)';
+    btn.disabled = false;
+    btn.textContent = "S'abonner →";
+    return;
+  }
+
+  // 2. Envoie un email de bienvenue via EmailJS
+  await sendWelcomeEmail(email, name);
+
+  // 3. Feedback
+  emailInput.value = '';
+  if(nameInput) nameInput.value = '';
+  status.textContent = '🎉 Abonnement confirmé ! Vous recevrez les prochains journaux.';
+  status.style.color = '#a8e6a3';
+  btn.textContent = "S'abonner →";
+  btn.disabled = false;
+
+  // Rafraîchit le compteur admin si ouvert
+  renderAdminSubscribers();
+}
+
+async function sendWelcomeEmail(email, name){
+  const cfg = getEJSConfig();
+  if(typeof emailjs === 'undefined' || cfg.pk === 'TON_PUBLIC_KEY') return;
+  emailjs.init(cfg.pk);
+  const siteName = db.settings.siteName || 'CapNews';
+  try{
+    await emailjs.send(cfg.sid, cfg.tid, {
+      to_email:         email,
+      to_name:          name,
+      journal_title:    'Bienvenue sur ' + siteName + ' !',
+      journal_excerpt:  'Merci de vous être abonné·e. Vous recevrez chaque nouveau journal directement dans votre boîte mail.',
+      journal_date:     new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}),
+      journal_url:      window.location.href.split('?')[0],
+      site_name:        siteName,
+      unsubscribe_link: window.location.href.split('?')[0] + '?unsub=' + encodeURIComponent(email),
+    });
+  } catch(e){ console.warn('EmailJS welcome error:', e); }
+}
+
+// Envoie une notification à TOUS les abonnés quand un journal est publié
+async function notifySubscribers(journal){
+  const cfg = getEJSConfig();
+  if(typeof emailjs === 'undefined' || cfg.pk === 'TON_PUBLIC_KEY'){
+    console.warn('EmailJS non configuré — notifications non envoyées. Configure-le dans Admin > Abonnés.');
+    return 0;
+  }
+  emailjs.init(cfg.pk);
+  const subs = getSubscribers();
+  if(!subs.length) return 0;
+
+  const siteName   = db.settings.siteName || 'CapNews';
+  const journalUrl = window.location.href.split('?')[0] + '?j=' + journal.id;
+  const excerpt    = stripRichTags(journal.excerpt || getPages(journal)[0] || '').slice(0, 200);
+
+  let sent = 0;
+  for(const sub of subs){
+    try{
+      await emailjs.send(cfg.sid, cfg.tid, {
+        to_email:         sub.email,
+        to_name:          sub.name || 'Lecteur',
+        journal_title:    journal.title,
+        journal_excerpt:  excerpt,
+        journal_date:     formatDateFr(journal.date),
+        journal_url:      journalUrl,
+        site_name:        siteName,
+        unsubscribe_link: window.location.href.split('?')[0] + '?unsub=' + encodeURIComponent(sub.email),
+      });
+      sent++;
+      // Petit délai anti rate-limit EmailJS (plan gratuit : ~2 req/s)
+      await new Promise(r => setTimeout(r, 600));
+    } catch(e){ console.warn('EmailJS send error for', sub.email, e); }
+  }
+  return sent;
+}
+
+// Gère le lien de désabonnement (?unsub=email)
+function checkUnsubLink(){
+  const params = new URLSearchParams(location.search);
+  const unsub  = params.get('unsub');
+  if(!unsub) return;
+  removeSubscriber(decodeURIComponent(unsub));
+  showToast('Désabonnement effectué. Vous ne recevrez plus de notifications.', 'info');
+  // Nettoie l'URL
+  history.replaceState({}, '', location.pathname);
+}
+
+// Panneau admin : liste des abonnés
+function renderAdminSubscribers(){
+  const el = document.getElementById('admin-subscribers-list');
+  if(!el) return;
+  const subs = getSubscribers();
+  const countEl = document.getElementById('admin-subs-count');
+  if(countEl) countEl.textContent = subs.length + ' abonné' + (subs.length>1?'s':'');
+  if(!subs.length){
+    el.innerHTML = '<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucun abonné pour l\'instant.</p>';
+    return;
+  }
+  el.innerHTML = subs.map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);">
+      <div>
+        <span style="font-weight:600;font-size:.9rem;">${escHtml(s.name)}</span>
+        <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-left:8px;">${escHtml(s.email)}</span>
+        <br><span style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">Inscrit le ${new Date(s.date).toLocaleDateString('fr-FR')}</span>
+      </div>
+      <button class="btn-danger" style="font-size:.72rem;padding:.3rem .6rem;" onclick="adminRemoveSub('${escHtml(s.email)}')">Retirer</button>
+    </div>
+  `).join('');
+}
+function adminRemoveSub(email){
+  if(!confirm('Retirer '+email+' des abonnés ?')) return;
+  removeSubscriber(email);
+  renderAdminSubscribers();
+  showToast('Abonné retiré.', 'info');
+}
 
 // ─── LIVE VIEWS SIMULATION ─────────────────────────────────────
 function startLiveSimulation(){
@@ -1684,7 +1914,18 @@ function adminLogout(){adminToken=null;document.getElementById('admin-login-scre
 function updateAutoReadTime(){const newPages=getPagesFromEditor('new-pages-editor');const el=document.getElementById('new-readtime-auto');if(el&&newPages.length)el.textContent='Auto : '+calcReadTime(newPages);}
 
 // ─── ADMIN TABS ────────────────────────────────────────────────
-function switchAdminTab(tab){['new','manage','calendar','analytics','moderation','settings'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';});if(tab==='manage')loadManageList();if(tab==='moderation')loadModeration();if(tab==='settings')loadSettings();if(tab==='calendar')renderAdminCalendar();if(tab==='analytics')loadAnalytics();}
+function switchAdminTab(tab){
+  ['new','manage','calendar','analytics','moderation','subscribers','settings'].forEach(t=>{
+    document.getElementById('atab-'+t).classList.toggle('active',t===tab);
+    document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';
+  });
+  if(tab==='manage')loadManageList();
+  if(tab==='moderation')loadModeration();
+  if(tab==='settings')loadSettings();
+  if(tab==='calendar')renderAdminCalendar();
+  if(tab==='analytics')loadAnalytics();
+  if(tab==='subscribers'){renderAdminSubscribers();loadEmailJSConfig();}
+}
 function switchEditTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){previewPage=0;}if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);}}
 function switchNewTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){newPreviewPage=0;}if(tab==='meta'){updateAutoReadTime();}}
 
@@ -1709,7 +1950,25 @@ async function publishJournal(){
   const autoRt=calcReadTime(pages);
   const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),readTime:document.getElementById('new-readtime').value.trim()||autoRt,coverImg:document.getElementById('new-cover-img').value.trim(),audioUrl:document.getElementById('new-audio-url').value.trim()};
   const btn=document.getElementById('publish-btn');btn.disabled=true;btn.textContent='Enregistrement...';
-  try{const res=await api('/api/admin/save',j);j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);showToast('Journal enregistré !','success');clearDraft();['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});document.getElementById('new-date').value=getTodayStr();document.getElementById('new-cover-img-preview').style.display='none';document.getElementById('new-audio-preview').style.display='none';initNewPagesEditor();renderHome();loadManageList();renderSidebarCalendar();}
+  try{const res=await api('/api/admin/save',j);j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);
+    showToast('Journal enregistré !','success');
+    clearDraft();
+    ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('new-date').value=getTodayStr();
+    document.getElementById('new-cover-img-preview').style.display='none';
+    document.getElementById('new-audio-preview').style.display='none';
+    initNewPagesEditor();renderHome();loadManageList();renderSidebarCalendar();
+    // Notifications EmailJS si le journal est pour aujourd'hui (publié immédiatement)
+    if(isPublished(j)){
+      const subCount = getSubscribers().length;
+      if(subCount > 0){
+        showToast('📧 Envoi des notifications à '+subCount+' abonné'+(subCount>1?'s':'')+'...','info');
+        notifySubscribers(j).then(sent=>{
+          if(sent>0)showToast('✅ '+sent+' notification'+(sent>1?'s':'')+'s envoyée'+(sent>1?'s':'')+' !','success');
+        });
+      }
+    }
+  }
   catch(e){showToast('Erreur : '+e.message,'error');}
   btn.disabled=false;btn.textContent='Enregistrer le journal →';
 }
@@ -1755,6 +2014,77 @@ function loadModeration(){
 function toggleModReply(id){const b=document.getElementById('mod-reply-'+id);if(!b)return;b.style.display=b.style.display==='none'?'block':'none';if(b.style.display==='block'){const ta=document.getElementById('mod-reply-text-'+id);if(ta)ta.focus();}}
 async function submitModReply(parentId,jid){if(!isAdmin)return;const ta=document.getElementById('mod-reply-text-'+parentId);const text=ta?ta.value.trim():'';if(!text){showToast('Veuillez écrire une réponse.','error');return;}try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);toggleModReply(parentId);loadModeration();showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
 async function deleteCommentAdmin(id){if(!isAdmin)return;if(!confirm('Supprimer cet avis (et ses réponses) ?'))return;try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);loadModeration();if(currentJournalId)renderComments(currentJournalId,'book-comment-list',0);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
+
+// ─── EMAILJS CONFIG — PERSISTANCE ──────────────────────────────
+// Permet de configurer EmailJS depuis le panel admin sans modifier le code
+function loadEmailJSConfig(){
+  const cfg = JSON.parse(localStorage.getItem('capnews_ejs_config')||'{}');
+  if(cfg.pk)  document.getElementById('ejs-pk').value  = cfg.pk;
+  if(cfg.sid) document.getElementById('ejs-sid').value = cfg.sid;
+  if(cfg.tid) document.getElementById('ejs-tid').value = cfg.tid;
+}
+function saveEmailJSConfig(){
+  const pk  = document.getElementById('ejs-pk').value.trim();
+  const sid = document.getElementById('ejs-sid').value.trim();
+  const tid = document.getElementById('ejs-tid').value.trim();
+  if(!pk||!sid||!tid){ showToast('Remplis les 3 champs EmailJS.','error'); return; }
+  localStorage.setItem('capnews_ejs_config', JSON.stringify({pk,sid,tid}));
+  // Applique immédiatement
+  if(typeof emailjs!=='undefined') emailjs.init(pk);
+  // Met à jour les constantes en mémoire (hack propre sans eval)
+  window._ejsCfg = {pk,sid,tid};
+  showToast('Config EmailJS sauvegardée et active !','success');
+}
+// Override des constantes par la config admin si présente
+function getEJSConfig(){
+  const cfg = JSON.parse(localStorage.getItem('capnews_ejs_config')||'{}');
+  return {
+    pk:  cfg.pk  || EMAILJS_PUBLIC_KEY,
+    sid: cfg.sid || EMAILJS_SERVICE_ID,
+    tid: cfg.tid || EMAILJS_TEMPLATE_ID,
+  };
+}
+
+// Test : envoie une notification test à toi-même
+async function testNotification(){
+  const email = prompt('Ton adresse email pour le test :','');
+  if(!email) return;
+  const cfg = getEJSConfig();
+  if(cfg.pk==='TON_PUBLIC_KEY'){ showToast('Configure d\'abord EmailJS dans l\'onglet Abonnés.','error'); return; }
+  if(typeof emailjs==='undefined'){ showToast('EmailJS non chargé.','error'); return; }
+  emailjs.init(cfg.pk);
+  showToast('Envoi du test...','info');
+  try{
+    await emailjs.send(cfg.sid, cfg.tid, {
+      to_email:         email,
+      to_name:          'Admin CapNews',
+      journal_title:    '🧪 Test de notification CapNews',
+      journal_excerpt:  'Ceci est un email de test. Si tu le reçois, tout fonctionne !',
+      journal_date:     new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
+      journal_url:      window.location.href.split('?')[0],
+      site_name:        db.settings.siteName||'CapNews',
+      unsubscribe_link: window.location.href.split('?')[0],
+    });
+    showToast('✅ Email de test envoyé à '+email,'success');
+  } catch(e){
+    showToast('❌ Erreur : '+(e.text||e.message||JSON.stringify(e)),'error');
+    console.error('EmailJS test error:', e);
+  }
+}
+
+// Export CSV des abonnés
+function exportSubscribers(){
+  const subs = getSubscribers();
+  if(!subs.length){ showToast('Aucun abonné à exporter.','info'); return; }
+  const csv = 'Prénom,Email,Date inscription\n' +
+    subs.map(s=>`"${s.name}","${s.email}","${new Date(s.date).toLocaleDateString('fr-FR')}"`).join('\n');
+  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href=url; a.download='capnews_abonnes.csv'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exporté !','success');
+}
 
 // ─── SETTINGS ──────────────────────────────────────────────────
 function loadSettings(){document.getElementById('setting-sitename').value=db.settings.siteName||'CapNews';document.getElementById('setting-tagline').value=db.settings.tagline||'';document.getElementById('setting-hour').value=db.settings.pubHour??18;}
