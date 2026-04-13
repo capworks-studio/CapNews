@@ -2733,10 +2733,6 @@ function showKbdHelp() { document.getElementById('kbd-help').classList.add('show
 function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
 document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
 document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
-function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
-function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
-document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
-document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
 
 // ← AJOUTE ICI
 window.showPage = showPage;
