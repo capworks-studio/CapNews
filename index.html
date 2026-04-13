@@ -922,64 +922,89 @@ footer strong{color:var(--ink);font-weight:500;}
 <!-- ══ CONTACT ══ -->
 <section class="page-section" id="page-contact">
   <div class="contact-page">
+
+    <!-- HERO -->
     <div class="contact-hero">
       <div class="contact-hero-top">
-        <span class="contact-hero-emoji">👋</span>
-        <div class="contact-hero-title">Bienvenue sur mon blog !</div>
+        <span class="contact-hero-emoji">👋🏻</span>
+        <h1 class="contact-hero-title">Bienvenue sur mon blog !</h1>
       </div>
-      <div class="contact-hero-sub">
-        Je vais vous expliquer <em>aujourd'hui</em> le concept de ce site !
-      </div>
+      <p class="contact-hero-sub">
+        Je vais vous expliquer <em>aujourd’hui</em> le concept de ce site !
+      </p>
     </div>
+
+    <!-- QUI SUIS-JE -->
     <div class="contact-section">
       <h2>📝 Qui suis-je ?</h2>
-      <p>Salut à tous ! J'ai 15 ans, et je m'appelle Kyan Bostdedore, curieux de plein de choses et avec une envie : partager, découvrir et créer du contenu sympa.</p>
-      <p>Ne savant pas comment me lancer sur les réseaux, j'ai décidé de lancer ce blog généraliste pour parler un peu de tout ce qui m'intéresse… et aussi de ce qui <em>vous</em> intéresse !</p>
-      <p>L'idée, c'est d'avoir un espace où on partage, où on discute, où on apprend des trucs ensemble, sans prise de tête.</p>
+      <p>Salut à tous ! J’ai 15 ans, et je m’appelle Kyan Bostdedore. Curieux de plein de choses, j’ai une envie : partager, découvrir et créer du contenu sympa.</p>
+      <p>Ne sachant pas comment me lancer sur les réseaux, j’ai décidé de créer ce blog généraliste pour parler de tout ce qui m’intéresse… et aussi de ce qui <em>vous</em> intéresse !</p>
+      <p>L’idée, c’est d’avoir un espace où on partage, où on discute et où on apprend ensemble, sans prise de tête.</p>
     </div>
+
+    <!-- SUJETS -->
     <div class="contact-section">
       <h2>🎯 De quoi va parler ce blog ?</h2>
       <p>Franchement ? Un peu de tout !</p>
+
       <div class="contact-topics">
-        <div class="contact-topic"><span class="contact-topic-emoji">🎮</span> Jeux vidéo</div>
-        <div class="contact-topic"><span class="contact-topic-emoji">🎬</span> Films et séries</div>
-        <div class="contact-topic"><span class="contact-topic-emoji">📱</span> Nouvelles applis et technologies</div>
-        <div class="contact-topic"><span class="contact-topic-emoji">🏫</span> Vie de tous les jours / quotidien</div>
-        <div class="contact-topic"><span class="contact-topic-emoji">💭</span> Réflexions, idées, actus</div>
-        <div class="contact-topic"><span class="contact-topic-emoji">🧠</span> Conseils, découvertes...</div>
+        <div class="contact-topic">🎮 Jeux vidéo</div>
+        <div class="contact-topic">🎬 Films et séries</div>
+        <div class="contact-topic">📱 Nouvelles applis et technologies</div>
+        <div class="contact-topic">🏫 Vie quotidienne</div>
+        <div class="contact-topic">💭 Réflexions, idées, actus</div>
+        <div class="contact-topic">🧠 Conseils et découvertes</div>
+
         <div class="contact-topic contact-topic-end">
           ✨ Et encore plein d’autres !
         </div>
-    </div>
-      <p style="margin-top:.5rem;">Le but, c'est de ne pas se limiter et de garder un blog <strong>vivant, varié et intéressant</strong>.</p>
-    </div>
-    <div class="contact-section">
-      <h2>💡 J'ai besoin de vous !</h2>
-      <p>Comme je débute, je cherche des idées d'articles. Donc si vous avez des sujets que vous aimeriez voir ici, n'hésitez pas !</p>
-      <div class="contact-actions">
-        <div class="contact-action-item"><span class="contact-action-dot"></span>Proposer des idées d'articles</div>
-        <div class="contact-action-item"><span class="contact-action-dot"></span>Poser des questions</div>
-        <div class="contact-action-item"><span class="contact-action-dot"></span>Suggérer des thèmes ou débats</div>
       </div>
-      <div class="contact-idea-form" style="margin-top:1.5rem;">
+
+      <p class="contact-note">
+        Le but, c’est de créer un blog <strong>vivant, varié et intéressant</strong>.
+      </p>
+    </div>
+
+    <!-- PARTICIPATION -->
+    <div class="contact-section">
+      <h2>💡 J’ai besoin de vous !</h2>
+      <p>Comme je débute, je cherche des idées d’articles. Si vous avez des sujets que vous aimeriez voir ici, n’hésitez pas !</p>
+
+      <div class="contact-actions">
+        <div class="contact-action-item">• Proposer des idées d’articles</div>
+        <div class="contact-action-item">• Poser des questions</div>
+        <div class="contact-action-item">• Suggérer des thèmes ou débats</div>
+      </div>
+
+      <div class="contact-idea-form">
         <label>Votre prénom</label>
         <input type="text" id="contact-name" placeholder="Votre prénom...">
-        <label>Votre idée d'article ou message</label>
-        <textarea id="contact-message" placeholder="Partagez votre idée, suggestion ou question ici..."></textarea>
-        <button class="contact-idea-submit" onclick="submitContactIdea()">Envoyer l'idée →</button>
-        <div id="contact-status" style="margin-top:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);min-height:1.2em;"></div>
+
+        <label>Votre idée d'article</label>
+        <textarea id="contact-message" placeholder="Partagez votre idée ici..."></textarea>
+
+        <button onclick="submitContactIdea()">Envoyer →</button>
+        <div id="contact-status"></div>
       </div>
     </div>
+
+    <!-- CONTRIBUTION -->
     <div class="contact-section">
       <h2>✍️ Et pourquoi pas vous ?</h2>
-      <p>Si vous aimez écrire, vous pouvez même <strong>proposer vos propres articles</strong> ! Je pourrais les publier sur le blog (avec votre accord bien sûr).</p>
-      <p>C'est aussi un moyen de créer un espace où plusieurs personnes peuvent partager leurs idées !</p>
-      <p>Pour proposer vos <em>idées</em>, remontez un peu et <em>décrivez votre article !</em></p>
+      <p>Vous aimez écrire ? Vous pouvez proposer vos propres articles ! Je pourrai les publier sur le blog (avec votre accord).</p>
+      <p>C’est aussi un moyen de créer un espace collaboratif où chacun partage ses idées.</p>
+      <p><em>Remontez un peu et proposez votre idée 😉</em></p>
     </div>
+
+    <!-- FIN -->
     <div class="contact-adventure">
-      <p>« Le début d'une aventure »</p>
-      <small>Ce blog démarre tout juste, donc tout est à construire. Merci à ceux qui passeront, liront, commenteront ou participeront. À très bientôt pour les premiers articles ! 🚀</small>
+      <p>« Le début d’une aventure »</p>
+      <small>
+        Ce blog démarre tout juste. Merci à ceux qui passeront, liront ou participeront.
+        À très bientôt pour les premiers articles 🚀
+      </small>
     </div>
+
   </div>
 </section>
 
