@@ -1475,7 +1475,27 @@ function updateLockedCountdown(){ const now=new Date(),pub=new Date(); pub.setHo
 setInterval(updateLockedCountdown,1000);
 
 // ── API ──
-async function api(path,body,method='POST'){ const opts={method,headers:{'Content-Type':'application/json'}}; if(adminToken)opts.headers['Authorization']='Bearer '+adminToken; if(body!==undefined)opts.body=JSON.stringify(body); const res=await fetch(WORKER_URL+path,opts); const data=await res.json(); if(!res.ok)throw new Error(data.error||'Erreur '+res.status); return data; }
+async function api(path, body, method = 'POST') {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000); // 8s max
+  const opts = {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    signal: controller.signal
+  };
+  if (adminToken) opts.headers['Authorization'] = 'Bearer ' + adminToken;
+  if (body !== undefined) opts.body = JSON.stringify(body);
+  try {
+    const res = await fetch(WORKER_URL + path, opts);
+    clearTimeout(timeout);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erreur ' + res.status);
+    return data;
+  } catch(e) {
+    clearTimeout(timeout);
+    throw e;
+  }
+}
 async function loadData(){ try{ db=await api('/api/data',undefined,'GET'); if(!db.journals)db.journals=[]; if(!db.comments)db.comments=[]; if(!db.reactions)db.reactions={}; if(!db.settings)db.settings={}; if(!db.pageviews)db.pageviews={}; userReactions=JSON.parse(localStorage.getItem('capnews_reactions')||'{}'); }catch(e){ showToast('Erreur de connexion : '+e.message,'error'); } }
 
 // ── NAVIGATION ──
