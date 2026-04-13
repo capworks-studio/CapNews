@@ -127,6 +127,12 @@ body.immersive-mode #immersive-bar{display:flex;}
 .book-page.active{display:block;}
 @keyframes pageIn{from{opacity:0;transform:translateX(22px);}to{opacity:1;transform:none;}}
 
+.contact-hero {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+  
 .cover-page{background:var(--ink);color:var(--parchment);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;overflow:hidden;}
 .cover-page::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%, rgba(184,134,11,.12) 0%, transparent 60%);pointer-events:none;}
 .cover-edition{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.5rem;opacity:.8;position:relative;}
@@ -916,7 +922,10 @@ footer strong{color:var(--ink);font-weight:500;}
 <section class="page-section" id="page-contact">
   <div class="contact-page">
     <div class="contact-hero">
-      <span class="contact-hero-emoji">👋</span><div class="contact-hero-title">Bienvenue sur mon blog !</div>
+      <div class="contact-hero">
+      <span class="contact-hero-emoji">👋</span>
+      <div class="contact-hero-title">Bienvenue sur mon blog !</div>
+      </div>
       <div class="contact-hero-sub">Je vais vous expliquez <em>aujourd'hui</em> le concepte de ce site !</div>
     </div>
     <div class="contact-section">
@@ -935,7 +944,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <div class="contact-topic"><span class="contact-topic-emoji">🏫</span> Vie de tous les jours / quotidien</div>
         <div class="contact-topic"><span class="contact-topic-emoji">💭</span> Réflexions, idées, actus</div>
         <div class="contact-topic"><span class="contact-topic-emoji">🧠</span> Conseils, découvertes...</div>
-        <h3 style="white-space: nowrap;"><em>✨ Et encore plein d’autres ! 🎉</em></h3>
+        <h3 style="white-space: nowrap; text-align: center; width: 100%;"><em>✨ Et encore plein d’autres ! 🎉</em></h3>
       </div>
       <p style="margin-top:.5rem;">Le but, c'est de ne pas se limiter et de garder un blog <strong>vivant, varié et intéressant</strong>.</p>
     </div>
