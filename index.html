@@ -122,6 +122,7 @@ body.immersive-mode #immersive-bar{display:flex;}
 #immersive-bar .imm-btn:hover{border-color:var(--gold-light);color:var(--gold-light);}
 
 /* ── JOURNAL SCROLL — pas de navigation pages ── */
+.book-wrapper .book-nav{display:none!important;}
 .book-reader{position:relative;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius);overflow-y:auto;max-height:78vh;box-shadow:var(--shadow);}
 .book-page{display:none;padding:2.5rem 2.8rem;overflow-y:auto;min-height:520px;animation:pageIn .28s cubic-bezier(.4,0,.2,1);}
 .book-page.active{display:block;}
@@ -777,7 +778,7 @@ footer strong{color:var(--ink);font-weight:500;}
       <div class="book-wrapper">
         <div class="book-reader" id="book-reader"></div>
         <!-- book-nav masquée par CSS en mode scroll -->
-        <div class="book-nav">
+        <div class="book-nav" style="display:none;">
           <button class="book-nav-btn" id="btn-prev">← Précédente</button>
           <div class="book-progress">
             <div class="progress-dots" id="progress-dots"></div>
@@ -1125,10 +1126,7 @@ footer strong{color:var(--ink);font-weight:500;}
       <div class="book-reader" id="modal-book-reader" style="min-height:480px;border-radius:4px;border:1px solid var(--border-strong);"></div>
       <div class="book-nav">
         <button class="book-nav-btn" id="modal-btn-prev" onclick="modalBookPrev()">← Précédente</button>
-        <div class="book-progress">
-        <div class="progress-dots" id="progress-dots"></div>
-        <span id="page-counter"></span>
-        </div>
+        <div class="book-progress"><div class="progress-dots" id="modal-progress-dots"></div><span id="modal-page-counter"></span></div>
         <button class="book-nav-btn" id="modal-btn-next" onclick="modalBookNext()">Suivante →</button>
       </div>
     </div>
@@ -1203,7 +1201,6 @@ let activeRichTarget = null;
 let calendarDate = new Date();
 let isImmersive = false;
 let liveViewCount = 0;
-let currentHomeJournal = null;
 
 const QUOTES = [
   {text:"L'écriture est la peinture de la voix.",author:"Voltaire"},
@@ -1670,46 +1667,10 @@ function renderBook(j){
   renderComments(j.id,'book-comment-list',0);
   currentJournalId=j.id;
 }
-
-function renderBookPaged(j) {
-  const pages = getPages(j);
-  const reader = document.getElementById('book-reader');
-  // Réactiver le scroll et la navigation
-  reader.style.overflowY = 'hidden';
-  reader.style.maxHeight = '78vh';
-
-  // Afficher la nav
-  const nav = reader.closest('.book-wrapper').querySelector('.book-nav');
-  if (nav) nav.style.display = 'flex';
-
-  buildBookPages(j, reader, (p) => {
-    bookPage = p;
-    goToBookPageHome(j);
-  });
-  homeBookTotal = pages.length + 1;
-  bookPage = 0;
-  goToBookPageHome(j);
-  currentJournalId = j.id;
-  currentHomeJournal = j;
-}
-
-function goToBookPageHome(j) {
-  bookPage = Math.max(0, Math.min(bookPage, homeBookTotal - 1));
-  setBookPage(
-    document.getElementById('book-reader'),
-    bookPage, homeBookTotal,
-    document.getElementById('progress-dots'),
-    document.getElementById('page-counter'),
-    document.getElementById('btn-prev'),
-    document.getElementById('btn-next'),
-    (i) => { bookPage = i; goToBookPageHome(j); }
-  );
-}
-  
 // no-op en mode scroll
 function goToBookPage(j){}
-function bookNext() { if(bookPage < homeBookTotal-1){ bookPage++; goToBookPageHome(currentHomeJournal); } }
-function bookPrev() { if(bookPage > 0){ bookPage--; goToBookPageHome(currentHomeJournal); } }
+function bookNext(){}
+function bookPrev(){}
 function setBookCommentRating(v){bookCommentRating=v;document.querySelectorAll('#book-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
 async function submitBookComment(){
   const name=(document.getElementById('book-comment-name')?.value||'').trim(); const email=(document.getElementById('book-comment-email')?.value||'').trim(); const text=(document.getElementById('book-comment-text')?.value||'').trim();
@@ -1754,6 +1715,14 @@ function buildNewPreview(){
   reader.innerHTML=''; reader.style.overflowY='auto'; reader.style.maxHeight='500px';
   renderBookInto(j,reader);
 }
+// ══════════════════════════════════════════════════════════════════
+// SUITE ET FIN DU SCRIPT CAPNEWS — à coller après renderBookInto()
+// ══════════════════════════════════════════════════════════════════
+
+// ── renderBookInto (suite — chips + body) ──
+// Le début de la fonction s'arrêtait sur :
+//   if(j.category)chips+='<span class="chip cat">'+escHtml(
+// Voici la fin complète de renderBookInto() :
 
 function renderBookInto(j, reader) {
   const pages = getPages(j);
@@ -1850,8 +1819,8 @@ function renderHome() {
   if (j && isPublished(j)) {
     if (lockedEl) lockedEl.style.display = 'none';
     if (contentEl) contentEl.style.display = 'block';
-    if (fab) fab.classList.toggle('hidden', !isAdmin);
-    renderBookPaged(j);
+    if (fab) fab.classList.remove('hidden');
+    renderBook(j);
     renderReactions(j.id);
     renderRecentList();
     renderTagsCloud();
@@ -1860,7 +1829,7 @@ function renderHome() {
   } else {
     if (lockedEl) lockedEl.style.display = 'block';
     if (contentEl) contentEl.style.display = 'none';
-    if (fab) fab.classList.toggle('hidden', !isAdmin);
+    if (fab) fab.classList.add('hidden');
     renderLeaderboard('lb-list-locked');
     triviaLoad();
   }
@@ -2108,12 +2077,8 @@ function buildCalendarWidget() {
       let cls = 'cal-day';
       let onclick = '';
       if (j) {
-        if (isPublished(j)) {
-          cls += ' published';
-          onclick = `onclick="openModal('${j.id}')"`;
-        } else if (isAdmin) {
-          cls += ' scheduled';
-        }
+        if (isPublished(j)) { cls += ' published'; onclick = `onclick="openModal('${j.id}')"` }
+        else { cls += ' scheduled'; }
       }
       if (isToday) cls += ' today';
       return `<div class="${cls}" ${onclick} title="${j ? j.title : ''}">${day}</div>`;
@@ -2173,7 +2138,7 @@ function renderHistory() {
       { num: journals.length, lbl: 'Journaux' },
       { num: totalComments, lbl: 'Avis' },
       { num: avgAll, lbl: 'Note moyenne' },
-      { num: Object.values(db.pageviews).reduce((a, b) => a + (b?.total || 0), 0), lbl: 'Vues totales' },
+      { num: Object.values(db.pageviews).reduce((a, b) => a + b, 0), lbl: 'Vues totales' },
     ].map(s => `<div class="stat-card"><div class="stat-num">${s.num}</div><div class="stat-lbl">${s.lbl}</div></div>`).join('');
   }
 
@@ -2220,7 +2185,7 @@ function filterHistory() {
     const stars = r.stars || [];
     const avg = stars.length ? (stars.reduce((a, b) => a + b, 0) / stars.length).toFixed(1) : null;
     const commentCount = (db.comments || []).filter(c => c.journalId === j.id && !c.isReply).length;
-    const views = db.pageviews[j.id]?.total || 0;
+    const views = db.pageviews[j.id] || 0;
     const excerpt = stripRichTags(j.excerpt || getPages(j)[0] || '').slice(0, 120) + '...';
     return `<div class="history-card" onclick="openModal('${j.id}')">
       <div class="history-card-date">${formatDateFr(j.date)}</div>
@@ -2415,7 +2380,7 @@ async function adminLogin() {
   if (!pw) { if (errEl) errEl.textContent = 'Mot de passe requis.'; return; }
   if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
   try {
-    const res = await api('/api/login', { password: pw });
+    const res = await api('/api/admin/login', { password: pw });
     adminToken = res.token;
     document.getElementById('admin-login-screen').style.display = 'none';
     document.getElementById('admin-panel').style.display = 'block';
@@ -2549,7 +2514,7 @@ function renderAnalytics() {
   if (contentEl) contentEl.style.display = 'block';
 
   const journals = db.journals.filter(j => isPublished(j));
-  const totalViews = Object.values(db.pageviews).reduce((a, b) => a + (b?.total || 0), 0);
+  const totalViews = Object.values(db.pageviews).reduce((a, b) => a + b, 0);
   const totalComments = (db.comments || []).filter(c => !c.isReply).length;
   const allStars = Object.values(db.reactions).flatMap(r => r.stars || []);
   const avgStars = allStars.length ? (allStars.reduce((a, b) => a + b, 0) / allStars.length).toFixed(1) : '—';
@@ -2575,7 +2540,7 @@ function renderAnalytics() {
     const maxV = Math.max(1, ...days.map(d => { const j = db.journals.find(x => x.date === d); return j ? (db.pageviews[j.id] || 0) : 0; }));
     chartEl.innerHTML = days.map(d => {
       const j = db.journals.find(x => x.date === d);
-      const v = j ? (db.pageviews[j.id]?.total || 0) : 0;
+      const v = j ? (db.pageviews[j.id] || 0) : 0;
       const h = Math.max(2, Math.round((v / maxV) * 150));
       const label = new Date(d + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
       return `<div class="chart-bar-col"><div class="chart-bar" style="height:${h}px;"><div class="chart-bar-tooltip">${label}<br>${v} vue${v > 1 ? 's' : ''}</div></div><div class="chart-bar-label">${label.split(' ')[0]}</div></div>`;
@@ -2654,18 +2619,15 @@ async function saveSettings() {
 
 // ── LIVE SIMULATION ──
 function startLiveSimulation() {
-  async function ping() {
-    try {
-      const res = await api('/api/ping', {});
-      const count = res.count || 1;
-      const badge = document.getElementById('live-badge');
-      const countEl = document.getElementById('live-count');
-      if (countEl) countEl.textContent = count;
-      if (badge) badge.style.display = count >= 1 ? 'inline-flex' : 'none';
-    } catch(e) {}
+  const badge = document.getElementById('live-badge');
+  const countEl = document.getElementById('live-count');
+  function update() {
+    liveViewCount = Math.floor(Math.random() * 8) + 1;
+    if (countEl) countEl.textContent = liveViewCount;
+    if (badge) badge.style.display = liveViewCount > 1 ? 'inline-flex' : 'none';
   }
-  ping();
-  setInterval(ping, 30000);
+  update();
+  setInterval(update, 30000);
 }
 
 // ── AUDIO PERSISTANT ──
@@ -2764,6 +2726,10 @@ document.addEventListener('keydown', e => {
   if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); showPage('history'); setTimeout(() => document.getElementById('search-input')?.focus(), 100); }
 });
 
+function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
+function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
+document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
+document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
 function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
 function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
 document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
