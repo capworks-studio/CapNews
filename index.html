@@ -6,42 +6,14 @@
 <title>CapNews</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
 <style>
-/* ══ ABONNEMENT EMAIL ══ */
-.subscribe-box{border:1px solid var(--border-strong);border-radius:3px;background:linear-gradient(135deg,var(--ink) 0%,#2a1f0e 100%);padding:1.2rem;color:var(--parchment);}
-.subscribe-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:.4rem;}
-.subscribe-box p{font-size:.8rem;color:rgba(247,243,235,.6);font-family:var(--font-mono);margin-bottom:.85rem;line-height:1.45;}
-.subscribe-input{width:100%;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--parchment)!important;font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
-.subscribe-input::placeholder{color:rgba(247,243,235,.4)!important;}
-.subscribe-input:focus{border-color:var(--gold-light);}
-.subscribe-btn{width:100%;background:var(--gold);color:white!important;border:none;padding:.55rem;border-radius:3px;font-family:var(--font-display);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
-.subscribe-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
-.subscribe-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.subscribe-notice{font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);margin-top:.4rem;text-align:center;}
-
-/* ══ LIRE TOUT (admin) ══ */
-#read-all-modal{position:fixed;inset:0;background:rgba(26,18,9,.85);z-index:600;display:none;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(8px);}
-#read-all-modal.show{display:flex;}
-#read-all-inner{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;max-width:740px;width:100%;padding:2.5rem 3rem;box-shadow:var(--shadow-strong);margin-top:1rem;position:relative;}
-#read-all-inner .ra-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--muted);}
-#read-all-inner .ra-close:hover{color:var(--ink);}
-#read-all-title{font-family:var(--font-display);font-size:2rem;font-weight:900;font-style:italic;line-height:1.1;color:var(--ink);margin-bottom:.5rem;}
-#read-all-meta{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
-#read-all-body{font-size:1.05rem;line-height:1.95;color:var(--ink);}
-#read-all-body p+p{margin-top:1.2rem;}
-#read-all-body .ra-page-sep{border:none;border-top:1px dashed var(--border-strong);margin:2rem 0;position:relative;}
-#read-all-body .ra-page-sep::after{content:attr(data-label);position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--parchment);padding:0 .75rem;font-family:var(--font-mono);font-size:.7rem;color:var(--muted);}
-
 /* ══ THÈMES COULEUR ══ */
 [data-accent="sage"]{--gold:#5a7a4a;--gold-light:#7a9a6a;--gold-glow:rgba(90,122,74,.2);}
 [data-accent="wine"]{--gold:#8b2252;--gold-light:#b03a72;--gold-glow:rgba(139,34,82,.2);}
 [data-accent="ocean"]{--gold:#1a6a8a;--gold-light:#2a8aaa;--gold-glow:rgba(26,106,138,.2);}
 [data-accent="ember"]{--gold:#b8460b;--gold-light:#d4620b;--gold-glow:rgba(184,70,11,.2);}
-</style>
 
-<style>
 /* ══════════════════════════════════════════════════════
    VARIABLES — Light & Dark
 ══════════════════════════════════════════════════════ */
@@ -73,13 +45,12 @@
   --shadow:0 2px 24px rgba(0,0,0,.4);--shadow-strong:0 8px 48px rgba(0,0,0,.6);
   --bg-page:#1a1510;--bg-card:#221e18;--text-on-card:#f0e8d8;
 }
-/* Règle universelle anti-blanc-sur-blanc */
-*{color:inherit;}
+*{color:inherit;box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.75;min-height:100vh;transition:background var(--transition),color var(--transition);}
 input,textarea,select{color:var(--ink)!important;background:var(--bg-card)!important;}
 input::placeholder,textarea::placeholder{color:var(--muted)!important;opacity:1;}
+
 /* ══ READING PROGRESS BAR ══ */
-*{box-sizing:border-box;margin:0;padding:0;}
 #reading-progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-light));z-index:9999;width:0%;transition:width .1s linear;pointer-events:none;}
 
 /* ══ FESTIVITÉS ══ */
@@ -124,8 +95,6 @@ input::placeholder,textarea::placeholder{color:var(--muted)!important;opacity:1;
 .masthead-tagline{font-size:.78rem;font-family:var(--font-mono);color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-top:.25rem;margin-bottom:.75rem;}
 .masthead-rule{border:none;border-top:1px solid var(--border-strong);margin:0;}
 .masthead-controls{display:flex;align-items:center;gap:.5rem;flex-shrink:0;}
-
-/* ══ THEME / IMMERSIVE BTNs ══ */
 .icon-btn{background:none;border:1px solid var(--border-strong);border-radius:20px;padding:.25rem .65rem;font-size:.85rem;cursor:pointer;color:var(--muted);transition:all .15s;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;font-family:var(--font-mono);}
 .icon-btn:hover{border-color:var(--gold);color:var(--gold);}
 
@@ -150,7 +119,7 @@ nav a.active{background:rgba(255,255,255,.12);color:var(--gold-light);}
 #live-badge .live-dot{width:6px;height:6px;border-radius:50%;background:#4caf50;animation:live-pulse 1.5s ease-in-out infinite;}
 @keyframes live-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.8);}}
 
-/* ══ COUNTDOWN ══ */
+/* ══ COUNTDOWN BANNER ══ */
 #countdown-banner{background:var(--ink);color:var(--parchment);text-align:center;padding:.55rem 1rem;font-family:var(--font-mono);font-size:.82rem;border-bottom:1px solid rgba(255,255,255,.08);letter-spacing:.05em;position:relative;}
 #countdown-banner.published{background:linear-gradient(90deg,#1a3a1a,#2a4a2a,#1a3a1a);color:#a8e6a3;}
 #countdown-timer{font-weight:500;color:var(--gold-light);}
@@ -176,9 +145,7 @@ body.immersive-mode #immersive-bar{display:flex;}
 .book-reader{position:relative;min-height:520px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;box-shadow:var(--shadow);}
 .book-page{display:none;padding:2.5rem 2.8rem;overflow-y:auto;min-height:520px;animation:pageIn .28s cubic-bezier(.4,0,.2,1);}
 .book-page.active{display:block;}
-.book-page.page-out{animation:pageOut .2s cubic-bezier(.4,0,.2,1) forwards;}
 @keyframes pageIn{from{opacity:0;transform:translateX(22px);}to{opacity:1;transform:none;}}
-@keyframes pageOut{from{opacity:1;transform:none;}to{opacity:0;transform:translateX(-22px);}}
 
 /* ── Couverture ── */
 .cover-page{background:var(--ink);color:var(--parchment);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;position:relative;overflow:hidden;}
@@ -197,16 +164,14 @@ body.immersive-mode #immersive-bar{display:flex;}
 .page-body-text{font-size:1rem;line-height:1.9;color:var(--ink);}
 .page-drop-cap::first-letter{font-family:var(--font-display);font-size:4rem;font-weight:900;float:left;line-height:.75;margin-right:.12em;margin-top:.1em;color:var(--gold);}
 
-/* ══ Force text color on bg-card elements ══ */
+/* Force text color */
 .book-page:not(.cover-page){color:var(--ink);}
 .comment-card{color:var(--ink);}
 .sidebar-box{color:var(--ink);}
 .modal-content{color:var(--ink);}
-.admin-body input,.admin-body textarea,.admin-body select{color:var(--ink);}
 .form-input,.form-select,.form-textarea{color:var(--ink);}
 .richtext-area{color:var(--ink);}
 
-/* ── Search highlight ── */
 mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;padding:0 2px;}
 
 /* ══ PAGE IMAGE / AUDIO ══ */
@@ -309,14 +274,11 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .star-pick.active{color:var(--gold);}
 .comment-submit{background:var(--ink);color:var(--parchment);border:none;padding:.6rem 1.4rem;border-radius:3px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
 .comment-submit:hover{background:var(--ink-light);transform:translateY(-1px);}
-
-/* ── Filtre étoiles ── */
 .star-filter-bar{display:flex;align-items:center;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
 .star-filter-bar label{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);}
 .star-filter-btn{background:none;border:1px solid var(--border-strong);border-radius:3px;padding:.2rem .6rem;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;color:var(--muted);transition:all .13s;display:flex;align-items:center;gap:3px;}
 .star-filter-btn.active{background:var(--gold);border-color:var(--gold);color:white;}
 .star-filter-btn:hover:not(.active){border-color:var(--gold);color:var(--gold);}
-
 .comment-list{display:flex;flex-direction:column;gap:1rem;}
 .comment-card{border:1px solid var(--border);border-radius:4px;padding:1rem 1.2rem;background:var(--bg-card);animation:fadeIn .35s ease;position:relative;}
 .comment-card.reply-card{border-left:3px solid var(--gold);background:var(--parchment-mid);margin-left:1.5rem;margin-top:-.5rem;}
@@ -342,12 +304,96 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .reply-submit{background:var(--gold);color:white;border:none;padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;}
 .reply-cancel{background:none;border:1px solid var(--border-strong);padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;color:var(--muted);}
 
-/* ══ LOCKED ══ */
-.locked-overlay{text-align:center;padding:3rem 1rem;border:1px dashed var(--border-strong);border-radius:8px;background:var(--parchment-mid);margin:2rem 0;}
-.locked-icon{font-size:2.5rem;margin-bottom:.75rem;}
-.locked-overlay h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:.5rem;}
-.locked-overlay p{color:var(--muted);font-size:.92rem;}
-.locked-time{font-family:var(--font-mono);font-size:1.1rem;color:var(--gold);margin-top:.5rem;font-weight:500;}
+/* ══ LOCKED / HOME ENRICHI ══ */
+.locked-hero-wrap{display:grid;grid-template-columns:1fr 340px;gap:2rem;margin-bottom:2rem;}
+@media(max-width:768px){.locked-hero-wrap{grid-template-columns:1fr;}}
+.locked-hero{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:3px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden;}
+.locked-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 0%,var(--gold-glow) 0%,transparent 70%);pointer-events:none;}
+.locked-kicker{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:1rem;}
+.locked-icon-big{font-size:48px;margin-bottom:1rem;display:block;}
+.locked-main-title{font-family:var(--font-display);font-size:1.8rem;font-weight:900;font-style:italic;color:var(--ink);margin-bottom:.6rem;line-height:1.2;}
+.locked-sub{font-size:.95rem;color:var(--muted);margin-bottom:1.5rem;}
+.locked-cd-box{background:var(--parchment-dark);border:1px solid var(--border-strong);border-radius:3px;padding:1rem 1.5rem;display:inline-flex;gap:1.5rem;margin-bottom:1.5rem;}
+.lcd-unit{text-align:center;}
+.lcd-num{font-size:2rem;font-weight:700;font-family:var(--font-display);color:var(--ink);line-height:1;font-variant-numeric:tabular-nums;}
+.lcd-lbl{font-size:.65rem;font-family:var(--font-mono);color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.1em;}
+.lcd-sep{font-size:1.8rem;color:var(--muted);align-self:center;margin-top:-8px;font-family:var(--font-display);}
+.pub-dot-wrap{display:inline-flex;align-items:center;gap:6px;background:rgba(76,175,80,.1);border:1px solid rgba(76,175,80,.3);border-radius:20px;padding:.2rem .75rem;font-family:var(--font-mono);font-size:.72rem;color:#2e7d32;margin-bottom:1rem;}
+.pub-dot-anim{width:7px;height:7px;border-radius:50%;background:#4caf50;animation:live-pulse 1.5s ease-in-out infinite;}
+.locked-chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem;}
+.locked-cta-row{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap;}
+.locked-cta-btn{padding:.6rem 1.2rem;border-radius:3px;font-family:var(--font-mono);font-size:.8rem;cursor:pointer;transition:all .13s;}
+.locked-cta-primary{background:var(--gold);color:white;border:none;}
+.locked-cta-primary:hover{background:var(--gold-light);}
+.locked-cta-secondary{background:none;border:1px solid var(--border-strong);color:var(--ink);}
+.locked-cta-secondary:hover{border-color:var(--gold);color:var(--gold);}
+.locked-bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:1.5rem;}
+@media(max-width:768px){.locked-bottom-row{grid-template-columns:1fr;}}
+
+/* ══ MÉTÉO ══ */
+.wx-main{display:flex;align-items:center;gap:12px;margin-bottom:.75rem;}
+.wx-icon-big{font-size:2.2rem;}
+.wx-temp-big{font-size:1.8rem;font-weight:700;font-family:var(--font-display);color:var(--ink);line-height:1;}
+.wx-desc-txt{font-size:.82rem;color:var(--muted);}
+.wx-city-txt{font-size:.72rem;font-family:var(--font-mono);color:var(--muted);}
+.wx-details-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:.6rem;}
+.wx-det{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
+.wx-det span{color:var(--ink);font-weight:500;}
+.wx-forecast{display:flex;gap:4px;padding-top:.75rem;border-top:1px solid var(--border);}
+.wx-day{flex:1;text-align:center;}
+.wx-day-name{font-size:.65rem;font-family:var(--font-mono);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;}
+.wx-day-icon{font-size:1.1rem;display:block;margin:.2rem 0;}
+.wx-day-t{font-size:.72rem;font-weight:500;color:var(--ink);}
+
+/* ══ ABONNEMENT ══ */
+.subscribe-box{border:1px solid var(--border-strong);border-radius:3px;background:linear-gradient(135deg,var(--ink) 0%,#2a1f0e 100%);padding:1.2rem;color:var(--parchment);}
+.subscribe-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:.4rem;}
+.subscribe-box p{font-size:.8rem;color:rgba(247,243,235,.6);font-family:var(--font-mono);margin-bottom:.85rem;line-height:1.45;}
+.subscribe-input{width:100%;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--parchment)!important;font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
+.subscribe-input::placeholder{color:rgba(247,243,235,.4)!important;}
+.subscribe-input:focus{border-color:var(--gold-light);}
+.subscribe-btn{width:100%;background:var(--gold);color:white!important;border:none;padding:.55rem;border-radius:3px;font-family:var(--font-display);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
+.subscribe-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+.subscribe-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.subscribe-notice{font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);margin-top:.4rem;text-align:center;}
+.unsub-toggle{background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);text-decoration:underline;width:100%;text-align:center;margin-top:.25rem;}
+.unsub-toggle:hover{color:rgba(247,243,235,.6);}
+.unsub-zone{display:none;margin-top:.75rem;padding:.75rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;}
+.unsub-zone.open{display:block;}
+.unsub-zone input{width:100%;padding:.45rem .7rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--parchment)!important;font-family:var(--font-mono);font-size:.8rem;outline:none;margin-bottom:.5rem;}
+.unsub-zone input::placeholder{color:rgba(247,243,235,.35)!important;}
+.unsub-confirm-btn{width:100%;padding:.4rem;border-radius:3px;border:1px solid rgba(139,26,26,.6);background:rgba(139,26,26,.3);color:#ffaaaa;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;}
+.unsub-confirm-btn:hover{background:rgba(139,26,26,.5);}
+
+/* ══ LEADERBOARD ABONNÉS ══ */
+.lb-list{display:flex;flex-direction:column;gap:6px;}
+.lb-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:3px;}
+.lb-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.75rem;font-weight:700;flex-shrink:0;}
+.lb-name{font-size:.9rem;color:var(--ink);flex:1;font-family:var(--font-body);}
+.lb-date{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);}
+
+/* ══ TRIVIA ══ */
+.trivia-box{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:3px;padding:1.5rem;}
+.trivia-label{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;}
+.trivia-score{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:.85rem;font-weight:500;}
+.trivia-q{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:var(--ink);margin-bottom:1rem;line-height:1.4;min-height:2.8em;}
+.trivia-opts{display:flex;flex-direction:column;gap:.45rem;}
+.trivia-opt{padding:.55rem .9rem;border:1px solid var(--border-strong);border-radius:3px;font-size:.9rem;color:var(--ink);background:var(--parchment-mid);cursor:pointer;text-align:left;transition:all .12s;width:100%;font-family:var(--font-body);}
+.trivia-opt:hover:not([disabled]){border-color:var(--gold);background:var(--parchment-dark);}
+.trivia-opt.correct{border-color:var(--green)!important;background:#e8f5e9!important;color:#1b5e20!important;}
+.trivia-opt.wrong{border-color:var(--red)!important;background:#ffebee!important;color:#b71c1c!important;}
+.trivia-feedback{font-size:.82rem;color:var(--muted);margin-top:.6rem;min-height:2.5em;font-style:italic;line-height:1.4;}
+.trivia-next-btn{margin-top:.75rem;padding:.5rem 1.1rem;border-radius:3px;border:1px solid var(--border-strong);background:var(--parchment-dark);font-family:var(--font-mono);font-size:.78rem;color:var(--ink-light);cursor:pointer;display:none;transition:all .13s;}
+.trivia-next-btn:hover{border-color:var(--gold);color:var(--gold);}
+
+/* ══ SNAKE ══ */
+.snake-box{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:3px;padding:1.5rem;position:relative;}
+.snake-tag{position:absolute;top:10px;right:12px;font-family:var(--font-mono);font-size:.65rem;color:var(--muted);border:1px solid var(--border-strong);padding:2px 6px;border-radius:2px;}
+.snake-label{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;}
+.snake-score{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:.6rem;}
+#snake-canvas{display:block;border:1px solid var(--border-strong);border-radius:3px;cursor:pointer;background:#1a1510;width:100%;}
+.snake-msg{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);text-align:center;margin-top:.5rem;min-height:1.2em;}
+.snake-hint{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);text-align:center;margin-top:.25rem;opacity:.7;}
 
 /* ══ HISTORY ══ */
 .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
@@ -533,15 +579,12 @@ footer strong{color:var(--ink);font-weight:500;}
 .footer-links button{background:none;border:none;font-family:var(--font-mono);font-size:.72rem;color:var(--muted);cursor:pointer;transition:color .15s;}
 .footer-links button:hover{color:var(--gold);}
 
-@media(max-width:600px){.form-row{flex-direction:column;}main{padding:1rem;}.book-page{padding:1.5rem 1.2rem;}.modal-content{padding:1.2rem 1rem;}.edit-modal{padding:1.2rem 1rem;}.journal-hero{display:block;}}
+@media(max-width:600px){.form-row{flex-direction:column;}main{padding:1rem;}.book-page{padding:1.5rem 1.2rem;}.modal-content{padding:1.2rem 1rem;}.edit-modal{padding:1.2rem 1rem;}}
 </style>
 </head>
 <body>
 
-<!-- READING PROGRESS -->
 <div id="reading-progress"></div>
-
-<!-- FESTIVE BANNER -->
 <div id="festive-banner"></div>
 
 <!-- RICH TEXT CONTEXT MENU -->
@@ -569,7 +612,7 @@ footer strong{color:var(--ink);font-weight:500;}
     <div class="kbd-row"><span class="kbd-desc">Archives</span><div class="kbd-keys"><kbd>A</kbd></div></div>
     <div class="kbd-row"><span class="kbd-desc">Thème clair/sombre</span><div class="kbd-keys"><kbd>D</kbd></div></div>
     <div class="kbd-row"><span class="kbd-desc">Cette aide</span><div class="kbd-keys"><kbd>?</kbd></div></div>
-    <p style="margin-top:1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">Les raccourcis B/I/→/← sont désactivés quand un champ de texte est actif.</p>
+    <p style="margin-top:1rem;font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">Les raccourcis sont désactivés quand un champ texte est actif.</p>
   </div>
 </div>
 
@@ -602,7 +645,6 @@ footer strong{color:var(--ink);font-weight:500;}
   <span id="countdown-text">Chargement...</span> <span id="countdown-timer"></span>
 </div>
 
-<!-- IMMERSIVE BAR -->
 <div id="immersive-bar">
   <span class="imm-title" id="imm-title">—</span>
   <button class="imm-btn" onclick="bookPrev()">← Préc.</button>
@@ -610,14 +652,12 @@ footer strong{color:var(--ink);font-weight:500;}
   <button class="imm-btn" onclick="toggleImmersive()">✕ Quitter</button>
 </div>
 
-<!-- PERSISTENT AUDIO PLAYER -->
 <div id="persistent-player">
   <span class="pp-info" id="pp-info">🔊 Audio</span>
   <audio id="pp-audio" controls></audio>
   <button class="pp-close" onclick="closePersistentPlayer()">✕</button>
 </div>
 
-<!-- DRAFT INDICATOR -->
 <div id="draft-indicator">💾 Brouillon sauvegardé</div>
 
 <main>
@@ -625,12 +665,122 @@ footer strong{color:var(--ink);font-weight:500;}
 <!-- ══ HOME ══ -->
 <section class="page-section active" id="page-home">
   <div id="home-loading" class="text-center mt-2"><div class="loading-spinner"></div></div>
-  <div id="home-locked" class="locked-overlay" style="display:none;">
-    <div class="locked-icon">🕰️</div>
-    <h2>Le journal du jour n'est pas encore publié</h2>
-    <p id="locked-subtitle">La publication a lieu chaque jour à 18h00.</p>
-    <div class="locked-time" id="locked-countdown"></div>
+
+  <!-- ═══ LOCKED : journal pas encore publié ═══ -->
+  <div id="home-locked" style="display:none;">
+    <div class="locked-hero-wrap">
+
+      <!-- HERO GAUCHE -->
+      <div class="locked-hero">
+        <div class="pub-dot-wrap"><span class="pub-dot-anim"></span>Publication quotidienne</div>
+        <div class="locked-kicker">Prochaine édition</div>
+        <div class="locked-icon-big">🕰️</div>
+        <div class="locked-main-title">Le journal arrive bientôt...</div>
+        <div class="locked-sub" id="locked-subtitle">La publication a lieu chaque jour à 18h00. Revenez plus tard !</div>
+        <div class="locked-cd-box">
+          <div class="lcd-unit"><div class="lcd-num" id="lcd-h">--</div><div class="lcd-lbl">heures</div></div>
+          <div class="lcd-sep">:</div>
+          <div class="lcd-unit"><div class="lcd-num" id="lcd-m">--</div><div class="lcd-lbl">minutes</div></div>
+          <div class="lcd-sep">:</div>
+          <div class="lcd-unit"><div class="lcd-num" id="lcd-s">--</div><div class="lcd-lbl">secondes</div></div>
+        </div>
+        <div class="locked-chips">
+          <span class="chip">📖 Archives disponibles</span>
+          <span class="chip">💬 Avis ouverts</span>
+          <span class="chip">📬 Notifications gratuites</span>
+        </div>
+        <div class="locked-cta-row">
+          <button class="locked-cta-btn locked-cta-primary" onclick="document.getElementById('sub-email-locked').focus();document.getElementById('sub-email-locked').scrollIntoView({behavior:'smooth'})">S'abonner aux notifications</button>
+          <button class="locked-cta-btn locked-cta-secondary" onclick="showPage('history')">Voir les archives</button>
+        </div>
+
+        <!-- MÉTÉO -->
+        <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--border);">
+          <div style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.75rem;">🌤 Météo — Marseille</div>
+          <div class="wx-main">
+            <div class="wx-icon-big" id="wx-icon">⏳</div>
+            <div>
+              <div class="wx-temp-big" id="wx-temp">--°C</div>
+              <div class="wx-desc-txt" id="wx-desc">Chargement...</div>
+              <div class="wx-city-txt">Marseille, France</div>
+            </div>
+          </div>
+          <div class="wx-details-grid">
+            <div class="wx-det">Ressenti : <span id="wx-feel">--</span></div>
+            <div class="wx-det">Humidité : <span id="wx-hum">--</span></div>
+            <div class="wx-det">Vent : <span id="wx-wind">--</span></div>
+            <div class="wx-det">Pression : <span id="wx-pres">--</span></div>
+          </div>
+          <div class="wx-forecast" id="wx-forecast"></div>
+        </div>
+      </div>
+
+      <!-- SIDEBAR DROITE -->
+      <div class="sidebar">
+        <!-- CITATION -->
+        <div id="quote-box">
+          <button id="quote-refresh" onclick="refreshQuote()" title="Nouvelle citation">↻</button>
+          <h3>✦ Citation du jour</h3>
+          <div id="quote-text">Chargement...</div>
+          <div id="quote-author"></div>
+        </div>
+
+        <!-- ABONNEMENT -->
+        <div class="subscribe-box" id="subscribe-box-locked">
+          <h3>📬 Recevoir les journaux</h3>
+          <p>Un email dès que le journal est publié. Jamais de spam.</p>
+          <input class="subscribe-input" id="sub-name-locked" type="text" placeholder="Ton prénom (optionnel)">
+          <input class="subscribe-input" id="sub-email-locked" type="email" placeholder="Ton adresse email *" onkeydown="if(event.key==='Enter')handleSubscribeLocked()">
+          <button class="subscribe-btn" id="sub-btn-locked" onclick="handleSubscribeLocked()">S'abonner →</button>
+          <p class="subscribe-notice">Gratuit · Désabonnement en un clic</p>
+          <button class="unsub-toggle" onclick="document.getElementById('unsub-zone-locked').classList.toggle('open')">Se désinscrire</button>
+          <div class="unsub-zone" id="unsub-zone-locked">
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.4);margin-bottom:.4rem;">Email à désinscrire :</div>
+            <input type="email" id="unsub-email-locked" placeholder="ton@email.com">
+            <button class="unsub-confirm-btn" onclick="handleUnsubLocked()">Se désinscrire définitivement</button>
+          </div>
+          <div id="sub-status-locked" style="margin-top:.5rem;font-family:var(--font-mono);font-size:.75rem;min-height:1rem;text-align:center;"></div>
+        </div>
+
+        <!-- LEADERBOARD ABONNÉS -->
+        <div class="sidebar-box">
+          <h3>🏆 Derniers abonnés</h3>
+          <div class="lb-list" id="lb-list-locked"></div>
+        </div>
+
+        <!-- CALENDRIER -->
+        <div class="sidebar-box">
+          <h3>📅 Calendrier</h3>
+          <div id="sidebar-calendar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIGNE DU BAS : TRIVIA + SNAKE -->
+    <div class="locked-bottom-row">
+      <!-- TRIVIA -->
+      <div class="trivia-box">
+        <div class="trivia-label">🧠 Culture générale</div>
+        <div class="trivia-score" id="trivia-score-display">Score : 0</div>
+        <div class="trivia-q" id="trivia-question">Chargement...</div>
+        <div class="trivia-opts" id="trivia-options"></div>
+        <div class="trivia-feedback" id="trivia-feedback"></div>
+        <button class="trivia-next-btn" id="trivia-next-btn" onclick="triviaNext()">Question suivante →</button>
+      </div>
+
+      <!-- SNAKE -->
+      <div class="snake-box">
+        <div class="snake-tag">🕹 mini-jeu caché</div>
+        <div class="snake-label">Snake</div>
+        <div class="snake-score">Score : <span id="snake-score">0</span> · Record : <span id="snake-best">0</span></div>
+        <canvas id="snake-canvas" width="280" height="196"></canvas>
+        <div class="snake-msg" id="snake-msg">Cliquer pour démarrer</div>
+        <div class="snake-hint">Flèches / ZQSD · Mobile : swipe</div>
+      </div>
+    </div>
   </div>
+  <!-- ═══ FIN LOCKED ═══ -->
+
   <div id="home-content" style="display:none;">
     <div class="journal-hero">
       <div class="book-wrapper">
@@ -645,7 +795,6 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
       </div>
       <aside class="sidebar">
-        <!-- QUOTE OF THE DAY -->
         <div id="quote-box">
           <button id="quote-refresh" onclick="refreshQuote()" title="Nouvelle citation">↻</button>
           <h3>✦ Citation du jour</h3>
@@ -686,12 +835,18 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
         <div class="subscribe-box">
           <h3>📬 Recevoir les journaux</h3>
-          <p>Un email à chaque nouvelle publication, directement dans ta boîte.</p>
+          <p>Un email à chaque nouvelle publication.</p>
           <input class="subscribe-input" id="sub-name" type="text" placeholder="Ton prénom (optionnel)">
           <input class="subscribe-input" id="sub-email" type="email" placeholder="Ton adresse email *" onkeydown="if(event.key==='Enter')handleSubscribe()">
           <button class="subscribe-btn" id="sub-btn" onclick="handleSubscribe()">S'abonner →</button>
-          <p class="subscribe-notice">Gratuit. Désabonnement en un clic. Zéro spam.</p>
-          <div id="sub-status" style="margin-top:.5rem;font-family:var(--font-mono);font-size:.75rem;min-height:1rem;"></div>
+          <p class="subscribe-notice">Gratuit · Désabonnement en un clic</p>
+          <button class="unsub-toggle" onclick="document.getElementById('unsub-zone-home').classList.toggle('open')">Se désinscrire</button>
+          <div class="unsub-zone" id="unsub-zone-home">
+            <div style="font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.4);margin-bottom:.4rem;">Email à désinscrire :</div>
+            <input type="email" id="unsub-email-home" placeholder="ton@email.com">
+            <button class="unsub-confirm-btn" onclick="handleUnsubHome()">Se désinscrire définitivement</button>
+          </div>
+          <div id="sub-status" style="margin-top:.5rem;font-family:var(--font-mono);font-size:.75rem;min-height:1rem;text-align:center;"></div>
         </div>
         <div class="sidebar-box">
           <h3>🏷️ Thèmes</h3>
@@ -702,10 +857,9 @@ footer strong{color:var(--ink);font-weight:500;}
   </div>
 </section>
 
-<!-- FAB -->
 <button class="edit-fab hidden" id="edit-fab" onclick="openEditModal()">✏️ Modifier</button>
 
-<!-- ══ EDIT MODAL ══ -->
+<!-- EDIT MODAL -->
 <div class="edit-modal-bg hidden" id="edit-modal-bg">
   <div class="edit-modal">
     <button class="edit-modal-close" onclick="closeEditModal()">✕</button>
@@ -717,58 +871,20 @@ footer strong{color:var(--ink);font-weight:500;}
       <button class="edit-tab" onclick="switchEditTab('preview')" id="etab-preview">👁 Aperçu</button>
     </div>
     <div id="etab-body-content">
-      <div class="form-group">
-        <label class="form-label">Titre *</label>
-        <input type="text" class="form-input" id="edit-title">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Accroche</label>
-        <textarea class="form-textarea" id="edit-excerpt" style="min-height:60px;"></textarea>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Pages du journal</label>
-        <div class="pages-editor" id="edit-pages-editor"></div>
-        <button class="add-page-btn" onclick="addEditPage()">+ Ajouter une page</button>
-      </div>
+      <div class="form-group"><label class="form-label">Titre *</label><input type="text" class="form-input" id="edit-title"></div>
+      <div class="form-group"><label class="form-label">Accroche</label><textarea class="form-textarea" id="edit-excerpt" style="min-height:60px;"></textarea></div>
+      <div class="form-group"><label class="form-label">Pages du journal</label><div class="pages-editor" id="edit-pages-editor"></div><button class="add-page-btn" onclick="addEditPage()">+ Ajouter une page</button></div>
     </div>
     <div id="etab-body-media" style="display:none;">
       <p style="font-size:.82rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;">Les médias s'intègrent via <code>[img url|Légende]</code> et <code>[audio url|Titre]</code>.</p>
-      <div class="form-group">
-        <label class="form-label">🖼 Image de couverture (URL)</label>
-        <div class="media-row"><input type="url" id="edit-cover-img" placeholder="https://exemple.com/image.jpg"><button onclick="previewCoverImg()">Aperçu</button></div>
-        <div id="cover-img-preview" class="media-preview" style="display:none;margin-top:.5rem;"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">🔊 Audio (URL mp3/ogg)</label>
-        <div class="media-row"><input type="url" id="edit-audio-url" placeholder="https://exemple.com/son.mp3"><button onclick="previewAudio()">Tester</button></div>
-        <div id="audio-preview" style="display:none;margin-top:.5rem;"></div>
-      </div>
+      <div class="form-group"><label class="form-label">🖼 Image de couverture (URL)</label><div class="media-row"><input type="url" id="edit-cover-img" placeholder="https://..."><button onclick="previewCoverImg()">Aperçu</button></div><div id="cover-img-preview" class="media-preview" style="display:none;margin-top:.5rem;"></div></div>
+      <div class="form-group"><label class="form-label">🔊 Audio (URL mp3/ogg)</label><div class="media-row"><input type="url" id="edit-audio-url" placeholder="https://..."><button onclick="previewAudio()">Tester</button></div><div id="audio-preview" style="display:none;margin-top:.5rem;"></div></div>
     </div>
     <div id="etab-body-meta" style="display:none;">
       <div class="form-row">
-        <div class="form-group">
-          <label class="form-label">Catégorie</label>
-          <select class="form-select" id="edit-category">
-            <option>Réflexion</option><option>Actualité</option><option>Culture</option>
-            <option>Société</option><option>Science</option><option>Humour</option>
-            <option>Personnel</option><option>Autre</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Humeur</label>
-          <select class="form-select" id="edit-mood">
-            <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
-            <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
-            <option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option>
-            <option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option>
-            <option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Temps de lecture</label>
-          <input type="text" class="form-input" id="edit-readtime" placeholder="Auto si vide">
-          <div class="readtime-auto" id="edit-readtime-auto"></div>
-        </div>
+        <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="edit-category"><option>Réflexion</option><option>Actualité</option><option>Culture</option><option>Société</option><option>Science</option><option>Humour</option><option>Personnel</option><option>Autre</option></select></div>
+        <div class="form-group"><label class="form-label">Humeur</label><select class="form-select" id="edit-mood"><option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option><option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option><option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option><option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option><option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option></select></div>
+        <div class="form-group"><label class="form-label">Temps de lecture</label><input type="text" class="form-input" id="edit-readtime" placeholder="Auto si vide"><div class="readtime-auto" id="edit-readtime-auto"></div></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">Auteur</label><input type="text" class="form-input" id="edit-author"></div>
@@ -797,15 +913,8 @@ footer strong{color:var(--ink);font-weight:500;}
 
 <!-- ══ HISTORY ══ -->
 <section class="page-section" id="page-history">
-  <div style="margin-bottom:1.5rem;">
-    <h1 class="section-title">Archives</h1>
-    <p class="section-sub">Tous les journaux publiés.</p>
-  </div>
-  <div class="search-bar">
-    <span style="color:var(--muted);">🔍</span>
-    <input type="text" id="search-input" placeholder="Rechercher dans les archives... (Ctrl+K)" oninput="filterHistory()">
-    <span id="search-results-count"></span>
-  </div>
+  <div style="margin-bottom:1.5rem;"><h1 class="section-title">Archives</h1><p class="section-sub">Tous les journaux publiés.</p></div>
+  <div class="search-bar"><span style="color:var(--muted);">🔍</span><input type="text" id="search-input" placeholder="Rechercher dans les archives... (Ctrl+K)" oninput="filterHistory()"><span id="search-results-count"></span></div>
   <div class="filter-row" id="cat-filters"></div>
   <div id="history-stats" class="stats-grid"></div>
   <div class="history-grid" id="history-grid"></div>
@@ -837,20 +946,16 @@ footer strong{color:var(--ink);font-weight:500;}
   <div id="admin-login-screen" class="admin-login">
     <h2>🔐 Accès administrateur</h2>
     <p style="font-size:.82rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;">Vérification côté serveur. <span class="security-badge">🔒 JWT signé</span></p>
-    <div class="form-group">
-      <label class="form-label">Mot de passe admin</label>
-      <input type="password" class="form-input" id="admin-pw-input" placeholder="Mot de passe..." onkeydown="if(event.key==='Enter')adminLogin()">
-    </div>
+    <div class="form-group"><label class="form-label">Mot de passe admin</label><input type="password" class="form-input" id="admin-pw-input" placeholder="Mot de passe..." onkeydown="if(event.key==='Enter')adminLogin()"></div>
     <button class="btn-primary" onclick="adminLogin()" id="admin-login-btn">Se connecter →</button>
     <div class="admin-error" id="admin-err"></div>
   </div>
-
   <div id="admin-panel" style="display:none;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:.5rem;">
       <h1 style="font-family:var(--font-display);font-size:1.8rem;font-weight:900;">Panel d'administration</h1>
       <button onclick="adminLogout()" class="btn-secondary" style="font-size:.78rem;">Déconnexion</button>
     </div>
-    <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.25);border-radius:4px;">💡 Clic droit sur le texte sélectionné → mise en forme. Onglet <strong>Aperçu</strong> pour voir le rendu avant publication. Les brouillons sont sauvegardés automatiquement.</p>
+    <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1.2rem;padding:.6rem 1rem;background:rgba(184,134,11,.08);border:1px solid rgba(184,134,11,.25);border-radius:4px;">💡 Clic droit sur le texte sélectionné → mise en forme. Onglet <strong>Aperçu</strong> pour voir le rendu avant publication.</p>
     <div class="admin-panel-box">
       <div class="admin-tabs">
         <button class="admin-tab active" onclick="switchAdminTab('new')" id="atab-new">✏️ Nouveau</button>
@@ -862,7 +967,6 @@ footer strong{color:var(--ink);font-weight:500;}
         <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
       </div>
       <div class="admin-body">
-
         <!-- NOUVEAU -->
         <div id="atab-body-new">
           <div class="edit-tabs" style="margin-bottom:1rem;">
@@ -872,14 +976,8 @@ footer strong{color:var(--ink);font-weight:500;}
             <button class="edit-tab" onclick="switchNewTab('preview');buildNewPreview()" id="ntab-preview">👁 Aperçu</button>
           </div>
           <div id="ntab-body-content">
-            <div class="form-group">
-              <label class="form-label">Titre du journal *</label>
-              <input type="text" class="form-input" id="new-title" placeholder="Un titre percutant..." oninput="saveDraft()">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Résumé / accroche</label>
-              <textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..." oninput="saveDraft()"></textarea>
-            </div>
+            <div class="form-group"><label class="form-label">Titre du journal *</label><input type="text" class="form-input" id="new-title" placeholder="Un titre percutant..." oninput="saveDraft()"></div>
+            <div class="form-group"><label class="form-label">Résumé / accroche</label><textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..." oninput="saveDraft()"></textarea></div>
             <div class="form-group">
               <label class="form-label">Pages du journal *</label>
               <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = un écran dans le lecteur.</p>
@@ -892,50 +990,19 @@ footer strong{color:var(--ink);font-weight:500;}
             </div>
           </div>
           <div id="ntab-body-media" style="display:none;">
-            <div class="form-group">
-              <label class="form-label">🖼 Image de couverture (URL)</label>
-              <div class="media-row"><input type="url" id="new-cover-img" placeholder="https://exemple.com/image.jpg"><button onclick="previewNewCoverImg()">Aperçu</button></div>
-              <div id="new-cover-img-preview" class="media-preview" style="display:none;margin-top:.5rem;"></div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">🔊 Audio (URL mp3/ogg)</label>
-              <div class="media-row"><input type="url" id="new-audio-url" placeholder="https://exemple.com/son.mp3"><button onclick="previewNewAudio()">Tester</button></div>
-              <div id="new-audio-preview" style="display:none;margin-top:.5rem;"></div>
-            </div>
+            <div class="form-group"><label class="form-label">🖼 Image de couverture (URL)</label><div class="media-row"><input type="url" id="new-cover-img" placeholder="https://..."><button onclick="previewNewCoverImg()">Aperçu</button></div><div id="new-cover-img-preview" class="media-preview" style="display:none;margin-top:.5rem;"></div></div>
+            <div class="form-group"><label class="form-label">🔊 Audio (URL mp3/ogg)</label><div class="media-row"><input type="url" id="new-audio-url" placeholder="https://..."><button onclick="previewNewAudio()">Tester</button></div><div id="new-audio-preview" style="display:none;margin-top:.5rem;"></div></div>
           </div>
           <div id="ntab-body-meta" style="display:none;">
             <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Catégorie</label>
-                <select class="form-select" id="new-category">
-                  <option>Réflexion</option><option>Actualité</option><option>Culture</option>
-                  <option>Société</option><option>Science</option><option>Humour</option>
-                  <option>Personnel</option><option>Autre</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Humeur du jour</label>
-                <select class="form-select" id="new-mood">
-                  <option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option>
-                  <option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option>
-                  <option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option>
-                  <option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option>
-                  <option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Date de publication</label>
-                <input type="date" class="form-input" id="new-date">
-              </div>
+              <div class="form-group"><label class="form-label">Catégorie</label><select class="form-select" id="new-category"><option>Réflexion</option><option>Actualité</option><option>Culture</option><option>Société</option><option>Science</option><option>Humour</option><option>Personnel</option><option>Autre</option></select></div>
+              <div class="form-group"><label class="form-label">Humeur du jour</label><select class="form-select" id="new-mood"><option value="positive">😊 Optimiste</option><option value="neutral">😐 Neutre</option><option value="melancholic">🌧️ Mélancolique</option><option value="energetic">⚡ Énergique</option><option value="pensive">🤔 Pensif</option><option value="excited">🎉 Enthousiaste</option><option value="grateful">🌿 Reconnaissant</option><option value="nostalgic">🌅 Nostalgique</option><option value="curious">🔍 Curieux</option><option value="inspired">💡 Inspiré</option></select></div>
+              <div class="form-group"><label class="form-label">Date de publication</label><input type="date" class="form-input" id="new-date"></div>
             </div>
             <div class="form-row">
               <div class="form-group"><label class="form-label">Auteur</label><input type="text" class="form-input" id="new-author" placeholder="Nom de l'auteur"></div>
               <div class="form-group"><label class="form-label">Tags (virgules)</label><input type="text" class="form-input" id="new-tags" placeholder="vie, quotidien"></div>
-              <div class="form-group">
-                <label class="form-label">Temps de lecture</label>
-                <input type="text" class="form-input" id="new-readtime" placeholder="Calculé automatiquement">
-                <div class="readtime-auto" id="new-readtime-auto"></div>
-              </div>
+              <div class="form-group"><label class="form-label">Temps de lecture</label><input type="text" class="form-input" id="new-readtime" placeholder="Calculé automatiquement"><div class="readtime-auto" id="new-readtime-auto"></div></div>
             </div>
           </div>
           <div id="ntab-body-preview" style="display:none;">
@@ -954,41 +1021,17 @@ footer strong{color:var(--ink);font-weight:500;}
           </div>
           <div id="publish-status" style="margin-top:.75rem;font-family:var(--font-mono);font-size:.82rem;color:var(--muted);"></div>
         </div>
-
         <!-- GÉRER -->
-        <div id="atab-body-manage" style="display:none;">
-          <div id="manage-list-loading" class="text-center"><div class="loading-spinner"></div></div>
-          <ul class="admin-list" id="manage-list"></ul>
-        </div>
-
+        <div id="atab-body-manage" style="display:none;"><div id="manage-list-loading" class="text-center"><div class="loading-spinner"></div></div><ul class="admin-list" id="manage-list"></ul></div>
         <!-- CALENDRIER -->
         <div id="atab-body-calendar" style="display:none;">
-          <p style="font-size:.85rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;">
-            <span style="display:inline-block;width:12px;height:12px;background:rgba(76,175,80,.3);border-radius:2px;margin-right:4px;"></span>Publié
-            <span style="display:inline-block;width:12px;height:12px;background:rgba(184,134,11,.3);border-radius:2px;margin:0 4px 0 12px;"></span>Programmé
-          </p>
+          <p style="font-size:.85rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;"><span style="display:inline-block;width:12px;height:12px;background:rgba(76,175,80,.3);border-radius:2px;margin-right:4px;"></span>Publié <span style="display:inline-block;width:12px;height:12px;background:rgba(184,134,11,.3);border-radius:2px;margin:0 4px 0 12px;"></span>Programmé</p>
           <div id="admin-calendar-full"></div>
         </div>
-
         <!-- ANALYTICS -->
-        <div id="atab-body-analytics" style="display:none;">
-          <div id="analytics-loading" class="text-center"><div class="loading-spinner"></div></div>
-          <div id="analytics-content" style="display:none;">
-            <div class="analytics-stats" id="analytics-stats"></div>
-            <p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Vues — 30 derniers jours</p>
-            <div class="chart-wrapper"><div class="chart-bars" id="analytics-chart"></div></div>
-            <p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Top journaux par vues</p>
-            <div class="top-journals" id="top-journals"></div>
-          </div>
-        </div>
-
+        <div id="atab-body-analytics" style="display:none;"><div id="analytics-loading" class="text-center"><div class="loading-spinner"></div></div><div id="analytics-content" style="display:none;"><div class="analytics-stats" id="analytics-stats"></div><p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Vues — 30 derniers jours</p><div class="chart-wrapper"><div class="chart-bars" id="analytics-chart"></div></div><p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Top journaux par vues</p><div class="top-journals" id="top-journals"></div></div></div>
         <!-- MODÉRATION -->
-        <div id="atab-body-moderation" style="display:none;">
-          <p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents.</p>
-          <ul class="admin-list" id="mod-list" style="display:flex;flex-direction:column;gap:0;"></ul>
-          <div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis.</p></div>
-        </div>
-
+        <div id="atab-body-moderation" style="display:none;"><p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents.</p><ul class="admin-list" id="mod-list" style="display:flex;flex-direction:column;gap:0;"></ul><div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis.</p></div></div>
         <!-- ABONNÉS -->
         <div id="atab-body-subscribers" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
@@ -998,32 +1041,12 @@ footer strong{color:var(--ink);font-weight:500;}
             </div>
             <div style="display:flex;gap:.5rem;flex-wrap:wrap;">
               <button class="btn-secondary" onclick="exportSubscribers()">⬇ Exporter CSV</button>
-              <button class="btn-primary" style="background:var(--gold);" onclick="testNotification()">🧪 Tester notif</button>
+              <button class="btn-primary" style="background:var(--gold);" onclick="adminTestNotif()">🧪 Tester notif</button>
             </div>
           </div>
-          <!-- Config EmailJS -->
-          <div style="background:rgba(184,134,11,.07);border:1px solid rgba(184,134,11,.25);border-radius:4px;padding:1rem;margin-bottom:1.2rem;">
-            <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:.6rem;font-weight:500;">⚙️ Configuration EmailJS</p>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label">Public Key</label>
-                <input type="text" class="form-input" id="ejs-pk" placeholder="Collle ta clé publique" style="font-family:var(--font-mono);font-size:.82rem;">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Service ID</label>
-                <input type="text" class="form-input" id="ejs-sid" placeholder="service_xxxxxxx" style="font-family:var(--font-mono);font-size:.82rem;">
-              </div>
-              <div class="form-group">
-                <label class="form-label">Template ID</label>
-                <input type="text" class="form-input" id="ejs-tid" placeholder="template_xxxxxxx" style="font-family:var(--font-mono);font-size:.82rem;">
-              </div>
-            </div>
-            <button class="btn-primary" style="font-size:.85rem;padding:.5rem 1.1rem;" onclick="saveEmailJSConfig()">Sauvegarder la config →</button>
-            <p style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);margin-top:.5rem;">Sauvegardé dans localStorage. <a href="https://www.emailjs.com" target="_blank" style="color:var(--gold);">Créer un compte EmailJS →</a></p>
-          </div>
+          <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);padding:.6rem;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:3px;margin-bottom:1rem;">🔒 Les clés EmailJS (Public Key, Service ID, Template ID, Private Key) sont configurées dans les <strong>Secrets Cloudflare Worker</strong> (EMAILJS_PUBLIC_KEY, EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PRIVATE_KEY). Aucune clé n'est stockée côté client.</p>
           <div id="admin-subscribers-list" style="max-height:400px;overflow-y:auto;"></div>
         </div>
-
         <!-- PARAMÈTRES -->
         <div id="atab-body-settings" style="display:none;">
           <div class="form-group"><label class="form-label">Nom du site</label><input type="text" class="form-input" id="setting-sitename" placeholder="CapNews"></div>
@@ -1032,7 +1055,6 @@ footer strong{color:var(--ink);font-weight:500;}
           <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:1rem;padding:.6rem;background:rgba(139,26,26,.05);border-radius:3px;">⚠️ Pour changer le mot de passe, modifie la variable <strong>ADMIN_PASSWORD</strong> dans les Secrets du Cloudflare Worker.</p>
           <button class="btn-primary" onclick="saveSettings()">Sauvegarder →</button>
         </div>
-
       </div>
     </div>
   </div>
@@ -1040,7 +1062,7 @@ footer strong{color:var(--ink);font-weight:500;}
 
 </main>
 
-<!-- ══ MODAL ARCHIVES ══ -->
+<!-- MODAL ARCHIVES -->
 <div class="modal-bg hidden" id="journal-modal">
   <div class="modal-content">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -1068,19 +1090,9 @@ footer strong{color:var(--ink);font-weight:500;}
     </div>
     <div style="background:var(--parchment-mid);border:1px solid var(--border);border-radius:4px;padding:1.2rem;margin-top:1rem;">
       <h3 style="font-family:var(--font-display);font-size:1rem;font-weight:700;margin-bottom:.85rem;">💬 Laisser un avis</h3>
-      <div class="comment-form-row">
-        <input type="text" id="modal-comment-name" placeholder="Votre prénom *">
-        <input type="email" id="modal-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;">
-      </div>
+      <div class="comment-form-row"><input type="text" id="modal-comment-name" placeholder="Votre prénom *"><input type="email" id="modal-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div>
       <p class="email-hint">L'email reste privé et n'est jamais affiché.</p>
-      <div class="star-picker" id="modal-star-picker">
-        <label>Note :</label>
-        <span class="star-pick" data-v="1" onclick="setModalCommentRating(1)">★</span>
-        <span class="star-pick" data-v="2" onclick="setModalCommentRating(2)">★</span>
-        <span class="star-pick" data-v="3" onclick="setModalCommentRating(3)">★</span>
-        <span class="star-pick" data-v="4" onclick="setModalCommentRating(4)">★</span>
-        <span class="star-pick" data-v="5" onclick="setModalCommentRating(5)">★</span>
-      </div>
+      <div class="star-picker" id="modal-star-picker"><label>Note :</label><span class="star-pick" data-v="1" onclick="setModalCommentRating(1)">★</span><span class="star-pick" data-v="2" onclick="setModalCommentRating(2)">★</span><span class="star-pick" data-v="3" onclick="setModalCommentRating(3)">★</span><span class="star-pick" data-v="4" onclick="setModalCommentRating(4)">★</span><span class="star-pick" data-v="5" onclick="setModalCommentRating(5)">★</span></div>
       <textarea id="modal-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;background:var(--bg-card);color:var(--ink);"></textarea>
       <br><br>
       <button class="comment-submit" onclick="submitModalComment()">Publier mon avis →</button>
@@ -1115,19 +1127,7 @@ footer strong{color:var(--ink);font-weight:500;}
 <script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 const WORKER_URL = 'https://capnews-backend.capkychannel.workers.dev';
-
-// ── EMAILJS CONFIG ────────────────────────────────────────────
-// 1. Crée un compte sur https://www.emailjs.com (gratuit, 200 emails/mois)
-// 2. Connecte ton service email (Gmail, Outlook…)
-// 3. Crée un template avec ces variables :
-//    {{to_email}}, {{to_name}}, {{journal_title}}, {{journal_excerpt}},
-//    {{journal_date}}, {{journal_url}}, {{site_name}}, {{unsubscribe_link}}
-// 4. Remplace les 3 valeurs ci-dessous :
-const EMAILJS_PUBLIC_KEY  = 'TON_PUBLIC_KEY';   // Account > API Keys
-const EMAILJS_SERVICE_ID  = 'TON_SERVICE_ID';   // Email Services > Service ID
-const EMAILJS_TEMPLATE_ID = 'TON_TEMPLATE_ID';  // Email Templates > Template ID
-const SUBS_STORAGE_KEY    = 'capnews_subscribers'; // localStorage key
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const SUBS_STORAGE_KEY = 'capnews_subscribers';
 
 // ─── ÉTAT ────────────────────────────────────────────────────
 let db = { journals:[], comments:[], settings:{}, reactions:{}, pageviews:{} };
@@ -1149,22 +1149,371 @@ let liveViewCount = 0;
 
 // ── Quotes ──
 const QUOTES = [
-  {text:"L'écriture est la peinture de la voix.", author:"Voltaire"},
-  {text:"Chaque jour est une nouvelle page à écrire.", author:"Anonyme"},
-  {text:"Les mots sont la plus puissante drogue utilisée par l'humanité.", author:"Rudyard Kipling"},
-  {text:"Un journal intime, c'est un ami qui ne trahit jamais.", author:"Alphonse Daudet"},
-  {text:"Écrire, c'est aussi une façon de parler sans être interrompu.", author:"Jules Renard"},
-  {text:"La lecture est à l'esprit ce que l'exercice est au corps.", author:"Joseph Addison"},
-  {text:"Les journaux sont le miroir du monde.", author:"Heinrich Heine"},
-  {text:"Toute l'histoire humaine témoigne que le bonheur des uns fait la misère des autres.", author:"Mary Shelley"},
-  {text:"Le présent est plein d'avenir.", author:"Henri Bergson"},
-  {text:"Ce n'est pas le temps qui manque, c'est nous qui manquons de temps.", author:"Victor Hugo"},
+  {text:"L'écriture est la peinture de la voix.",author:"Voltaire"},
+  {text:"Chaque jour est une nouvelle page à écrire.",author:"Anonyme"},
+  {text:"Les mots sont la plus puissante drogue utilisée par l'humanité.",author:"Rudyard Kipling"},
+  {text:"Un journal intime, c'est un ami qui ne trahit jamais.",author:"Alphonse Daudet"},
+  {text:"Écrire, c'est aussi une façon de parler sans être interrompu.",author:"Jules Renard"},
+  {text:"La lecture est à l'esprit ce que l'exercice est au corps.",author:"Joseph Addison"},
+  {text:"Les journaux sont le miroir du monde.",author:"Heinrich Heine"},
+  {text:"Le présent est plein d'avenir.",author:"Henri Bergson"},
+  {text:"Ce n'est pas le temps qui manque, c'est nous qui manquons de temps.",author:"Victor Hugo"},
+  {text:"L'imagination est plus importante que le savoir.",author:"Albert Einstein"},
+  {text:"Connais-toi toi-même.",author:"Socrate"},
+  {text:"La vie est courte, l'art est long.",author:"Hippocrate"},
+  {text:"Nul n'est prophète en son pays.",author:"Proverbe"},
+  {text:"Il n'y a pas de vent favorable pour celui qui ne sait pas où il va.",author:"Sénèque"},
+  {text:"La curiosité est la mère de toutes les sciences.",author:"Anonyme"},
 ];
 let currentQuoteIdx = Math.floor(Math.random()*QUOTES.length);
 
 Object.defineProperty(window,'isAdmin',{get(){return!!adminToken;},set(){}});
 
-// ─── INIT ─────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── TRIVIA ──────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const TRIVIA_QUESTIONS = [
+  {q:"Quelle est la capitale de l'Australie ?",opts:["Sydney","Melbourne","Canberra","Brisbane"],a:2,exp:"Canberra est la capitale depuis 1913, et non Sydney."},
+  {q:"Combien de cordes a une guitare classique ?",opts:["4","5","6","7"],a:2,exp:"6 cordes pour une guitare classique standard."},
+  {q:"En quelle année a été fondée Wikipedia ?",opts:["1998","2001","2004","2007"],a:1,exp:"Jimmy Wales a lancé Wikipedia le 15 janvier 2001."},
+  {q:"Quelle planète est surnommée la planète rouge ?",opts:["Vénus","Jupiter","Mars","Saturne"],a:2,exp:"Mars doit sa couleur à l'oxyde de fer en surface."},
+  {q:"Qui a peint La Joconde ?",opts:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],a:2,exp:"Léonard de Vinci l'a peinte entre 1503 et 1519."},
+  {q:"Combien d'os compte le corps humain adulte ?",opts:["178","206","234","198"],a:1,exp:"206 os chez l'adulte — les bébés en ont environ 270."},
+  {q:"Quel est le plus grand océan du monde ?",opts:["Atlantique","Indien","Arctique","Pacifique"],a:3,exp:"Le Pacifique couvre environ 165 millions de km²."},
+  {q:"En quelle langue a été écrit Don Quichotte ?",opts:["Portugais","Italien","Espagnol","Latin"],a:2,exp:"Cervantes l'a écrit en espagnol, publié en 1605."},
+  {q:"Combien de couleurs compte l'arc-en-ciel ?",opts:["5","6","7","8"],a:2,exp:"Rouge, orange, jaune, vert, bleu, indigo, violet — 7 couleurs."},
+  {q:"Quel animal est le symbole de la France ?",opts:["L'aigle","Le coq","Le lion","Le renard"],a:1,exp:"Le coq gaulois est symbole officieux depuis la Révolution."},
+  {q:"Combien de pays composent l'Union Européenne ?",opts:["24","25","27","30"],a:2,exp:"27 pays depuis le Brexit du Royaume-Uni en 2020."},
+  {q:"Qui a écrit Les Misérables ?",opts:["Balzac","Zola","Hugo","Flaubert"],a:2,exp:"Victor Hugo l'a publié en 1862."},
+  {q:"Quelle est la plus haute montagne du monde ?",opts:["K2","Kangchenjunga","Lhotse","Everest"],a:3,exp:"L'Everest culmine à 8 849 m au Népal."},
+  {q:"En quelle année a eu lieu la Révolution française ?",opts:["1776","1789","1799","1815"],a:1,exp:"La Révolution française a débuté en 1789 avec la prise de la Bastille."},
+  {q:"Quel est l'élément chimique de symbole Au ?",opts:["Argent","Aluminium","Or","Cuivre"],a:2,exp:"Au vient du latin Aurum qui signifie or."},
+  {q:"Quelle est la vitesse de la lumière (approximativement) ?",opts:["150 000 km/s","300 000 km/s","450 000 km/s","600 000 km/s"],a:1,exp:"La lumière voyage à environ 299 792 km/s dans le vide."},
+  {q:"Combien de continents y a-t-il sur Terre ?",opts:["5","6","7","8"],a:2,exp:"Europe, Asie, Afrique, Amérique du Nord, Amérique du Sud, Océanie, Antarctique."},
+  {q:"Qui a composé la Neuvième Symphonie ?",opts:["Mozart","Bach","Beethoven","Chopin"],a:2,exp:"Beethoven a composé sa 9ème symphonie, en étant sourd."},
+  {q:"Quelle planète est la plus grande du système solaire ?",opts:["Saturne","Uranus","Neptune","Jupiter"],a:3,exp:"Jupiter est si grande qu'on pourrait y mettre 1 300 Terres."},
+  {q:"Quel pays a inventé le papier ?",opts:["Égypte","Chine","Inde","Grèce"],a:1,exp:"Le papier a été inventé en Chine vers le IIe siècle av. J.-C."},
+  {q:"Combien y a-t-il de secondes dans une heure ?",opts:["360","600","3 600","36 000"],a:2,exp:"60 minutes × 60 secondes = 3 600 secondes."},
+  {q:"Qui a découvert la pénicilline ?",opts:["Louis Pasteur","Marie Curie","Alexander Fleming","Charles Darwin"],a:2,exp:"Alexander Fleming l'a découverte par accident en 1928."},
+  {q:"Dans quelle ville se trouve la Tour Eiffel ?",opts:["Lyon","Marseille","Paris","Bordeaux"],a:2,exp:"Construite par Gustave Eiffel pour l'Exposition universelle de 1889."},
+  {q:"Quel est le pays le plus grand du monde ?",opts:["Canada","Chine","États-Unis","Russie"],a:3,exp:"La Russie couvre 17 millions de km², soit 11% des terres émergées."},
+  {q:"Quelle langue a le plus grand nombre de locuteurs natifs ?",opts:["Anglais","Espagnol","Mandarin","Hindi"],a:2,exp:"Le mandarin est la langue maternelle d'environ 920 millions de personnes."},
+  {q:"Quel est le roman le plus vendu de tous les temps ?",opts:["Don Quichotte","Le Seigneur des Anneaux","Harry Potter","La Bible"],a:3,exp:"La Bible reste le livre le plus diffusé avec plus de 5 milliards d'exemplaires."},
+  {q:"Combien de dents a un adulte (avec les dents de sagesse) ?",opts:["28","30","32","34"],a:2,exp:"32 dents au total chez un adulte : 8 incisives, 4 canines, 8 prémolaires, 12 molaires."},
+  {q:"Quel sport se joue à Wimbledon ?",opts:["Golf","Cricket","Tennis","Polo"],a:2,exp:"Wimbledon est le plus ancien tournoi de tennis du monde, fondé en 1877."},
+  {q:"Quel est le symbole chimique de l'eau ?",opts:["HO","H2O","H3O","OH2"],a:1,exp:"H2O : deux atomes d'hydrogène pour un atome d'oxygène."},
+  {q:"Qui a peint La Nuit étoilée ?",opts:["Monet","Picasso","Van Gogh","Renoir"],a:2,exp:"Vincent van Gogh l'a peinte en juin 1889 à l'asile de Saint-Rémy."},
+  {q:"Quel est le fleuve le plus long du monde ?",opts:["Amazone","Nil","Mississippi","Yangtsé"],a:1,exp:"Le Nil mesure environ 6 650 km, légèrement devant l'Amazone selon les sources."},
+  {q:"En quelle année a eu lieu le premier pas sur la Lune ?",opts:["1965","1967","1969","1972"],a:2,exp:"Neil Armstrong a posé le pied sur la Lune le 21 juillet 1969."},
+  {q:"Quel est l'os le plus long du corps humain ?",opts:["Humérus","Tibia","Péroné","Fémur"],a:3,exp:"Le fémur (os de la cuisse) peut mesurer jusqu'à 50 cm chez un adulte."},
+  {q:"Combien de joueurs y a-t-il dans une équipe de football ?",opts:["9","10","11","12"],a:2,exp:"11 joueurs sur le terrain, dont un gardien de but."},
+  {q:"Quel pays a la plus longue côte maritime ?",opts:["Russie","Australie","Norvège","Canada"],a:3,exp:"Le Canada possède la plus longue côte au monde avec plus de 202 000 km."},
+  {q:"Qui est l'auteur de Sherlock Holmes ?",opts:["Agatha Christie","Edgar Poe","Arthur Conan Doyle","Jules Verne"],a:2,exp:"Arthur Conan Doyle a créé Sherlock Holmes en 1887."},
+  {q:"Quelle est la monnaie du Japon ?",opts:["Yuan","Won","Yen","Baht"],a:2,exp:"Le yen japonais (¥) est la monnaie nationale depuis 1871."},
+  {q:"Quel animal est le plus rapide sur Terre ?",opts:["Lion","Guépard","Aigle","Autruche"],a:1,exp:"Le guépard peut atteindre 110 km/h sur de courtes distances."},
+  {q:"Combien de faces a un cube ?",opts:["4","6","8","12"],a:1,exp:"Un cube a 6 faces, toutes identiques (carrées)."},
+  {q:"Quelle est la capitale de l'Espagne ?",opts:["Barcelone","Séville","Valence","Madrid"],a:3,exp:"Madrid est la capitale et la plus grande ville d'Espagne."},
+  {q:"Quel scientifique a proposé la théorie de la relativité ?",opts:["Newton","Planck","Einstein","Bohr"],a:2,exp:"Albert Einstein a publié la relativité restreinte en 1905, la générale en 1915."},
+  {q:"Quel est le plus petit pays du monde ?",opts:["Monaco","Liechtenstein","Saint-Marin","Vatican"],a:3,exp:"Le Vatican, avec seulement 0,44 km², est le plus petit État du monde."},
+  {q:"En quelle année a été construite la Tour Eiffel ?",opts:["1879","1887","1889","1895"],a:2,exp:"La Tour Eiffel a été inaugurée le 31 mars 1889 pour l'Exposition universelle."},
+  {q:"Quel pays a remporté le plus de Coupes du Monde de football ?",opts:["Allemagne","Argentine","Italie","Brésil"],a:3,exp:"Le Brésil a remporté 5 Coupes du Monde (1958, 1962, 1970, 1994, 2002)."},
+  {q:"Quelle est la formule de l'aire d'un cercle ?",opts:["2πr","πr²","πd","2πd"],a:1,exp:"L'aire d'un cercle est πr², où r est le rayon."},
+  {q:"Quel est le plus grand désert du monde ?",opts:["Sahara","Gobi","Patagonie","Antarctique"],a:3,exp:"L'Antarctique est un désert de glace de 14 millions de km², devant le Sahara."},
+  {q:"Combien d'heures dure une journée sur la Lune ?",opts:["24h","48h","354h","708h"],a:3,exp:"La Lune tourne sur elle-même en 27,3 jours, soit environ 708 heures."},
+  {q:"Qui a inventé le téléphone ?",opts:["Thomas Edison","Nikola Tesla","Alexander Graham Bell","Guglielmo Marconi"],a:2,exp:"Alexander Graham Bell a déposé le brevet du téléphone en 1876."},
+  {q:"Quelle planète est surnommée la planète bleue ?",opts:["Neptune","Uranus","La Terre","Vénus"],a:2,exp:"La Terre est appelée planète bleue en raison de ses océans vus de l'espace."},
+  {q:"Combien de pays sont membres de l'ONU ?",opts:["157","179","193","210"],a:2,exp:"L'ONU compte 193 États membres depuis l'adhésion du Soudan du Sud en 2011."},
+];
+
+let triviaShuffled = [], triviaIdx = 0, triviaScore = 0, triviaTotal = 0, triviaAnswered = false;
+
+function triviaInit(){
+  triviaShuffled = [...TRIVIA_QUESTIONS].sort(()=>Math.random()-.5);
+  triviaIdx = 0; triviaScore = 0; triviaTotal = 0;
+}
+triviaInit();
+
+function triviaUpdateScore(){
+  const el = document.getElementById('trivia-score-display');
+  if(el) el.textContent = 'Score : '+triviaScore+'/'+triviaTotal;
+}
+
+function triviaLoad(){
+  if(triviaIdx >= triviaShuffled.length){ triviaShuffled = [...TRIVIA_QUESTIONS].sort(()=>Math.random()-.5); triviaIdx = 0; }
+  const q = triviaShuffled[triviaIdx];
+  triviaAnswered = false;
+  const qEl = document.getElementById('trivia-question');
+  const fbEl = document.getElementById('trivia-feedback');
+  const nextBtn = document.getElementById('trivia-next-btn');
+  const optsEl = document.getElementById('trivia-options');
+  if(!qEl) return;
+  qEl.textContent = q.q;
+  if(fbEl) fbEl.textContent = '';
+  if(nextBtn) nextBtn.style.display = 'none';
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'trivia-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', ()=>triviaAnswer(i, q));
+    optsEl.appendChild(btn);
+  });
+  triviaUpdateScore();
+}
+
+function triviaAnswer(i, q){
+  if(triviaAnswered) return;
+  triviaAnswered = true; triviaTotal++;
+  const btns = document.querySelectorAll('.trivia-opt');
+  btns.forEach(b => b.setAttribute('disabled',''));
+  const fbEl = document.getElementById('trivia-feedback');
+  const nextBtn = document.getElementById('trivia-next-btn');
+  if(i === q.a){
+    triviaScore++;
+    btns[i].classList.add('correct');
+    if(fbEl) fbEl.textContent = '✓ Exact ! '+q.exp;
+  } else {
+    btns[i].classList.add('wrong');
+    btns[q.a].classList.add('correct');
+    if(fbEl) fbEl.textContent = '✗ Raté. '+q.exp;
+  }
+  triviaUpdateScore();
+  if(nextBtn) nextBtn.style.display = 'block';
+}
+
+function triviaNext(){
+  triviaIdx++;
+  triviaLoad();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── SNAKE ───────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+(function initSnake(){
+  const cvs = document.getElementById('snake-canvas');
+  if(!cvs) return;
+  const ctx = cvs.getContext('2d');
+  const COLS = 28, ROWS = 14, CS = 14;
+  cvs.width = COLS * CS; cvs.height = ROWS * CS;
+
+  let snake, dir, nextDir, food, running=false, started=false, interval=null, score=0, best=0;
+  let touchSX=0, touchSY=0;
+
+  function rndFood(){
+    let pos, tries=0;
+    do{
+      pos = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)};
+      tries++;
+      if(tries > 500) break;
+    } while(snake && snake.some(s=>s.x===pos.x && s.y===pos.y));
+    return pos;
+  }
+
+  function draw(){
+    ctx.fillStyle = '#1a1510';
+    ctx.fillRect(0,0,cvs.width,cvs.height);
+    if(!food) return;
+    // Pomme
+    ctx.fillStyle = '#c0392b';
+    ctx.beginPath();
+    ctx.arc(food.x*CS + CS/2, food.y*CS + CS/2, CS/2 - 1, 0, Math.PI*2);
+    ctx.fill();
+    // Serpent
+    snake.forEach((s,i)=>{
+      ctx.fillStyle = i===0 ? '#e8c060' : '#b8860b';
+      ctx.fillRect(s.x*CS+1, s.y*CS+1, CS-2, CS-2);
+    });
+  }
+
+  function init(){
+    snake = [{x:7,y:7},{x:6,y:7},{x:5,y:7}];
+    dir = {x:1,y:0}; nextDir = {x:1,y:0};
+    score = 0;
+    food = rndFood();
+    const sc = document.getElementById('snake-score');
+    if(sc) sc.textContent = 0;
+    draw();
+  }
+
+  function tick(){
+    dir = {x: nextDir.x, y: nextDir.y};
+    const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+    if(head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS || snake.some(s=>s.x===head.x && s.y===head.y)){
+      clearInterval(interval); interval=null; running=false;
+      if(score > best){ best=score; const b=document.getElementById('snake-best'); if(b) b.textContent=best; }
+      const msg = document.getElementById('snake-msg');
+      if(msg) msg.textContent = 'Game over — score : '+score+' · Cliquer pour rejouer';
+      draw(); return;
+    }
+    snake.unshift(head);
+    if(head.x===food.x && head.y===food.y){
+      score++;
+      const sc=document.getElementById('snake-score'); if(sc) sc.textContent=score;
+      food = rndFood();
+    } else { snake.pop(); }
+    draw();
+  }
+
+  function startGame(){
+    if(running) return;
+    running=true; started=true;
+    init();
+    const msg=document.getElementById('snake-msg'); if(msg) msg.textContent='';
+    interval = setInterval(tick, 110);
+  }
+
+  cvs.addEventListener('click', startGame);
+
+  document.addEventListener('keydown', e=>{
+    const map = {
+      'ArrowUp':{x:0,y:-1},'ArrowDown':{x:0,y:1},
+      'ArrowLeft':{x:-1,y:0},'ArrowRight':{x:1,y:0},
+      'z':{x:0,y:-1},'Z':{x:0,y:-1},
+      'q':{x:-1,y:0},'Q':{x:-1,y:0},
+      's':{x:0,y:1},'S':{x:0,y:1},
+      'd':{x:1,y:0},'D':{x:1,y:0}
+    };
+    const n = map[e.key];
+    if(!n) return;
+    if(nextDir.x === -n.x && nextDir.y === -n.y) return;
+    e.preventDefault();
+    nextDir = {x:n.x, y:n.y};
+    if(!running) startGame();
+  });
+
+  cvs.addEventListener('touchstart', e=>{ touchSX=e.touches[0].clientX; touchSY=e.touches[0].clientY; },{passive:true});
+  cvs.addEventListener('touchend', e=>{
+    const dx=e.changedTouches[0].clientX-touchSX, dy=e.changedTouches[0].clientY-touchSY;
+    if(Math.abs(dx)<10 && Math.abs(dy)<10){ startGame(); return; }
+    let n;
+    if(Math.abs(dx)>Math.abs(dy)) n = dx>0?{x:1,y:0}:{x:-1,y:0};
+    else n = dy>0?{x:0,y:1}:{x:0,y:-1};
+    if(nextDir.x===-n.x && nextDir.y===-n.y) return;
+    nextDir=n;
+    if(!running) startGame();
+  },{passive:true});
+
+  init();
+})();
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── MÉTÉO ───────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function loadWeather(){
+  try{
+    const r = await fetch('https://api.open-meteo.com/v1/forecast?latitude=43.2965&longitude=5.3698&current=temperature_2m,apparent_temperature,weathercode,windspeed_10m,relativehumidity_2m,surface_pressure&daily=weathercode,temperature_2m_max,temperature_2m_min&timezone=Europe/Paris&forecast_days=5');
+    const d = await r.json(); const c = d.current;
+    const icons={0:'☀️',1:'🌤',2:'⛅',3:'☁️',45:'🌫',48:'🌫',51:'🌦',53:'🌦',55:'🌧',61:'🌧',63:'🌧',65:'🌧',71:'🌨',73:'🌨',80:'🌦',81:'🌦',82:'🌩',95:'⛈',96:'⛈'};
+    const descs={0:'Ciel dégagé',1:'Peu nuageux',2:'Partiellement nuageux',3:'Couvert',45:'Brouillard',48:'Brouillard givrant',51:'Bruine légère',53:'Bruine modérée',55:'Bruine dense',61:'Pluie faible',63:'Pluie modérée',65:'Pluie forte',71:'Neige légère',73:'Neige modérée',80:'Averses légères',81:'Averses',82:'Averses fortes',95:'Orages',96:'Orages avec grêle'};
+    const wc=c.weathercode;
+    const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+    setEl('wx-icon', icons[wc]||'🌡');
+    setEl('wx-temp', Math.round(c.temperature_2m)+'°C');
+    setEl('wx-desc', descs[wc]||'Variable');
+    setEl('wx-feel', Math.round(c.apparent_temperature)+'°');
+    setEl('wx-hum',  Math.round(c.relativehumidity_2m)+'%');
+    setEl('wx-wind', Math.round(c.windspeed_10m)+' km/h');
+    setEl('wx-pres', Math.round(c.surface_pressure)+' hPa');
+    const days=['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+    const fc=document.getElementById('wx-forecast');
+    if(fc){fc.innerHTML='';for(let i=1;i<=4;i++){const dt=new Date(d.daily.time[i]+'T12:00:00');const dwc=d.daily.weathercode[i];fc.innerHTML+=`<div class="wx-day"><div class="wx-day-name">${days[dt.getDay()]}</div><span class="wx-day-icon">${icons[dwc]||'🌡'}</span><div class="wx-day-t">${Math.round(d.daily.temperature_2m_min[i])}/${Math.round(d.daily.temperature_2m_max[i])}°</div></div>`;}}
+  }catch(e){
+    const el=document.getElementById('wx-desc'); if(el) el.textContent='Météo indisponible';
+    const ic=document.getElementById('wx-icon'); if(ic) ic.textContent='🌡';
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── ABONNEMENTS (localStorage — envoi via CF Worker) ──────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function getSubscribers(){ try{ return JSON.parse(localStorage.getItem(SUBS_STORAGE_KEY)||'[]'); }catch{ return []; } }
+function saveSubscribers(s){ localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(s)); }
+
+function addSubscriberLocal(email, name){
+  const subs = getSubscribers();
+  if(subs.find(s=>s.email.toLowerCase()===email.toLowerCase())) return false;
+  subs.push({email, name: name||'Abonné de la CapNews', date: new Date().toISOString()});
+  saveSubscribers(subs);
+  return true;
+}
+function removeSubscriberLocal(email){
+  const subs = getSubscribers().filter(s=>s.email.toLowerCase()!==email.toLowerCase());
+  saveSubscribers(subs);
+}
+
+// Envoie l'abonnement au Worker (qui gère EmailJS server-side)
+async function subscribeViaWorker(email, name){
+  try{
+    await api('/api/subscribe', {email, name});
+  } catch(e){ console.warn('Subscribe worker error:', e.message); }
+}
+async function unsubscribeViaWorker(email){
+  try{ await api('/api/unsubscribe', {email}); }catch(e){ console.warn('Unsub worker error:', e.message); }
+}
+
+function renderLeaderboard(listId){
+  const el = document.getElementById(listId);
+  if(!el) return;
+  const subs = getSubscribers().slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+  if(!subs.length){ el.innerHTML='<p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);">Sois le premier abonné !</p>'; return; }
+  el.innerHTML = subs.map(s=>{
+    const initials=(s.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?';
+    return `<div class="lb-row"><div class="lb-avatar">${escHtml(initials)}</div><div class="lb-name">${escHtml(s.name)}</div><div class="lb-date">${timeSince(s.date)}</div></div>`;
+  }).join('');
+}
+
+async function doSubscribe(emailId, nameId, btnId, statusId, unsubZoneId){
+  const email = (document.getElementById(emailId)?.value||'').trim();
+  const rawName = (document.getElementById(nameId)?.value||'').trim();
+  const name = rawName || 'Abonné de la CapNews';
+  const statusEl = document.getElementById(statusId);
+  const btn = document.getElementById(btnId);
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){ if(statusEl){statusEl.textContent='❌ Email invalide.';statusEl.style.color='#ff8888';} return; }
+  const added = addSubscriberLocal(email, name);
+  if(!added){ if(statusEl){statusEl.textContent='✓ Déjà abonné !';statusEl.style.color='rgba(247,243,235,.5)';} return; }
+  if(btn){ btn.disabled=true; btn.textContent='⏳...'; }
+  await subscribeViaWorker(email, name);
+  if(document.getElementById(emailId)) document.getElementById(emailId).value='';
+  if(document.getElementById(nameId)) document.getElementById(nameId).value='';
+  if(statusEl){ statusEl.textContent='🎉 Bienvenue '+name+' !'; statusEl.style.color='#a8e6a3'; }
+  if(btn){ btn.disabled=false; btn.textContent="S'abonner →"; }
+  renderLeaderboard('lb-list-locked');
+  renderAdminSubscribers();
+  showToast('Abonnement confirmé !','success');
+}
+
+async function doUnsub(emailId, zoneId, statusId){
+  const email = (document.getElementById(emailId)?.value||'').trim();
+  if(!email) return;
+  removeSubscriberLocal(email);
+  await unsubscribeViaWorker(email);
+  const z=document.getElementById(zoneId); if(z) z.classList.remove('open');
+  const s=document.getElementById(statusId); if(s){s.textContent='✓ Désabonnement effectué.';s.style.color='rgba(247,243,235,.5)';}
+  if(document.getElementById(emailId)) document.getElementById(emailId).value='';
+  renderLeaderboard('lb-list-locked');
+  renderAdminSubscribers();
+  showToast('Désabonné.','info');
+}
+
+function handleSubscribeLocked(){ doSubscribe('sub-email-locked','sub-name-locked','sub-btn-locked','sub-status-locked','unsub-zone-locked'); }
+function handleUnsubLocked(){ doUnsub('unsub-email-locked','unsub-zone-locked','sub-status-locked'); }
+function handleSubscribe(){ doSubscribe('sub-email','sub-name','sub-btn','sub-status','unsub-zone-home'); }
+function handleUnsubHome(){ doUnsub('unsub-email-home','unsub-zone-home','sub-status'); }
+
+// Désabonnement via lien email (?unsub=email)
+function checkUnsubLink(){
+  const params=new URLSearchParams(location.search);
+  const unsub=params.get('unsub');
+  if(!unsub) return;
+  removeSubscriberLocal(decodeURIComponent(unsub));
+  unsubscribeViaWorker(decodeURIComponent(unsub));
+  showToast('Désabonnement effectué.','info');
+  history.replaceState({},''  ,location.pathname);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// ── INIT ────────────────────────────────────────────────────────
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 window.onload = async () => {
   loadTheme();
   updateDateDisplay();
@@ -1173,7 +1522,6 @@ window.onload = async () => {
   checkFestive();
   setupReadingProgress();
   showQuote();
-  initEmailJS();
   await loadData();
   applyBranding();
   renderHome();
@@ -1181,311 +1529,43 @@ window.onload = async () => {
   checkDraft();
   startLiveSimulation();
   checkUnsubLink();
-  // Ouvre journal depuis URL ?j=
-  const p = new URLSearchParams(location.search).get('j');
-  if(p) setTimeout(()=>openModal(p), 800);
+  loadWeather();
+  const p=new URLSearchParams(location.search).get('j');
+  if(p) setTimeout(()=>openModal(p),800);
 };
 
 // ─── THEME ─────────────────────────────────────────────────────
 function loadTheme(){const t=localStorage.getItem('capnews_theme')||'light';document.documentElement.setAttribute('data-theme',t);document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre';}
 function toggleTheme(){const cur=document.documentElement.getAttribute('data-theme');const next=cur==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',next);localStorage.setItem('capnews_theme',next);document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Clair':'🌙 Sombre';}
 
-// ─── READING PROGRESS ─────────────────────────────────────────
-function setupReadingProgress(){
-  const reader=document.getElementById('book-reader');
-  if(!reader)return;
-  reader.addEventListener('scroll',updateReadingProgress);
-  document.getElementById('book-reader').addEventListener('scroll',updateReadingProgress);
-}
-function updateReadingProgress(){
-  const page = document.querySelector('.book-page.active');
-  if(!page)return;
-  const {scrollTop,scrollHeight,clientHeight}=page;
-  const pct = scrollHeight<=clientHeight ? 100 : (scrollTop/(scrollHeight-clientHeight))*100;
-  document.getElementById('reading-progress').style.width=pct+'%';
-}
+function setupReadingProgress(){const reader=document.getElementById('book-reader');if(!reader)return;reader.addEventListener('scroll',updateReadingProgress);}
+function updateReadingProgress(){const page=document.querySelector('.book-page.active');if(!page)return;const{scrollTop,scrollHeight,clientHeight}=page;const pct=scrollHeight<=clientHeight?100:(scrollTop/(scrollHeight-clientHeight))*100;document.getElementById('reading-progress').style.width=pct+'%';}
 
-// ─── IMMERSIVE MODE ────────────────────────────────────────────
-function toggleImmersive(){
-  isImmersive=!isImmersive;
-  document.body.classList.toggle('immersive-mode',isImmersive);
-  document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍';
-  if(isImmersive){
-    const j=db.journals.find(x=>x.id===currentJournalId);
-    if(j)document.getElementById('imm-title').textContent=j.title;
-    showToast('Mode lecture immersif — appuyez sur F ou Esc pour quitter','info');
-  }
-}
+function toggleImmersive(){isImmersive=!isImmersive;document.body.classList.toggle('immersive-mode',isImmersive);document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍';if(isImmersive){const j=db.journals.find(x=>x.id===currentJournalId);if(j)document.getElementById('imm-title').textContent=j.title;showToast('Mode lecture immersif — F ou Esc pour quitter','info');}}
 function closeImmersive(){if(isImmersive)toggleImmersive();}
 
-// ─── CITATIONS ─────────────────────────────────────────────────
+const QUOTE_LIST=QUOTES;
 function showQuote(){
   const q=QUOTES[currentQuoteIdx];
-  const el=document.getElementById('quote-text');
-  const au=document.getElementById('quote-author');
+  const el=document.getElementById('quote-text');const au=document.getElementById('quote-author');
   if(!el)return;
   el.style.opacity='0';
-  setTimeout(()=>{el.textContent='« '+q.text+' »';au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200);
+  setTimeout(()=>{el.textContent='« '+q.text+' »';if(au)au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200);
 }
 function refreshQuote(){currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length;showQuote();}
 
-// ─── EMAILJS — ABONNEMENTS ────────────────────────────────────
-// Les abonnés sont stockés en localStorage côté admin.
-// En production, tu peux les stocker dans Cloudflare KV via le Worker.
-
-function initEmailJS(){
-  if(typeof emailjs === 'undefined') return;
-  emailjs.init(EMAILJS_PUBLIC_KEY);
+// ── LOCKED COUNTDOWN ──
+function updateLockedCountdown(){
+  const now=new Date(),pub=new Date();
+  pub.setHours(getPubHour(),0,0,0);
+  if(now>=pub) pub.setDate(pub.getDate()+1);
+  const diff=pub-now;
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  const pad2=n=>String(Math.max(0,n)).padStart(2,'0');
+  const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=pad2(v);};
+  setEl('lcd-h',h); setEl('lcd-m',m); setEl('lcd-s',s);
 }
-
-// Lit la liste des abonnés depuis localStorage
-function getSubscribers(){
-  try { return JSON.parse(localStorage.getItem(SUBS_STORAGE_KEY)||'[]'); }
-  catch { return []; }
-}
-
-// Ajoute un abonné (evite les doublons)
-function addSubscriber(email, name){
-  const subs = getSubscribers();
-  const already = subs.find(s=>s.email.toLowerCase()===email.toLowerCase());
-  if(already) return false;
-  subs.push({email, name: name||'Lecteur', date: new Date().toISOString()});
-  localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(subs));
-  return true;
-}
-
-// Supprime un abonné
-function removeSubscriber(email){
-  const subs = getSubscribers().filter(s=>s.email.toLowerCase()!==email.toLowerCase());
-  localStorage.setItem(SUBS_STORAGE_KEY, JSON.stringify(subs));
-}
-
-// Formulaire d'abonnement (sidebar)
-async function handleSubscribe(){
-  const emailInput = document.getElementById('sub-email');
-  const nameInput  = document.getElementById('sub-name');
-  const btn        = document.getElementById('sub-btn');
-  const status     = document.getElementById('sub-status');
-
-  const email = (emailInput?.value||'').trim();
-  const name  = (nameInput?.value||'').trim() || 'Lecteur';
-
-  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
-    status.textContent = '❌ Adresse email invalide.';
-    status.style.color = 'var(--red-light)';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = '⏳ Inscription...';
-  status.textContent = '';
-
-  // 1. Enregistre localement
-  const added = addSubscriber(email, name);
-  if(!added){
-    status.textContent = '✓ Vous êtes déjà abonné·e !';
-    status.style.color = 'var(--gold-light)';
-    btn.disabled = false;
-    btn.textContent = "S'abonner →";
-    return;
-  }
-
-  // 2. Envoie un email de bienvenue via EmailJS
-  await sendWelcomeEmail(email, name);
-
-  // 3. Feedback
-  emailInput.value = '';
-  if(nameInput) nameInput.value = '';
-  status.textContent = '🎉 Abonnement confirmé ! Vous recevrez les prochains journaux.';
-  status.style.color = '#a8e6a3';
-  btn.textContent = "S'abonner →";
-  btn.disabled = false;
-
-  // Rafraîchit le compteur admin si ouvert
-  renderAdminSubscribers();
-}
-
-async function sendWelcomeEmail(email, name){
-  const cfg = getEJSConfig();
-  if(typeof emailjs === 'undefined' || cfg.pk === 'TON_PUBLIC_KEY') return;
-  emailjs.init(cfg.pk);
-  const siteName = db.settings.siteName || 'CapNews';
-  try{
-    await emailjs.send(cfg.sid, cfg.tid, {
-      to_email:         email,
-      to_name:          name,
-      journal_title:    'Bienvenue sur ' + siteName + ' !',
-      journal_excerpt:  'Merci de vous être abonné·e. Vous recevrez chaque nouveau journal directement dans votre boîte mail.',
-      journal_date:     new Date().toLocaleDateString('fr-FR', {weekday:'long', year:'numeric', month:'long', day:'numeric'}),
-      journal_url:      window.location.href.split('?')[0],
-      site_name:        siteName,
-      unsubscribe_link: window.location.href.split('?')[0] + '?unsub=' + encodeURIComponent(email),
-    });
-  } catch(e){ console.warn('EmailJS welcome error:', e); }
-}
-
-// Envoie une notification à TOUS les abonnés quand un journal est publié
-async function notifySubscribers(journal){
-  const cfg = getEJSConfig();
-  if(typeof emailjs === 'undefined' || cfg.pk === 'TON_PUBLIC_KEY'){
-    console.warn('EmailJS non configuré — notifications non envoyées. Configure-le dans Admin > Abonnés.');
-    return 0;
-  }
-  emailjs.init(cfg.pk);
-  const subs = getSubscribers();
-  if(!subs.length) return 0;
-
-  const siteName   = db.settings.siteName || 'CapNews';
-  const journalUrl = window.location.href.split('?')[0] + '?j=' + journal.id;
-  const excerpt    = stripRichTags(journal.excerpt || getPages(journal)[0] || '').slice(0, 200);
-
-  let sent = 0;
-  for(const sub of subs){
-    try{
-      await emailjs.send(cfg.sid, cfg.tid, {
-        to_email:         sub.email,
-        to_name:          sub.name || 'Lecteur',
-        journal_title:    journal.title,
-        journal_excerpt:  excerpt,
-        journal_date:     formatDateFr(journal.date),
-        journal_url:      journalUrl,
-        site_name:        siteName,
-        unsubscribe_link: window.location.href.split('?')[0] + '?unsub=' + encodeURIComponent(sub.email),
-      });
-      sent++;
-      // Petit délai anti rate-limit EmailJS (plan gratuit : ~2 req/s)
-      await new Promise(r => setTimeout(r, 600));
-    } catch(e){ console.warn('EmailJS send error for', sub.email, e); }
-  }
-  return sent;
-}
-
-// Gère le lien de désabonnement (?unsub=email)
-function checkUnsubLink(){
-  const params = new URLSearchParams(location.search);
-  const unsub  = params.get('unsub');
-  if(!unsub) return;
-  removeSubscriber(decodeURIComponent(unsub));
-  showToast('Désabonnement effectué. Vous ne recevrez plus de notifications.', 'info');
-  // Nettoie l'URL
-  history.replaceState({}, '', location.pathname);
-}
-
-// Panneau admin : liste des abonnés
-function renderAdminSubscribers(){
-  const el = document.getElementById('admin-subscribers-list');
-  if(!el) return;
-  const subs = getSubscribers();
-  const countEl = document.getElementById('admin-subs-count');
-  if(countEl) countEl.textContent = subs.length + ' abonné' + (subs.length>1?'s':'');
-  if(!subs.length){
-    el.innerHTML = '<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucun abonné pour l\'instant.</p>';
-    return;
-  }
-  el.innerHTML = subs.map(s=>`
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);">
-      <div>
-        <span style="font-weight:600;font-size:.9rem;">${escHtml(s.name)}</span>
-        <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-left:8px;">${escHtml(s.email)}</span>
-        <br><span style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">Inscrit le ${new Date(s.date).toLocaleDateString('fr-FR')}</span>
-      </div>
-      <button class="btn-danger" style="font-size:.72rem;padding:.3rem .6rem;" onclick="adminRemoveSub('${escHtml(s.email)}')">Retirer</button>
-    </div>
-  `).join('');
-}
-function adminRemoveSub(email){
-  if(!confirm('Retirer '+email+' des abonnés ?')) return;
-  removeSubscriber(email);
-  renderAdminSubscribers();
-  showToast('Abonné retiré.', 'info');
-}
-
-// ─── LIVE VIEWS SIMULATION ─────────────────────────────────────
-function startLiveSimulation(){
-  const badge=document.getElementById('live-badge');
-  const count=document.getElementById('live-count');
-  if(!badge||!count)return;
-  // Simule des vues en ligne (entre 1 et 12)
-  function update(){
-    liveViewCount=Math.max(1,Math.min(12,liveViewCount+(Math.random()>.5?1:-1)));
-    count.textContent=liveViewCount;
-    if(liveViewCount>0){badge.style.display='inline-flex';}
-  }
-  liveViewCount=Math.floor(Math.random()*8)+1;
-  count.textContent=liveViewCount;
-  badge.style.display='inline-flex';
-  setInterval(update,8000);
-}
-
-// ─── DRAFT AUTO-SAVE ───────────────────────────────────────────
-function saveDraft(){
-  clearTimeout(draftTimer);
-  draftTimer=setTimeout(()=>{
-    const title=(document.getElementById('new-title')?.value||'').trim();
-    if(!title)return;
-    const draft={title,excerpt:document.getElementById('new-excerpt')?.value||'',pages:getPagesFromEditor('new-pages-editor'),date:document.getElementById('new-date')?.value||''};
-    localStorage.setItem('capnews_draft',JSON.stringify(draft));
-    const ind=document.getElementById('draft-indicator');
-    ind.classList.add('show');
-    setTimeout(()=>ind.classList.remove('show'),2000);
-  },1500);
-}
-function checkDraft(){
-  const draft=localStorage.getItem('capnews_draft');
-  if(draft){
-    const btn=document.getElementById('load-draft-btn');
-    if(btn){const d=JSON.parse(draft);btn.textContent='📋 Charger brouillon : "'+d.title.slice(0,30)+'..."';btn.style.display='inline-flex';}
-  }
-}
-function loadDraft(){
-  const draft=localStorage.getItem('capnews_draft');
-  if(!draft)return;
-  const d=JSON.parse(draft);
-  if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title||'';
-  if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
-  if(d.date&&document.getElementById('new-date'))document.getElementById('new-date').value=d.date;
-  const editor=document.getElementById('new-pages-editor');
-  if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
-  showToast('Brouillon chargé !','success');
-}
-function clearDraft(){localStorage.removeItem('capnews_draft');const btn=document.getElementById('load-draft-btn');if(btn)btn.style.display='none';showToast('Brouillon effacé.','info');}
-
-// ─── KEYBOARD HELP ─────────────────────────────────────────────
-function showKbdHelp(){document.getElementById('kbd-help').classList.add('show');}
-function closeKbdHelp(){document.getElementById('kbd-help').classList.remove('show');}
-
-// ─── PERSISTENT AUDIO PLAYER ───────────────────────────────────
-function openPersistentPlayer(src,title){
-  const pp=document.getElementById('persistent-player');
-  const audio=document.getElementById('pp-audio');
-  const info=document.getElementById('pp-info');
-  if(!pp||!audio)return;
-  audio.src=src;info.textContent='🔊 '+title;
-  pp.classList.add('show');
-  audio.play().catch(()=>{});
-}
-function closePersistentPlayer(){
-  const pp=document.getElementById('persistent-player');
-  const audio=document.getElementById('pp-audio');
-  if(!pp||!audio)return;
-  audio.pause();pp.classList.remove('show');
-}
-
-// ─── FESTIVITÉS ───────────────────────────────────────────────
-const BIRTHDAY_MONTH=4,BIRTHDAY_DAY=10,BIRTHDAY_YEAR=2025;
-function checkFestive(){
-  const now=new Date();const m=now.getMonth()+1;const d=now.getDate();
-  const banner=document.getElementById('festive-banner');
-  let festive=null;
-  if(m===BIRTHDAY_MONTH&&d===BIRTHDAY_DAY){const age=now.getFullYear()-BIRTHDAY_YEAR;festive={cls:'birthday',msg:`🎂 CapNews fête son ${age} an${age>1?'s':''} d'existence ! Merci à toute la communauté ! 🎉`,particles:['🎂','🎊','🎈','✨','🥳','🎁']};}
-  else if(m===10){festive={cls:'halloween',msg:`🎃 Joyeux Halloween ! Les fantômes rôdent dans les archives... 👻`,particles:['🎃','👻','🕷️','🦇','🕸️']};}
-  else if(m===12&&(d===24||d===25)){festive={cls:'christmas',msg:`🎄 Joyeux Noël ! Que cette édition vous apporte joie et sérénité ! 🎅`,particles:['🎄','⛄','❄️','🎁','⭐','🔔']};}
-  else if(isEaster(now)){festive={cls:'easter',msg:`🐣 Joyeuses Pâques ! Que la douceur du printemps vous accompagne ! 🌷`,particles:['🐣','🥚','🐰','🌷','🌸']};}
-  else if(m===1&&d===1){festive={cls:'newyear',msg:`🥂 Bonne Année ! Que cette nouvelle année soit pleine de belles lectures ! 🎆`,particles:['🎆','🥂','✨','🎊','🌟']};}
-  if(festive){banner.className='';banner.classList.add(festive.cls);banner.innerHTML=`<span class="confetti-emoji">${festive.particles[0]}</span> ${festive.msg} <span class="confetti-emoji">${festive.particles[0]}</span>`;banner.style.display='block';launchParticles(festive.particles);}
-}
-function isEaster(date){const y=date.getFullYear(),a=y%19,b=Math.floor(y/100),c=y%100;const d2=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25);const g=Math.floor((b-f+1)/3),h=(19*a+b-d2-g+15)%30;const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7;const m2=Math.floor((a+11*h+22*l)/451);const month=Math.floor((h+l-7*m2+114)/31);const day=((h+l-7*m2+114)%31)+1;return date.getMonth()+1===month&&date.getDate()===day;}
-function launchParticles(emojis){let count=0;const interval=setInterval(()=>{if(count>=30){clearInterval(interval);return;}count++;const el=document.createElement('div');el.className='festive-particle';el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=Math.random()*100+'vw';el.style.animationDuration=(Math.random()*3+2)+'s';el.style.animationDelay=(Math.random()*2)+'s';el.style.fontSize=(Math.random()*1.5+0.8)+'rem';document.body.appendChild(el);setTimeout(()=>el.remove(),6000);},150);}
+setInterval(updateLockedCountdown, 1000);
 
 // ─── API ───────────────────────────────────────────────────────
 async function api(path,body,method='POST'){
@@ -1527,7 +1607,6 @@ function moodClass(m){return{positive:'mood-good',neutral:'mood-neutral',melanch
 function moodLabel(m){return{positive:'😊 Optimiste',neutral:'😐 Neutre',melancholic:'🌧️ Mélancolique',energetic:'⚡ Énergique',pensive:'🤔 Pensif',excited:'🎉 Enthousiaste',grateful:'🌿 Reconnaissant',nostalgic:'🌅 Nostalgique',curious:'🔍 Curieux',inspired:'💡 Inspiré'}[m]||m;}
 function stripRichTags(r){return(r||'').replace(/\[b\]([\s\S]*?)\[\/b\]/g,'$1').replace(/\[i\]([\s\S]*?)\[\/i\]/g,'$1').replace(/\[hl\]([\s\S]*?)\[\/hl\]/g,'$1').replace(/\[sp\]([\s\S]*?)\[\/sp\]/g,'$1').replace(/\[a [^\]]+\]([\s\S]*?)\[\/a\]/g,'$1').replace(/\[img [^\]]+\]/g,'').replace(/\[audio [^\]]+\]/g,'');}
 function calcReadTime(pages){const words=pages.map(p=>stripRichTags(p)).join(' ').split(/\s+/).filter(Boolean).length;const mins=Math.max(1,Math.round(words/200));return mins+' min de lecture';}
-// Badge commentateur
 function getCommentBadge(name){const count=(db.comments||[]).filter(c=>c.name===name&&!c.isReply).length;if(count>=20)return'🏆 Fidèle';if(count>=10)return'⭐ Habitué';if(count>=5)return'✍ Actif';return'';}
 
 let toastTimer=null;
@@ -1547,8 +1626,7 @@ function parseRichText(raw,searchQ){
   h=h.replace(/\[img ([^\]]+)\]/g,(_,url)=>`</p><div class="page-image-block"><img src="${url.trim()}" loading="lazy" onerror="this.parentElement.style.display='none'"></div><p>`);
   h=h.replace(/\[audio ([^\|]+)\|([^\]]+)\]/g,(_,url,t)=>`</p><div class="page-audio-block"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${url.trim()}','${escHtml(t)}')">🔊 ${escHtml(t)}</span><audio controls src="${url.trim()}"></audio></div><p>`);
   h=h.replace(/\[audio ([^\]]+)\]/g,(_,url)=>`</p><div class="page-audio-block"><span class="page-audio-label">🔊 Audio</span><audio controls src="${url.trim()}"></audio></div><p>`);
-  // Highlight search terms
-  if(searchQ&&searchQ.trim()){const esc=searchQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');h=h.replace(new RegExp('('+esc+')', 'gi'),'<mark class="search-hl">$1</mark>');}
+  if(searchQ&&searchQ.trim()){const esc=searchQ.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');h=h.replace(new RegExp('('+esc+')','gi'),'<mark class="search-hl">$1</mark>');}
   return h;
 }
 
@@ -1556,7 +1634,7 @@ function parseRichText(raw,searchQ){
 function buildRichEditor(text,idx,editorId){
   const wrapper=document.createElement('div');
   const toolbar=document.createElement('div');toolbar.className='richtext-toolbar';
-  toolbar.innerHTML=`<button class="richtext-toolbar-btn" title="Gras (Ctrl+B)" onclick="editorCmd(this,'bold')"><strong>B</strong></button><button class="richtext-toolbar-btn" title="Italique (Ctrl+I)" onclick="editorCmd(this,'italic')"><em>I</em></button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Mise en avant" onclick="editorCmd(this,'highlight')">✦</button><button class="richtext-toolbar-btn" title="Spoil" onclick="editorCmd(this,'spoil')">👁</button><button class="richtext-toolbar-btn" title="Lien" onclick="editorCmd(this,'link')">🔗</button><button class="richtext-toolbar-btn" title="Image" onclick="editorCmd(this,'image')">🖼</button><button class="richtext-toolbar-btn" title="Audio" onclick="editorCmd(this,'audio')">🔊</button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Corriger (IA)" onclick="editorCmd(this,'spellcheck')" style="color:var(--gold);">✨ Corriger</button>`;
+  toolbar.innerHTML=`<button class="richtext-toolbar-btn" title="Gras" onclick="editorCmd(this,'bold')"><strong>B</strong></button><button class="richtext-toolbar-btn" title="Italique" onclick="editorCmd(this,'italic')"><em>I</em></button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Mise en avant" onclick="editorCmd(this,'highlight')">✦</button><button class="richtext-toolbar-btn" title="Spoil" onclick="editorCmd(this,'spoil')">👁</button><button class="richtext-toolbar-btn" title="Lien" onclick="editorCmd(this,'link')">🔗</button><button class="richtext-toolbar-btn" title="Image" onclick="editorCmd(this,'image')">🖼</button><button class="richtext-toolbar-btn" title="Audio" onclick="editorCmd(this,'audio')">🔊</button><div style="width:1px;background:var(--border-strong);margin:2px 4px;"></div><button class="richtext-toolbar-btn" title="Corriger (IA)" onclick="editorCmd(this,'spellcheck')" style="color:var(--gold);">✨ Corriger</button>`;
   const ta=document.createElement('textarea');ta.className='richtext-area';ta.value=text||'';ta.setAttribute('data-page-idx',idx);
   const charCount=document.createElement('div');charCount.className='richtext-charcount';
   function updateCC(){charCount.textContent=ta.value.length+' caractères · '+calcReadTime([ta.value]);}
@@ -1585,7 +1663,6 @@ function applyRichCmd(cmd,ta){
 }
 async function aiSpellcheck(ta,text,start,end){showToast('Correction en cours...','info');try{const res=await api('/api/spellcheck',{text});if(!res.corrected){showToast('Correction échouée.','error');return;}if(start===0&&end===ta.value.length)ta.value=res.corrected;else ta.value=ta.value.substring(0,start)+res.corrected+ta.value.substring(end);ta.focus();showToast('✅ Texte corrigé !','success');}catch(e){showToast('Erreur : '+e.message,'error');}hideCtxMenu();}
 
-// ─── CONTEXT MENU ──────────────────────────────────────────────
 function setupContextMenu(){
   document.addEventListener('click',hideCtxMenu);
   document.addEventListener('contextmenu',e=>{const ta=e.target.closest('.richtext-area');if(!ta)return;e.preventDefault();activeRichTarget=ta;showCtxMenu(e.clientX,e.clientY);});
@@ -1594,103 +1671,57 @@ function showCtxMenu(x,y){const menu=document.getElementById('rich-ctx-menu');me
 function hideCtxMenu(){document.getElementById('rich-ctx-menu').classList.remove('visible');}
 function rtCmd(cmd){applyRichCmd(cmd,activeRichTarget);}
 
-// ─── BOOK RENDERER ──────────────────────────────────────────────
-// buildBookPages : construit TOUTES les pages sans jamais poser 'active'.
-// setBookPage s'occupe SEUL de l'activation. Cela évite les conflits de double-toggle.
-function buildBookPages(j, readerEl, onStartRead, searchQ) {
+// ─── BOOK RENDERER ─────────────────────────────────────────────
+function buildBookPages(j,readerEl,onStartRead,searchQ){
   const pages=getPages(j);const total=pages.length+1;
   readerEl.innerHTML='';
-  // Couverture — pas de classe 'active' ici
   const cover=document.createElement('div');cover.className='book-page cover-page';
   let chips='';if(j.category)chips+='<span class="chip cat">'+escHtml(j.category)+'</span>';if(j.mood)chips+='<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>';if(j.author)chips+='<span class="chip">✒ '+escHtml(j.author)+'</span>';
   let coverExtra='';if(j.coverImg)coverExtra+=`<div style="margin-bottom:1rem;border-radius:4px;overflow:hidden;max-height:180px;"><img src="${j.coverImg}" style="width:100%;max-height:180px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
-  if(j.audioUrl)coverExtra+=`<div class="page-audio-block" style="margin-bottom:1rem;"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${j.audioUrl}','${escHtml(j.title)}')">🔊 Écouter (mini player)</span><audio controls src="${j.audioUrl}"></audio></div>`;
+  if(j.audioUrl)coverExtra+=`<div class="page-audio-block" style="margin-bottom:1rem;"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${j.audioUrl}','${escHtml(j.title)}')">🔊 Écouter</span><audio controls src="${j.audioUrl}"></audio></div>`;
   const rt=j.readTime||calcReadTime(pages);
   cover.innerHTML='<div class="cover-edition">'+escHtml((db.settings.siteName||'CapNews').toUpperCase())+' · '+formatDateFr(j.date)+'</div>'+'<div class="cover-title">'+escHtml(j.title)+'</div>'+(j.excerpt?'<div class="cover-excerpt">'+parseRichText(j.excerpt)+'</div>':'')+coverExtra+'<div class="cover-meta">'+chips+'</div>'+'<div class="cover-readtime">⏱ '+escHtml(rt)+'</div>'+'<button class="cover-start-btn" id="cover-start-'+readerEl.id+'">Lire le journal →</button>'+'<span class="cover-page-num">Couverture</span>';
   readerEl.appendChild(cover);
-  // Pages de contenu — pas de classe 'active' non plus
   pages.forEach((p,i)=>{const pg=document.createElement('div');pg.className='book-page';pg.innerHTML='<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p,searchQ)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';readerEl.appendChild(pg);});
-  // Bouton couverture → page 1
   const startBtn=readerEl.querySelector('#cover-start-'+readerEl.id);if(startBtn)startBtn.onclick=()=>onStartRead(1);
   return total;
 }
-
-function setBookPage(readerEl, pageIdx, total, dotsEl, counterEl, btnPrev, btnNext, onPageChange) {
+function setBookPage(readerEl,pageIdx,total,dotsEl,counterEl,btnPrev,btnNext,onPageChange){
   const pages=readerEl.querySelectorAll('.book-page');
   pages.forEach((p,i)=>{p.classList.toggle('active',i===pageIdx);});
-  // Scroll to top de la page active
-  const activePg=readerEl.querySelector('.book-page.active');
-  if(activePg)activePg.scrollTop=0;
+  const activePg=readerEl.querySelector('.book-page.active');if(activePg)activePg.scrollTop=0;
   if(btnPrev)btnPrev.disabled=pageIdx===0;if(btnNext)btnNext.disabled=pageIdx===total-1;
   if(counterEl)counterEl.textContent=(pageIdx+1)+' / '+total;
   if(dotsEl){dotsEl.innerHTML='';for(let i=0;i<total;i++){const dot=document.createElement('span');dot.className='progress-dot'+(i===pageIdx?' active':'');dot.onclick=()=>onPageChange(i);dotsEl.appendChild(dot);}}
   updateReadingProgress();
 }
 
-// ─── HOME BOOK ──────────────────────────────────────────────────
-// On NE reconstruit le DOM complet QUE lors du premier rendu ou d'un vrai changement de journal.
-// Pour changer de page, on appelle uniquement goToBookPage() qui manipule les classes CSS.
+// ─── HOME BOOK ─────────────────────────────────────────────────
 function renderBook(j){
-  const pages=getPages(j);
-  homeBookTotal=pages.length+2; // couverture + pages contenu + page commentaires
+  const pages=getPages(j);homeBookTotal=pages.length+2;
   const reader=document.getElementById('book-reader');
   const searchQ=(document.getElementById('search-input')?.value||'');
-
-  // Construit tout le DOM (sans aucun 'active')
   buildBookPages(j,reader,(p)=>{bookPage=p;goToBookPage(j);},searchQ);
-
-  // Page commentaires
   const cp=document.createElement('div');cp.className='book-page comments-book-page';
   const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
   cp.innerHTML='<h2>💬 Avis des lecteurs</h2><div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;">Laisser un avis</h3><div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div><p class="email-hint">L\'email reste privé.</p><div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div><textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);transition:border-color .2s;"></textarea><button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div><div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div><div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div><span class="cover-page-num">Commentaires</span>';
   reader.appendChild(cp);
-
-  // Swipe mobile
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
-
-  // Activation de la bonne page maintenant que le DOM est complet
   goToBookPage(j);
 }
-
-// goToBookPage : active la page bookPage dans le DOM déjà construit.
-// Ne reconstruit JAMAIS le DOM. Ultra-fiable.
 function goToBookPage(j){
   bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));
   const reader=document.getElementById('book-reader');
-  setBookPage(
-    reader, bookPage, homeBookTotal,
-    document.getElementById('progress-dots'),
-    document.getElementById('page-counter'),
-    document.getElementById('btn-prev'),
-    document.getElementById('btn-next'),
-    (i)=>{bookPage=i;goToBookPage(j);}
-  );
-  // Charge les commentaires si on est sur la dernière page
-  if(bookPage===homeBookTotal-1){
-    const listEl=document.getElementById('book-comment-list');
-    if(listEl&&!listEl.dataset.loaded){listEl.dataset.loaded='1';renderComments(j.id,'book-comment-list',0);}
-  }
+  setBookPage(reader,bookPage,homeBookTotal,document.getElementById('progress-dots'),document.getElementById('page-counter'),document.getElementById('btn-prev'),document.getElementById('btn-next'),(i)=>{bookPage=i;goToBookPage(j);});
+  if(bookPage===homeBookTotal-1){const listEl=document.getElementById('book-comment-list');if(listEl&&!listEl.dataset.loaded){listEl.dataset.loaded='1';renderComments(j.id,'book-comment-list',0);}}
 }
-
-function bookNext(){
-  const j=db.journals.find(x=>x.id===currentJournalId);
-  if(j&&bookPage<homeBookTotal-1){bookPage++;goToBookPage(j);}
-}
-function bookPrev(){
-  const j=db.journals.find(x=>x.id===currentJournalId);
-  if(j&&bookPage>0){bookPage--;goToBookPage(j);}
-}
+function bookNext(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage<homeBookTotal-1){bookPage++;goToBookPage(j);}}
+function bookPrev(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage>0){bookPage--;goToBookPage(j);}}
 function setBookCommentRating(v){bookCommentRating=v;document.querySelectorAll('#book-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
-
 async function submitBookComment(){
-  const name=(document.getElementById('book-comment-name')?.value||'').trim();
-  const email=(document.getElementById('book-comment-email')?.value||'').trim();
-  const text=(document.getElementById('book-comment-text')?.value||'').trim();
-  if(!name){showToast('Veuillez entrer votre prénom.','error');return;}
-  if(!text){showToast('Veuillez écrire un avis.','error');return;}
-  if(!isValidEmail(email)){showToast('Email invalide.','error');return;}
-  if(!currentJournalId)return;
+  const name=(document.getElementById('book-comment-name')?.value||'').trim();const email=(document.getElementById('book-comment-email')?.value||'').trim();const text=(document.getElementById('book-comment-text')?.value||'').trim();
+  if(!name){showToast('Veuillez entrer votre prénom.','error');return;}if(!text){showToast('Veuillez écrire un avis.','error');return;}if(!isValidEmail(email)){showToast('Email invalide.','error');return;}if(!currentJournalId)return;
   try{const res=await api('/api/comment',{journalId:currentJournalId,name,text,rating:bookCommentRating});db.comments.push(res.comment);if(bookCommentRating){if(!db.reactions[currentJournalId])db.reactions[currentJournalId]={positive:0,neutral:0,negative:0,stars:[],total:0};if(!db.reactions[currentJournalId].stars)db.reactions[currentJournalId].stars=[];db.reactions[currentJournalId].stars.push(bookCommentRating);}
   document.getElementById('book-comment-name').value='';document.getElementById('book-comment-email').value='';document.getElementById('book-comment-text').value='';setBookCommentRating(0);renderComments(currentJournalId,'book-comment-list',0);renderReactions(currentJournalId);showToast('Votre avis a été publié !','success');}
   catch(e){showToast('Erreur : '+e.message,'error');}
@@ -1700,7 +1731,6 @@ async function submitBookComment(){
 function renderModalBook(j){
   const pages=getPages(j);modalBookTotal=pages.length+1;
   const reader=document.getElementById('modal-book-reader');
-  // Build DOM once
   buildBookPages(j,reader,(p)=>{modalPage=p;goToModalPage(j);});
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?modalBookNext():modalBookPrev();}};
@@ -1708,52 +1738,22 @@ function renderModalBook(j){
 }
 function goToModalPage(j){
   modalPage=Math.max(0,Math.min(modalPage,modalBookTotal-1));
-  setBookPage(document.getElementById('modal-book-reader'),modalPage,modalBookTotal,
-    document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),
-    document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),
-    (i)=>{modalPage=i;goToModalPage(j);});
+  setBookPage(document.getElementById('modal-book-reader'),modalPage,modalBookTotal,document.getElementById('modal-progress-dots'),document.getElementById('modal-page-counter'),document.getElementById('modal-btn-prev'),document.getElementById('modal-btn-next'),(i)=>{modalPage=i;goToModalPage(j);});
 }
 function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage<modalBookTotal-1){modalPage++;goToModalPage(j);}}
 function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;goToModalPage(j);}}
 
 // ─── PREVIEW ───────────────────────────────────────────────────
-function buildPreview(){
-  switchEditTab('preview');
-  const j=buildJournalFromEditForm();
-  const reader=document.getElementById('edit-preview-reader');
-  previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;goToPreviewPage();});
-  goToPreviewPage();
-}
-function goToPreviewPage(){
-  previewPage=Math.max(0,Math.min(previewPage,previewBookTotal-1));
-  setBookPage(document.getElementById('edit-preview-reader'),previewPage,previewBookTotal,
-    document.getElementById('preview-dots'),document.getElementById('preview-counter'),
-    document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),
-    (i)=>{previewPage=i;goToPreviewPage();});
-}
+function buildPreview(){switchEditTab('preview');const j=buildJournalFromEditForm();const reader=document.getElementById('edit-preview-reader');previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;goToPreviewPage();});goToPreviewPage();}
+function goToPreviewPage(){previewPage=Math.max(0,Math.min(previewPage,previewBookTotal-1));setBookPage(document.getElementById('edit-preview-reader'),previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;goToPreviewPage();});}
 function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;goToPreviewPage();}}
 function previewPrev(){if(previewPage>0){previewPage--;goToPreviewPage();}}
-
-function buildNewPreview(){
-  switchNewTab('preview');
-  const j=buildJournalFromNewForm();
-  const reader=document.getElementById('new-preview-reader');
-  newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;goToNewPreviewPage();});
-  goToNewPreviewPage();
-}
-function goToNewPreviewPage(){
-  newPreviewPage=Math.max(0,Math.min(newPreviewPage,newPreviewBookTotal-1));
-  setBookPage(document.getElementById('new-preview-reader'),newPreviewPage,newPreviewBookTotal,
-    document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),
-    document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),
-    (i)=>{newPreviewPage=i;goToNewPreviewPage();});
-}
+function buildNewPreview(){switchNewTab('preview');const j=buildJournalFromNewForm();const reader=document.getElementById('new-preview-reader');newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;goToNewPreviewPage();});goToNewPreviewPage();}
+function goToNewPreviewPage(){newPreviewPage=Math.max(0,Math.min(newPreviewPage,newPreviewBookTotal-1));setBookPage(document.getElementById('new-preview-reader'),newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;goToNewPreviewPage();});}
 function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;goToNewPreviewPage();}}
 function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;goToNewPreviewPage();}}
-
 function buildJournalFromEditForm(){const pages=getPagesFromEditor('edit-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('edit-title')?.value||'Sans titre',excerpt:document.getElementById('edit-excerpt')?.value||'',pages,category:document.getElementById('edit-category')?.value||'',mood:document.getElementById('edit-mood')?.value||'neutral',author:document.getElementById('edit-author')?.value||'',readTime:document.getElementById('edit-readtime')?.value||autoRt,date:document.getElementById('edit-date')?.value||getTodayStr(),coverImg:document.getElementById('edit-cover-img')?.value||'',audioUrl:document.getElementById('edit-audio-url')?.value||''};}
 function buildJournalFromNewForm(){const pages=getPagesFromEditor('new-pages-editor');const autoRt=calcReadTime(pages);return{title:document.getElementById('new-title')?.value||'Sans titre',excerpt:document.getElementById('new-excerpt')?.value||'',pages,category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'neutral',author:document.getElementById('new-author')?.value||'',readTime:document.getElementById('new-readtime')?.value||autoRt,date:document.getElementById('new-date')?.value||getTodayStr(),coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};}
-
 function previewCoverImg(){const url=document.getElementById('edit-cover-img').value.trim();const d=document.getElementById('cover-img-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">';}
 function previewAudio(){const url=document.getElementById('edit-audio-url').value.trim();const d=document.getElementById('audio-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>';}
 function previewNewCoverImg(){const url=document.getElementById('new-cover-img').value.trim();const d=document.getElementById('new-cover-img-preview');if(!url){d.style.display='none';return;}d.style.display='block';d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">';}
@@ -1763,8 +1763,17 @@ function previewNewAudio(){const url=document.getElementById('new-audio-url').va
 function renderHome(){
   document.getElementById('home-loading').style.display='none';
   const j=getTodayJournal();const fab=document.getElementById('edit-fab');
-  if(!j||!isPublished(j)){document.getElementById('home-locked').style.display='block';document.getElementById('home-content').style.display='none';if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');return;}
-  document.getElementById('home-locked').style.display='none';document.getElementById('home-content').style.display='block';
+  const lockedEl=document.getElementById('home-locked');
+  const contentEl=document.getElementById('home-content');
+  if(!j||!isPublished(j)){
+    lockedEl.style.display='block';contentEl.style.display='none';
+    if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');
+    updateLockedCountdown();
+    triviaLoad();
+    renderLeaderboard('lb-list-locked');
+    return;
+  }
+  lockedEl.style.display='none';contentEl.style.display='block';
   currentJournalId=j.id;bookPage=0;homeBookTotal=getPages(j).length+2;
   if(isAdmin)fab.classList.remove('hidden');else fab.classList.add('hidden');
   renderBook(j);renderReactions(j.id);renderRecentList();renderTagsCloud();
@@ -1776,7 +1785,6 @@ function shareJournal(){const url=window.location.href.split('?')[0];if(navigato
 function shareModalJournal(){if(!modalJournalId)return;const j=db.journals.find(x=>x.id===modalJournalId);const url=window.location.href.split('?')[0]+'?j='+modalJournalId;const txt=j?('"'+j.title+'" — '+url):url;if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');}}
 
 // ─── CALENDAR ──────────────────────────────────────────────────
-// Publiés = visibles pour tous | Programmés = visibles admins seulement
 function renderCalendar(containerId,year,month){
   const container=document.getElementById(containerId);if(!container)return;
   const days=['Lu','Ma','Me','Je','Ve','Sa','Di'];
@@ -1789,11 +1797,9 @@ function renderCalendar(containerId,year,month){
   let col=0;for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
   for(let d=1;d<=lastDay.getDate();d++){
     const dateStr=`${year}-${pad(month+1)}-${pad(d)}`;const j=journalsByDate[dateStr];
-    const pub=j&&isPublished(j);
-    const sched=j&&!pub;
+    const pub=j&&isPublished(j);const sched=j&&!pub;
     let cls='cal-day';if(dateStr===today)cls+=' today';
-    if(pub)cls+=' published';
-    else if(sched&&isAdmin)cls+=' scheduled';
+    if(pub)cls+=' published';else if(sched&&isAdmin)cls+=' scheduled';
     const canClick=pub||(sched&&isAdmin);
     const onclick=canClick?`onclick="openModal('${j.id}')"`:'';
     const titleAttr=canClick?`title="${escHtml(j.title)+(sched?' (programmé)':'')}"`:'' ;
@@ -1819,14 +1825,12 @@ function setStarFilter(btn,containerId,jid){const bar=btn.closest('.star-filter-
 
 // ─── COMMENTS ──────────────────────────────────────────────────
 function setModalCommentRating(v){modalCommentRating=v;document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
-
 async function submitModalComment(){
   const name=(document.getElementById('modal-comment-name').value||'').trim();const email=(document.getElementById('modal-comment-email').value||'').trim();const text=(document.getElementById('modal-comment-text').value||'').trim();
   if(!name){showToast('Veuillez entrer votre prénom.','error');return;}if(!text){showToast('Veuillez écrire un avis.','error');return;}if(!isValidEmail(email)){showToast('Email invalide.','error');return;}if(!modalJournalId)return;
   try{const res=await api('/api/comment',{journalId:modalJournalId,name,text,rating:modalCommentRating});db.comments.push(res.comment);document.getElementById('modal-comment-name').value='';document.getElementById('modal-comment-email').value='';document.getElementById('modal-comment-text').value='';setModalCommentRating(0);renderComments(modalJournalId,'modal-comments',0);renderModalReactions(modalJournalId);showToast('Votre avis a été publié !','success');}
   catch(e){showToast('Erreur : '+e.message,'error');}
 }
-
 function renderComments(jid,containerId,starFilter=0){
   const list=document.getElementById(containerId);if(!list)return;
   let top=(db.comments||[]).filter(c=>c.journalId===jid&&!c.flagged&&!c.isReply).sort((a,b)=>new Date(b.date)-new Date(a.date));
@@ -1835,7 +1839,6 @@ function renderComments(jid,containerId,starFilter=0){
   if(!top.length){list.innerHTML='<p style="color:var(--muted);font-size:.9rem;font-family:var(--font-mono);">'+(starFilter>0?'Aucun avis avec cette note.':'Aucun avis. Soyez le premier !')+'</p>';return;}
   top.forEach(c=>{list.appendChild(buildCommentEl(c,jid,containerId));(db.comments||[]).filter(r=>r.parentId===c.id&&!r.flagged).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(reply=>list.appendChild(buildReplyEl(reply)));});
 }
-
 function buildCommentEl(c,jid,containerId){
   const initials=c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
   const stars=Array.from({length:5},(_,i)=>'<span class="comment-star'+(i<c.rating?' filled':'')+'">★</span>').join('');
@@ -1876,7 +1879,6 @@ function filterHistory(){
   const todayStr=getTodayStr();
   filtered.forEach(j=>{const r=db.reactions[j.id]||{};const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):null;const cc=(db.comments||[]).filter(c=>c.journalId===j.id&&!c.isReply).length;const views=(db.pageviews||{})[j.id]?.total||0;const isToday=j.date===todayStr;
     const div=document.createElement('div');div.className='history-card';div.onclick=()=>openModal(j.id);
-    // Highlight in titles
     let titleHtml=escHtml(j.title);if(q)titleHtml=titleHtml.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="search-hl">$1</mark>');
     div.innerHTML='<div class="history-card-date">'+formatDateFr(j.date)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</div><div class="history-card-title">'+titleHtml+'</div><div class="history-card-excerpt">'+escHtml(stripRichTags(j.excerpt||getPages(j)[0]||'').slice(0,120))+'</div><div class="history-card-footer">'+(j.category?'<span class="history-card-cat">'+escHtml(j.category)+'</span>':'')+(stars?'<span class="history-card-rating">★ '+stars+'</span>':'')+'<span class="history-card-comments">'+cc+' avis</span><span class="history-card-views">👁 '+views+'</span></div>';
     grid.appendChild(div);});
@@ -1891,7 +1893,6 @@ function openModal(jid){
   modalCommentRating=0;document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('#modal-star-filter .star-filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
   renderComments(jid,'modal-comments',0);
-  // Bandeau "programmé" si pas encore publié
   let scheduledBanner=document.getElementById('modal-scheduled-banner');
   if(!scheduledBanner){scheduledBanner=document.createElement('div');scheduledBanner.id='modal-scheduled-banner';scheduledBanner.style.cssText='padding:.6rem 1rem;background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.3);border-radius:4px;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:1rem;text-align:center;';document.querySelector('.modal-content').insertBefore(scheduledBanner,document.querySelector('.modal-content').firstChild);}
   if(!isPublished(j)){scheduledBanner.style.display='block';scheduledBanner.textContent='🕐 Ce journal est programmé pour le '+formatDateFr(j.date)+' à '+pad(getPubHour())+'h00 — aperçu disponible.';}
@@ -1915,19 +1916,11 @@ function updateAutoReadTime(){const newPages=getPagesFromEditor('new-pages-edito
 
 // ─── ADMIN TABS ────────────────────────────────────────────────
 function switchAdminTab(tab){
-  ['new','manage','calendar','analytics','moderation','subscribers','settings'].forEach(t=>{
-    document.getElementById('atab-'+t).classList.toggle('active',t===tab);
-    document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';
-  });
-  if(tab==='manage')loadManageList();
-  if(tab==='moderation')loadModeration();
-  if(tab==='settings')loadSettings();
-  if(tab==='calendar')renderAdminCalendar();
-  if(tab==='analytics')loadAnalytics();
-  if(tab==='subscribers'){renderAdminSubscribers();loadEmailJSConfig();}
+  ['new','manage','calendar','analytics','moderation','subscribers','settings'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';});
+  if(tab==='manage')loadManageList();if(tab==='moderation')loadModeration();if(tab==='settings')loadSettings();if(tab==='calendar')renderAdminCalendar();if(tab==='analytics')loadAnalytics();if(tab==='subscribers'){renderAdminSubscribers();}
 }
-function switchEditTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){previewPage=0;}if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);}}
-function switchNewTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='preview'){newPreviewPage=0;}if(tab==='meta'){updateAutoReadTime();}}
+function switchEditTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);}}
+function switchNewTab(tab){['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';});if(tab==='meta'){updateAutoReadTime();}}
 
 // ─── PAGES EDITOR ──────────────────────────────────────────────
 function buildPageItem(text,idx,editorId){
@@ -1950,7 +1943,8 @@ async function publishJournal(){
   const autoRt=calcReadTime(pages);
   const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),readTime:document.getElementById('new-readtime').value.trim()||autoRt,coverImg:document.getElementById('new-cover-img').value.trim(),audioUrl:document.getElementById('new-audio-url').value.trim()};
   const btn=document.getElementById('publish-btn');btn.disabled=true;btn.textContent='Enregistrement...';
-  try{const res=await api('/api/admin/save',j);j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);
+  try{
+    const res=await api('/api/admin/save',j);j.id=res.id;j.createdAt=new Date().toISOString();db.journals.push(j);
     showToast('Journal enregistré !','success');
     clearDraft();
     ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
@@ -1958,18 +1952,15 @@ async function publishJournal(){
     document.getElementById('new-cover-img-preview').style.display='none';
     document.getElementById('new-audio-preview').style.display='none';
     initNewPagesEditor();renderHome();loadManageList();renderSidebarCalendar();
-    // Notifications EmailJS si le journal est pour aujourd'hui (publié immédiatement)
+    // Notifier les abonnés via le Worker (gère EmailJS server-side)
     if(isPublished(j)){
-      const subCount = getSubscribers().length;
-      if(subCount > 0){
-        showToast('📧 Envoi des notifications à '+subCount+' abonné'+(subCount>1?'s':'')+'...','info');
-        notifySubscribers(j).then(sent=>{
-          if(sent>0)showToast('✅ '+sent+' notification'+(sent>1?'s':'')+'s envoyée'+(sent>1?'s':'')+' !','success');
-        });
+      const subCount=getSubscribers().length;
+      if(subCount>0){
+        showToast('📧 Envoi des notifications...','info');
+        api('/api/admin/notify',{journalId:j.id}).then(r=>{if(r.sent>0)showToast('✅ '+r.sent+' notification'+(r.sent>1?'s':'')+' envoyée'+(r.sent>1?'s':'')+'!','success');}).catch(()=>{});
       }
     }
-  }
-  catch(e){showToast('Erreur : '+e.message,'error');}
+  }catch(e){showToast('Erreur : '+e.message,'error');}
   btn.disabled=false;btn.textContent='Enregistrer le journal →';
 }
 
@@ -2000,7 +1991,13 @@ async function loadAnalytics(){
   try{const data=await api('/api/admin/analytics',undefined,'GET');document.getElementById('analytics-loading').style.display='none';document.getElementById('analytics-content').style.display='block';document.getElementById('analytics-stats').innerHTML='<div class="analytics-stat"><div class="analytics-num">'+data.totalViews+'</div><div class="analytics-lbl">Vues total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalComments+'</div><div class="analytics-lbl">Avis total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalJournals+'</div><div class="analytics-lbl">Journaux</div></div>';
   const chartEl=document.getElementById('analytics-chart');chartEl.innerHTML='';const entries=Object.entries(data.daily);const maxVal=Math.max(...entries.map(([,v])=>v),1);
   entries.forEach(([date,count],i)=>{const col=document.createElement('div');col.className='chart-bar-col';const pct=Math.round((count/maxVal)*100);const d=new Date(date+'T12:00:00');const label=i%5===0?d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';col.innerHTML='<div class="chart-bar" style="height:'+Math.max(pct,2)+'%"><div class="chart-bar-tooltip">'+count+' vue'+(count>1?'s':'')+' · '+date+'</div></div><div class="chart-bar-label">'+label+'</div>';chartEl.appendChild(col);});
-  const topEl=document.getElementById('top-journals');topEl.innerHTML='';data.byJournal.slice(0,8).forEach((j,i)=>{topEl.innerHTML+='<div class="top-journal-row"><span class="top-journal-rank">#'+(i+1)+'</span><span class="top-journal-title">'+escHtml(j.title)+'</span><span class="top-journal-views">👁 '+j.views+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:.5rem;">💬 '+j.comments+'</span></div>';});if(!data.byJournal.length)topEl.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';}
+  const topEl=document.getElementById('top-journals');topEl.innerHTML='';data.byJournal.slice(0,8).forEach((j,i)=>{topEl.innerHTML+='<div class="top-journal-row"><span class="top-journal-rank">#'+(i+1)+'</span><span class="top-journal-title">'+escHtml(j.title)+'</span><span class="top-journal-views">👁 '+j.views+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:.5rem;">💬 '+j.comments+'</span></div>';});if(!data.byJournal.length)top
+// ══ COLLER CE BLOC À LA SUITE DE : if(!data.byJournal.length)top ══
+// (remplace le "top" tronqué — la ligne complète est celle-ci :)
+// if(!data.byJournal.length)topEl.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';
+// ════════════════════════════════════════════════════════════════════
+
+El.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';}
   catch(e){document.getElementById('analytics-loading').innerHTML='<p style="color:var(--red);font-family:var(--font-mono);">Erreur : '+escHtml(e.message)+'</p>';}
 }
 
@@ -2015,80 +2012,69 @@ function toggleModReply(id){const b=document.getElementById('mod-reply-'+id);if(
 async function submitModReply(parentId,jid){if(!isAdmin)return;const ta=document.getElementById('mod-reply-text-'+parentId);const text=ta?ta.value.trim():'';if(!text){showToast('Veuillez écrire une réponse.','error');return;}try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);toggleModReply(parentId);loadModeration();showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
 async function deleteCommentAdmin(id){if(!isAdmin)return;if(!confirm('Supprimer cet avis (et ses réponses) ?'))return;try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);loadModeration();if(currentJournalId)renderComments(currentJournalId,'book-comment-list',0);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
 
-// ─── EMAILJS CONFIG — PERSISTANCE ──────────────────────────────
-// Permet de configurer EmailJS depuis le panel admin sans modifier le code
-function loadEmailJSConfig(){
-  const cfg = JSON.parse(localStorage.getItem('capnews_ejs_config')||'{}');
-  if(cfg.pk)  document.getElementById('ejs-pk').value  = cfg.pk;
-  if(cfg.sid) document.getElementById('ejs-sid').value = cfg.sid;
-  if(cfg.tid) document.getElementById('ejs-tid').value = cfg.tid;
+// ─── ADMIN ABONNÉS ─────────────────────────────────────────────
+function renderAdminSubscribers(){
+  const el=document.getElementById('admin-subscribers-list');if(!el)return;
+  const subs=getSubscribers();
+  const countEl=document.getElementById('admin-subs-count');
+  if(countEl)countEl.textContent=subs.length+' abonné'+(subs.length>1?'s':'');
+  if(!subs.length){el.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucun abonné pour l\'instant.</p>';return;}
+  el.innerHTML=subs.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);">
+      <div>
+        <span style="font-weight:600;font-size:.9rem;">${escHtml(s.name)}</span>
+        <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-left:8px;">${escHtml(s.email)}</span>
+        <br><span style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">Inscrit ${timeSince(s.date)}</span>
+      </div>
+      <button class="btn-danger" style="font-size:.72rem;padding:.3rem .6rem;" onclick="adminRemoveSub('${escHtml(s.email)}')">Retirer</button>
+    </div>
+  `).join('');
 }
-function saveEmailJSConfig(){
-  const pk  = document.getElementById('ejs-pk').value.trim();
-  const sid = document.getElementById('ejs-sid').value.trim();
-  const tid = document.getElementById('ejs-tid').value.trim();
-  if(!pk||!sid||!tid){ showToast('Remplis les 3 champs EmailJS.','error'); return; }
-  localStorage.setItem('capnews_ejs_config', JSON.stringify({pk,sid,tid}));
-  // Applique immédiatement
-  if(typeof emailjs!=='undefined') emailjs.init(pk);
-  // Met à jour les constantes en mémoire (hack propre sans eval)
-  window._ejsCfg = {pk,sid,tid};
-  showToast('Config EmailJS sauvegardée et active !','success');
+function adminRemoveSub(email){
+  if(!confirm('Retirer '+email+' des abonnés ?'))return;
+  removeSubscriberLocal(email);
+  unsubscribeViaWorker(email);
+  renderAdminSubscribers();
+  renderLeaderboard('lb-list-locked');
+  showToast('Abonné retiré.','info');
 }
-// Override des constantes par la config admin si présente
-function getEJSConfig(){
-  const cfg = JSON.parse(localStorage.getItem('capnews_ejs_config')||'{}');
-  return {
-    pk:  cfg.pk  || EMAILJS_PUBLIC_KEY,
-    sid: cfg.sid || EMAILJS_SERVICE_ID,
-    tid: cfg.tid || EMAILJS_TEMPLATE_ID,
-  };
-}
-
-// Test : envoie une notification test à toi-même
-async function testNotification(){
-  const email = prompt('Ton adresse email pour le test :','');
-  if(!email) return;
-  const cfg = getEJSConfig();
-  if(cfg.pk==='TON_PUBLIC_KEY'){ showToast('Configure d\'abord EmailJS dans l\'onglet Abonnés.','error'); return; }
-  if(typeof emailjs==='undefined'){ showToast('EmailJS non chargé.','error'); return; }
-  emailjs.init(cfg.pk);
-  showToast('Envoi du test...','info');
-  try{
-    await emailjs.send(cfg.sid, cfg.tid, {
-      to_email:         email,
-      to_name:          'Admin CapNews',
-      journal_title:    '🧪 Test de notification CapNews',
-      journal_excerpt:  'Ceci est un email de test. Si tu le reçois, tout fonctionne !',
-      journal_date:     new Date().toLocaleDateString('fr-FR',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
-      journal_url:      window.location.href.split('?')[0],
-      site_name:        db.settings.siteName||'CapNews',
-      unsubscribe_link: window.location.href.split('?')[0],
-    });
-    showToast('✅ Email de test envoyé à '+email,'success');
-  } catch(e){
-    showToast('❌ Erreur : '+(e.text||e.message||JSON.stringify(e)),'error');
-    console.error('EmailJS test error:', e);
-  }
-}
-
-// Export CSV des abonnés
 function exportSubscribers(){
-  const subs = getSubscribers();
-  if(!subs.length){ showToast('Aucun abonné à exporter.','info'); return; }
-  const csv = 'Prénom,Email,Date inscription\n' +
-    subs.map(s=>`"${s.name}","${s.email}","${new Date(s.date).toLocaleDateString('fr-FR')}"`).join('\n');
-  const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href=url; a.download='capnews_abonnes.csv'; a.click();
+  const subs=getSubscribers();
+  if(!subs.length){showToast('Aucun abonné à exporter.','info');return;}
+  const csv='Prénom,Email,Date inscription\n'+subs.map(s=>`"${s.name}","${s.email}","${new Date(s.date).toLocaleDateString('fr-FR')}"`).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='capnews_abonnes.csv';a.click();
   URL.revokeObjectURL(url);
   showToast('CSV exporté !','success');
 }
+async function adminTestNotif(){
+  const email=prompt('Ton adresse email pour le test :','');
+  if(!email)return;
+  showToast('Envoi du test via le Worker...','info');
+  try{
+    await api('/api/admin/notify-test',{email});
+    showToast('✅ Email de test envoyé à '+email,'success');
+  }catch(e){showToast('❌ Erreur : '+e.message,'error');}
+}
 
 // ─── SETTINGS ──────────────────────────────────────────────────
-function loadSettings(){document.getElementById('setting-sitename').value=db.settings.siteName||'CapNews';document.getElementById('setting-tagline').value=db.settings.tagline||'';document.getElementById('setting-hour').value=db.settings.pubHour??18;}
-async function saveSettings(){if(!isAdmin)return;const siteName=document.getElementById('setting-sitename').value.trim()||'CapNews';const tagline=document.getElementById('setting-tagline').value.trim();const pubHour=parseInt(document.getElementById('setting-hour').value)||18;try{await api('/api/admin/settings',{siteName,tagline,pubHour});db.settings.siteName=siteName;db.settings.tagline=tagline;db.settings.pubHour=pubHour;applyBranding();showToast('Paramètres sauvegardés !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
+function loadSettings(){
+  document.getElementById('setting-sitename').value=db.settings.siteName||'CapNews';
+  document.getElementById('setting-tagline').value=db.settings.tagline||'';
+  document.getElementById('setting-hour').value=db.settings.pubHour??18;
+}
+async function saveSettings(){
+  if(!isAdmin)return;
+  const siteName=document.getElementById('setting-sitename').value.trim()||'CapNews';
+  const tagline=document.getElementById('setting-tagline').value.trim();
+  const pubHour=parseInt(document.getElementById('setting-hour').value)||18;
+  try{
+    await api('/api/admin/settings',{siteName,tagline,pubHour});
+    db.settings.siteName=siteName;db.settings.tagline=tagline;db.settings.pubHour=pubHour;
+    applyBranding();showToast('Paramètres sauvegardés !','success');
+  }catch(e){showToast('Erreur : '+e.message,'error');}
+}
 
 // ─── BRANDING ──────────────────────────────────────────────────
 function applyBranding(){
@@ -2106,28 +2092,95 @@ function applyBranding(){
   const ls=document.getElementById('locked-subtitle');if(ls)ls.textContent='La publication a lieu chaque jour à '+hourStr+'. Revenez plus tard !';
 }
 
-// ─── COUNTDOWN ─────────────────────────────────────────────────
+// ─── COUNTDOWN (bannière nav) ───────────────────────────────────
 function startCountdown(){updateCountdown();setInterval(updateCountdown,1000);}
 function updateCountdown(){
-  const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);if(now>=pub)pub.setDate(pub.getDate()+1);const diff=pub-now;const j=getTodayJournal();
-  if(j&&isPublished(j)){document.getElementById('countdown-banner').classList.add('published');document.getElementById('countdown-text').textContent='✓ Le journal du jour est disponible !';document.getElementById('countdown-timer').textContent='';const lc=document.getElementById('locked-countdown');if(lc)lc.textContent='';return;}
+  const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);if(now>=pub)pub.setDate(pub.getDate()+1);const diff=pub-now;
+  const j=getTodayJournal();
+  if(j&&isPublished(j)){
+    document.getElementById('countdown-banner').classList.add('published');
+    document.getElementById('countdown-text').textContent='✓ Le journal du jour est disponible !';
+    document.getElementById('countdown-timer').textContent='';
+    return;
+  }
   document.getElementById('countdown-banner').classList.remove('published');
   const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
-  document.getElementById('countdown-text').textContent='Prochain journal dans :';document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';const lc=document.getElementById('locked-countdown');if(lc)lc.textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
+  document.getElementById('countdown-text').textContent='Prochain journal dans :';
+  document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
 }
+
+// ─── LIVE SIMULATION ───────────────────────────────────────────
+function startLiveSimulation(){
+  const badge=document.getElementById('live-badge');const count=document.getElementById('live-count');if(!badge||!count)return;
+  liveViewCount=Math.floor(Math.random()*8)+1;count.textContent=liveViewCount;badge.style.display='inline-flex';
+  setInterval(()=>{liveViewCount=Math.max(1,Math.min(12,liveViewCount+(Math.random()>.5?1:-1)));count.textContent=liveViewCount;},8000);
+}
+
+// ─── DRAFT ─────────────────────────────────────────────────────
+function saveDraft(){
+  clearTimeout(draftTimer);
+  draftTimer=setTimeout(()=>{
+    const title=(document.getElementById('new-title')?.value||'').trim();if(!title)return;
+    const draft={title,excerpt:document.getElementById('new-excerpt')?.value||'',pages:getPagesFromEditor('new-pages-editor'),date:document.getElementById('new-date')?.value||''};
+    localStorage.setItem('capnews_draft',JSON.stringify(draft));
+    const ind=document.getElementById('draft-indicator');ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);
+  },1500);
+}
+function checkDraft(){
+  const draft=localStorage.getItem('capnews_draft');
+  if(draft){const btn=document.getElementById('load-draft-btn');if(btn){const d=JSON.parse(draft);btn.textContent='📋 Charger brouillon : "'+d.title.slice(0,30)+'..."';btn.style.display='inline-flex';}}
+}
+function loadDraft(){
+  const draft=localStorage.getItem('capnews_draft');if(!draft)return;
+  const d=JSON.parse(draft);
+  if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title||'';
+  if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
+  if(d.date&&document.getElementById('new-date'))document.getElementById('new-date').value=d.date;
+  const editor=document.getElementById('new-pages-editor');
+  if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
+  showToast('Brouillon chargé !','success');
+}
+function clearDraft(){localStorage.removeItem('capnews_draft');const btn=document.getElementById('load-draft-btn');if(btn)btn.style.display='none';showToast('Brouillon effacé.','info');}
+
+// ─── AUDIO ─────────────────────────────────────────────────────
+function openPersistentPlayer(src,title){
+  const pp=document.getElementById('persistent-player');const audio=document.getElementById('pp-audio');const info=document.getElementById('pp-info');
+  if(!pp||!audio)return;audio.src=src;info.textContent='🔊 '+title;pp.classList.add('show');audio.play().catch(()=>{});
+}
+function closePersistentPlayer(){
+  const pp=document.getElementById('persistent-player');const audio=document.getElementById('pp-audio');
+  if(!pp||!audio)return;audio.pause();pp.classList.remove('show');
+}
+
+// ─── FESTIVITÉS ────────────────────────────────────────────────
+const BIRTHDAY_MONTH=4,BIRTHDAY_DAY=10,BIRTHDAY_YEAR=2025;
+function checkFestive(){
+  const now=new Date();const m=now.getMonth()+1;const d=now.getDate();
+  const banner=document.getElementById('festive-banner');let festive=null;
+  if(m===BIRTHDAY_MONTH&&d===BIRTHDAY_DAY){const age=now.getFullYear()-BIRTHDAY_YEAR;festive={cls:'birthday',msg:`🎂 CapNews fête son ${age} an${age>1?'s':''} d'existence ! Merci à toute la communauté ! 🎉`,particles:['🎂','🎊','🎈','✨','🥳','🎁']};}
+  else if(m===10){festive={cls:'halloween',msg:`🎃 Joyeux Halloween ! Les fantômes rôdent dans les archives... 👻`,particles:['🎃','👻','🕷️','🦇','🕸️']};}
+  else if(m===12&&(d===24||d===25)){festive={cls:'christmas',msg:`🎄 Joyeux Noël ! Que cette édition vous apporte joie et sérénité ! 🎅`,particles:['🎄','⛄','❄️','🎁','⭐','🔔']};}
+  else if(m===1&&d===1){festive={cls:'newyear',msg:`🥂 Bonne Année ! Que cette nouvelle année soit pleine de belles lectures ! 🎆`,particles:['🎆','🥂','✨','🎊','🌟']};}
+  if(festive){banner.className='';banner.classList.add(festive.cls);banner.innerHTML=`<span class="confetti-emoji">${festive.particles[0]}</span> ${festive.msg} <span class="confetti-emoji">${festive.particles[0]}</span>`;banner.style.display='block';launchParticles(festive.particles);}
+}
+function launchParticles(emojis){let count=0;const interval=setInterval(()=>{if(count>=30){clearInterval(interval);return;}count++;const el=document.createElement('div');el.className='festive-particle';el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=Math.random()*100+'vw';el.style.animationDuration=(Math.random()*3+2)+'s';el.style.animationDelay=(Math.random()*2)+'s';el.style.fontSize=(Math.random()*1.5+0.8)+'rem';document.body.appendChild(el);setTimeout(()=>el.remove(),6000);},150);}
+
+// ─── KBD HELP ──────────────────────────────────────────────────
+function showKbdHelp(){document.getElementById('kbd-help').classList.add('show');}
+function closeKbdHelp(){document.getElementById('kbd-help').classList.remove('show');}
 
 // ─── KEYBOARD SHORTCUTS ────────────────────────────────────────
 document.addEventListener('keydown',e=>{
   const inField=e.target.matches('input,textarea,select');
-  if(e.key==='Escape'){hideCtxMenu();closeModal();closeEditModal();closeImmersive();closeKbdHelp();document.getElementById('kbd-help').classList.remove('show');}
+  if(e.key==='Escape'){hideCtxMenu();closeModal();closeEditModal();closeImmersive();document.getElementById('kbd-help').classList.remove('show');}
   if(inField)return;
   if(e.key==='ArrowRight')bookNext();
   if(e.key==='ArrowLeft')bookPrev();
   if(e.key==='f'||e.key==='F')toggleImmersive();
-  if(e.key==='h'||e.key==='H'){showPage('home');}
-  if(e.key==='a'||e.key==='A'){showPage('history');}
-  if(e.key==='d'||e.key==='D'){toggleTheme();}
-  if(e.key==='?'){showKbdHelp();}
+  if(e.key==='h'||e.key==='H')showPage('home');
+  if(e.key==='a'||e.key==='A')showPage('history');
+  if(e.key==='d'||e.key==='D')toggleTheme();
+  if(e.key==='?')showKbdHelp();
   if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();showPage('history');setTimeout(()=>{const inp=document.getElementById('search-input');if(inp){inp.focus();inp.select();}},100);}
 });
 </script>
