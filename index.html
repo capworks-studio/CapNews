@@ -6,7 +6,6 @@
 <title>CapNews</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-
 <style>
 [data-accent="sage"]{--gold:#5a7a4a;--gold-light:#7a9a6a;--gold-glow:rgba(90,122,74,.2);}
 [data-accent="wine"]{--gold:#8b2252;--gold-light:#b03a72;--gold-glow:rgba(139,34,82,.2);}
@@ -193,12 +192,33 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .sidebar-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--parchment-mid);padding:1.2rem;}
 .sidebar-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
 
+/* ── CITATION BOX — couleurs fixes indépendantes du thème ── */
 #quote-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--ink);padding:1.2rem;}
 #quote-box h3{font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--gold-light);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;}
-#quote-text{font-family:var(--font-display);font-style:italic;font-size:1rem;color:rgba(247,243,235,.88);line-height:1.55;margin-bottom:.5rem;}
-#quote-author{font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.45);}
-#quote-refresh{background:none;border:none;color:rgba(247,243,235,.35);cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;}
-#quote-refresh:hover{color:var(--gold-light);}
+#quote-text{font-family:var(--font-display);font-style:italic;font-size:1rem;color:rgba(247,243,235,.88)!important;line-height:1.55;margin-bottom:.5rem;}
+#quote-author{font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.45)!important;}
+#quote-refresh{background:none;border:none;color:rgba(247,243,235,.35)!important;cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;}
+#quote-refresh:hover{color:var(--gold-light)!important;}
+
+/* ── SUBSCRIBE BOX — couleurs fixes indépendantes du thème ── */
+.subscribe-box{border:1px solid var(--border-strong);border-radius:3px;background:linear-gradient(135deg,#1a1209 0%,#2a1f0e 100%);padding:1.2rem;}
+.subscribe-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:#d4a843!important;margin-bottom:.4rem;}
+.subscribe-box p{font-size:.8rem;color:rgba(247,243,235,.6)!important;font-family:var(--font-mono);margin-bottom:.85rem;line-height:1.45;}
+.subscribe-input{width:100%;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.15)!important;border-radius:3px;background:rgba(255,255,255,.08)!important;color:rgba(247,243,235,.85)!important;font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
+.subscribe-input::placeholder{color:rgba(247,243,235,.4)!important;}
+.subscribe-input:focus{border-color:#d4a843!important;}
+.subscribe-btn{width:100%;background:var(--gold);color:white!important;border:none;padding:.55rem;border-radius:3px;font-family:var(--font-display);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
+.subscribe-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+.subscribe-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.subscribe-notice{font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35)!important;margin-top:.4rem;text-align:center;}
+.unsub-toggle{background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35)!important;text-decoration:underline;width:100%;text-align:center;margin-top:.25rem;}
+.unsub-toggle:hover{color:rgba(247,243,235,.6)!important;}
+.unsub-zone{display:none;margin-top:.75rem;padding:.75rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;}
+.unsub-zone.open{display:block;}
+.unsub-zone input{width:100%;padding:.45rem .7rem;border:1px solid rgba(255,255,255,.15)!important;border-radius:3px;background:rgba(255,255,255,.08)!important;color:rgba(247,243,235,.85)!important;font-family:var(--font-mono);font-size:.8rem;outline:none;margin-bottom:.5rem;}
+.unsub-zone input::placeholder{color:rgba(247,243,235,.4)!important;}
+.unsub-confirm-btn{width:100%;padding:.4rem;border-radius:3px;border:1px solid rgba(139,26,26,.6);background:rgba(139,26,26,.3);color:#ffaaaa;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;}
+.unsub-confirm-btn:hover{background:rgba(139,26,26,.5);}
 
 .chip{font-family:var(--font-mono);font-size:.72rem;padding:.2rem .65rem;border-radius:2px;border:1px solid var(--border-strong);color:var(--muted);background:var(--parchment-mid);letter-spacing:.08em;text-transform:uppercase;}
 .chip.cat{background:var(--ink);color:var(--parchment-dark);border-color:var(--ink);}
@@ -272,7 +292,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .reply-submit{background:var(--gold);color:white;border:none;padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;}
 .reply-cancel{background:none;border:1px solid var(--border-strong);padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;color:var(--muted);}
 
-/* LOCKED (journal pas encore publié) */
 .locked-hero-wrap{display:grid;grid-template-columns:1fr 340px;gap:2rem;margin-bottom:2rem;}
 @media(max-width:768px){.locked-hero-wrap{grid-template-columns:1fr;}}
 .locked-hero{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:3px;padding:2.5rem 2rem;text-align:center;position:relative;overflow:hidden;}
@@ -297,7 +316,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .locked-cta-secondary:hover{border-color:var(--gold);color:var(--gold);}
 .locked-bottom-row{display:grid;grid-template-columns:1fr;gap:1.5rem;margin-top:1.5rem;}
 
-/* SNAKE CACHÉ */
 .snake-hidden-toggle{text-align:center;margin-top:1rem;}
 .snake-hidden-toggle summary{font-family:var(--font-mono);font-size:.65rem;color:var(--muted);cursor:pointer;list-style:none;opacity:.4;transition:opacity .2s;user-select:none;}
 .snake-hidden-toggle summary:hover{opacity:.8;}
@@ -310,7 +328,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .snake-msg{font-family:var(--font-mono);font-size:.7rem;color:var(--muted);text-align:center;margin-top:.4rem;min-height:1em;}
 .snake-hint{font-family:var(--font-mono);font-size:.6rem;color:var(--muted);text-align:center;margin-top:.2rem;opacity:.6;}
 
-/* MÉTÉO */
 .wx-main{display:flex;align-items:center;gap:12px;margin-bottom:.75rem;}
 .wx-icon-big{font-size:2.2rem;}
 .wx-temp-big{font-size:1.8rem;font-weight:700;font-family:var(--font-display);color:var(--ink);line-height:1;}
@@ -325,34 +342,25 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .wx-day-icon{font-size:1.1rem;display:block;margin:.2rem 0;}
 .wx-day-t{font-size:.72rem;font-weight:500;color:var(--ink);}
 
-/* ABONNEMENT */
-.subscribe-box{border:1px solid var(--border-strong);border-radius:3px;background:linear-gradient(135deg,var(--ink) 0%,#2a1f0e 100%);padding:1.2rem;}
-.subscribe-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--gold-light);margin-bottom:.4rem;}
-.subscribe-box p{font-size:.8rem;color:rgba(247,243,235,.6);font-family:var(--font-mono);margin-bottom:.85rem;line-height:1.45;}
-.subscribe-input{width:100%;padding:.55rem .8rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--muted)!important;font-family:var(--font-body);font-size:.9rem;outline:none;transition:border-color .2s;margin-bottom:.5rem;}
-.subscribe-input::placeholder{color:rgba(247,243,235,.4)!important;}
-.subscribe-input:focus{border-color:var(--gold-light);}
-.subscribe-btn{width:100%;background:var(--gold);color:white!important;border:none;padding:.55rem;border-radius:3px;font-family:var(--font-display);font-size:.9rem;font-weight:600;cursor:pointer;transition:background .15s,transform .1s;}
-.subscribe-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
-.subscribe-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
-.subscribe-notice{font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);margin-top:.4rem;text-align:center;}
-.unsub-toggle{background:none;border:none;cursor:pointer;font-family:var(--font-mono);font-size:.65rem;color:rgba(247,243,235,.35);text-decoration:underline;width:100%;text-align:center;margin-top:.25rem;}
-.unsub-toggle:hover{color:rgba(247,243,235,.6);}
-.unsub-zone{display:none;margin-top:.75rem;padding:.75rem;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:3px;}
-.unsub-zone.open{display:block;}
-.unsub-zone input{width:100%;padding:.45rem .7rem;border:1px solid rgba(255,255,255,.15);border-radius:3px;background:rgba(255,255,255,.08);color:var(--parchment)!important;font-family:var(--font-mono);font-size:.8rem;outline:none;margin-bottom:.5rem;}
-.unsub-zone input::placeholder{color:#6a5a42 !important;}
-.unsub-confirm-btn{width:100%;padding:.4rem;border-radius:3px;border:1px solid rgba(139,26,26,.6);background:rgba(139,26,26,.3);color:#ffaaaa;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;}
-.unsub-confirm-btn:hover{background:rgba(139,26,26,.5);}
+/* ── BROUILLONS — boutons manuels ── */
+.draft-btn-bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.75rem;padding:.75rem;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:4px;}
+.draft-btn{padding:.42rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;transition:all .13s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
+.draft-btn-save{background:var(--gold);color:white;border:none;}
+.draft-btn-save:hover{background:var(--gold-light);}
+.draft-btn-load{background:none;border:1px solid var(--border-strong);color:var(--ink-light);}
+.draft-btn-load:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+.draft-btn-load:disabled{opacity:.35;cursor:not-allowed;}
+.draft-btn-history{background:none;border:1px solid var(--border-strong);color:var(--ink-light);}
+.draft-btn-history:hover{border-color:var(--ink);color:var(--ink);}
+.draft-btn-clear{background:none;border:1px solid rgba(139,26,26,.4);color:var(--red);}
+.draft-btn-clear:hover{background:rgba(139,26,26,.08);}
 
-/* LEADERBOARD */
 .lb-list{display:flex;flex-direction:column;gap:6px;}
 .lb-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-card);border:1px solid var(--border);border-radius:3px;}
 .lb-avatar{width:28px;height:28px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.75rem;font-weight:700;flex-shrink:0;}
 .lb-name{font-size:.9rem;color:var(--ink);flex:1;font-family:var(--font-body);}
 .lb-date{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);}
 
-/* TRIVIA */
 .trivia-box{background:var(--bg-card);border:1px solid var(--border-strong);border-radius:3px;padding:1.5rem;}
 .trivia-label{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem;}
 .trivia-score{font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:.85rem;font-weight:500;}
@@ -366,7 +374,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .trivia-next-btn{margin-top:.75rem;padding:.5rem 1.1rem;border-radius:3px;border:1px solid var(--border-strong);background:var(--parchment-dark);font-family:var(--font-mono);font-size:.78rem;color:var(--ink-light);cursor:pointer;display:none;transition:all .13s;}
 .trivia-next-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* HISTORY */
 .history-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;}
 .history-card{border:1px solid var(--border-strong);border-radius:4px;background:var(--bg-card);padding:1.2rem;cursor:pointer;transition:all .18s;position:relative;overflow:hidden;}
 .history-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--gold);transform:scaleY(0);transition:transform .18s;}
@@ -381,7 +388,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .history-card-views{font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-left:auto;}
 .history-card-cat{font-family:var(--font-mono);font-size:.7rem;color:var(--parchment);background:var(--ink);padding:2px 8px;border-radius:2px;}
 
-/* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.75);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(6px);}
 .modal-bg.hidden{display:none;}
 .modal-content{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;padding:2rem 2.5rem;max-width:900px;width:100%;position:relative;box-shadow:var(--shadow-strong);margin-top:1rem;animation:modalIn .25s cubic-bezier(.4,0,.2,1);}
@@ -389,17 +395,14 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .modal-close{position:absolute;top:1.2rem;right:1.4rem;background:none;border:none;cursor:pointer;font-size:1.3rem;color:var(--muted);font-family:var(--font-mono);transition:color .15s;}
 .modal-close:hover{color:var(--ink);}
 
-/* EDIT FAB */
 .edit-fab{position:fixed;bottom:2rem;left:2rem;background:var(--gold);color:white;border:none;padding:.7rem 1.3rem;border-radius:30px;font-family:var(--font-display);font-size:.95rem;font-weight:600;cursor:pointer;box-shadow:var(--shadow-gold);z-index:200;transition:background .15s,transform .15s,box-shadow .15s;}
 .edit-fab:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 6px 24px rgba(184,134,11,.45);}
 .edit-fab.hidden{display:none;}
 
-/* BOUTON CORRIGER IA (bas droite éditeur) */
 .ai-correct-all-btn{position:sticky;bottom:1rem;float:right;margin-top:.75rem;background:var(--gold);color:white;border:none;padding:.55rem 1.1rem;border-radius:20px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;box-shadow:var(--shadow-gold);transition:background .15s,transform .1s;display:flex;align-items:center;gap:6px;z-index:10;}
 .ai-correct-all-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
 .ai-correct-all-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
 
-/* KBD HELP */
 #kbd-help{position:fixed;inset:0;background:rgba(26,18,9,.8);z-index:10000;display:none;align-items:center;justify-content:center;backdrop-filter:blur(6px);}
 #kbd-help.show{display:flex;animation:fadeIn .2s ease;}
 .kbd-help-box{background:var(--parchment);border:1px solid var(--border-strong);border-radius:8px;padding:2rem;max-width:480px;width:100%;box-shadow:var(--shadow-strong);}
@@ -410,7 +413,6 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .kbd-keys{display:flex;gap:4px;}
 kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);border-radius:3px;padding:2px 7px;font-family:var(--font-mono);font-size:.75rem;color:var(--ink-light);}
 
-/* EDIT MODAL */
 .edit-modal-bg{position:fixed;inset:0;background:rgba(26,18,9,.75);z-index:500;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem;overflow-y:auto;backdrop-filter:blur(6px);}
 .edit-modal-bg.hidden{display:none;}
 .edit-modal{background:var(--parchment);border:1px solid var(--border-strong);border-radius:6px;padding:2rem 2.5rem;max-width:820px;width:100%;position:relative;box-shadow:var(--shadow-strong);margin-top:1rem;}
@@ -421,7 +423,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .edit-tab{padding:.5rem 1.2rem;font-family:var(--font-mono);font-size:.8rem;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;}
 .edit-tab.active{color:var(--ink);border-bottom-color:var(--gold);}
 
-/* RICH TEXT EDITOR */
 .richtext-area{width:100%;min-height:160px;border:1px solid var(--border);border-radius:0 0 3px 3px;padding:.6rem .8rem;font-family:var(--font-body);font-size:.95rem;color:var(--ink);resize:vertical;outline:none;line-height:1.65;background:var(--bg-card);}
 .richtext-area:focus{border-color:var(--gold);}
 .richtext-toolbar{display:flex;gap:4px;padding:4px 6px;background:var(--parchment-dark);border:1px solid var(--border);border-bottom:none;border-radius:3px 3px 0 0;flex-wrap:wrap;}
@@ -429,7 +430,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .richtext-toolbar-btn:hover{background:var(--bg-card);border-color:var(--border);}
 .richtext-charcount{font-family:var(--font-mono);font-size:.68rem;color:var(--muted);text-align:right;padding:2px 8px;background:var(--parchment-dark);border:1px solid var(--border);border-top:none;border-radius:0 0 3px 3px;}
 
-/* MEDIA INPUTS */
 .media-row{display:flex;gap:.5rem;align-items:flex-end;margin-top:.5rem;}
 .media-row input{flex:1;padding:.5rem .75rem;border:1px solid var(--border-strong);border-radius:3px;font-family:var(--font-mono);font-size:.8rem;color:var(--ink);background:var(--bg-card);outline:none;}
 .media-row input:focus{border-color:var(--gold);}
@@ -438,7 +438,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .media-preview{margin-top:.5rem;border-radius:4px;overflow:hidden;border:1px solid var(--border);}
 .media-preview img{width:100%;max-height:200px;object-fit:cover;display:block;}
 
-/* PAGES EDITOR */
 .pages-editor{border:1px solid var(--border-strong);border-radius:4px;overflow:hidden;margin-bottom:.6rem;}
 .page-editor-item{border-bottom:1px solid var(--border);}
 .page-editor-item:last-child{border-bottom:none;}
@@ -449,7 +448,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .add-page-btn{background:none;border:1px dashed var(--border-strong);border-radius:3px;padding:.5rem 1rem;font-family:var(--font-mono);font-size:.8rem;color:var(--muted);cursor:pointer;width:100%;transition:all .13s;}
 .add-page-btn:hover{border-color:var(--gold);color:var(--gold);}
 
-/* ADMIN */
 .admin-panel-box{border:1px solid var(--border-strong);border-radius:4px;background:var(--parchment-mid);}
 .admin-tabs{display:flex;border-bottom:1px solid var(--border-strong);overflow-x:auto;}
 .admin-tab{padding:.75rem 1.2rem;font-family:var(--font-mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;border:none;background:none;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap;}
@@ -478,7 +476,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .admin-login h2{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:1.2rem;color:var(--ink);}
 .admin-error{color:var(--red);font-size:.85rem;margin-top:.5rem;font-family:var(--font-mono);}
 
-/* CALENDAR */
 .calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .cal-header{font-family:var(--font-mono);font-size:.7rem;text-align:center;color:var(--muted);padding:.4rem 0;letter-spacing:.06em;text-transform:uppercase;}
 .cal-day{aspect-ratio:1;border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:.8rem;cursor:default;position:relative;transition:all .15s;border:1px solid transparent;}
@@ -494,7 +491,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .cal-nav-btn:hover{color:var(--gold);}
 .cal-month-label{font-family:var(--font-display);font-weight:700;font-size:.95rem;color:var(--ink);}
 
-/* ANALYTICS */
 .chart-wrapper{position:relative;height:180px;margin-top:1rem;}
 .chart-bars{display:flex;align-items:flex-end;gap:2px;height:100%;padding-bottom:22px;}
 .chart-bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
@@ -514,7 +510,6 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .top-journal-title{flex:1;font-family:var(--font-display);font-style:italic;font-weight:700;color:var(--ink);}
 .top-journal-views{font-family:var(--font-mono);font-size:.75rem;color:var(--gold);}
 
-/* SEARCH */
 .search-bar{display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:4px;padding:.5rem 1rem;transition:border-color .2s,box-shadow .2s;}
 .search-bar:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px var(--gold-glow);}
 .search-bar input{flex:1;border:none;background:none;font-family:var(--font-body);font-size:.95rem;color:var(--ink);outline:none;}
@@ -529,14 +524,12 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .stat-num{font-family:var(--font-display);font-size:2.2rem;font-weight:900;color:var(--ink);line-height:1;}
 .stat-lbl{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.1em;}
 
-/* TOAST */
 .toast{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--parchment);padding:.75rem 1.4rem;border-radius:6px;font-family:var(--font-mono);font-size:.85rem;z-index:9999;transform:translateY(20px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);pointer-events:none;max-width:320px;box-shadow:var(--shadow-strong);}
 .toast.show{opacity:1;transform:none;}
 .toast.success{border-left:3px solid #4caf50;}
 .toast.error{border-left:3px solid var(--red);}
 .toast.info{border-left:3px solid var(--gold);}
 
-/* PAGE CONTACT */
 .contact-page{max-width:760px;margin:0 auto;}
 .contact-hero{background:linear-gradient(135deg,var(--ink) 0%,#2a1f0e 100%);border-radius:8px;padding:2.5rem 2rem;margin-bottom:2rem;position:relative;overflow:hidden;}
 .contact-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(184,134,11,.15) 0%,transparent 60%);pointer-events:none;}
@@ -564,7 +557,15 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .contact-adventure p{font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--ink);margin-bottom:.3rem;}
 .contact-adventure small{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
 
-/* MISC */
+/* ── IDÉES ADMIN ── */
+.idea-card{border:1px solid var(--border-strong);border-radius:4px;background:var(--bg-card);padding:1rem 1.2rem;margin-bottom:.75rem;position:relative;transition:border-color .15s;}
+.idea-card:hover{border-color:var(--gold);}
+.idea-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.3rem;}
+.idea-card-author{display:flex;align-items:center;gap:.5rem;}
+.idea-avatar{width:30px;height:30px;border-radius:50%;background:var(--gold);color:white;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:.8rem;font-weight:700;flex-shrink:0;}
+.idea-card-actions{display:flex;align-items:center;gap:.4rem;}
+.idea-new-badge{background:var(--green);color:white;font-family:var(--font-mono);font-size:.6rem;padding:1px 6px;border-radius:2px;text-transform:uppercase;letter-spacing:.08em;}
+
 .email-hint{font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-top:-.4rem;margin-bottom:.5rem;}
 .text-center{text-align:center;}
 .mt-2{margin-top:2rem;}
@@ -591,7 +592,6 @@ footer strong{color:var(--ink);font-weight:500;}
 <div id="reading-progress"></div>
 <div id="festive-banner"></div>
 
-<!-- RICH TEXT CONTEXT MENU -->
 <div id="rich-ctx-menu">
   <button class="ctx-item" onclick="rtCmd('bold')"><span class="ctx-icon">𝐁</span><span class="ctx-label">Gras</span><span class="ctx-shortcut">Ctrl+B</span></button>
   <button class="ctx-item" onclick="rtCmd('italic')"><span class="ctx-icon">𝘐</span><span class="ctx-label">Italique</span><span class="ctx-shortcut">Ctrl+I</span></button>
@@ -601,7 +601,6 @@ footer strong{color:var(--ink);font-weight:500;}
   <button class="ctx-item" onclick="rtCmd('spoil')"><span class="ctx-icon">👁</span><span class="ctx-label">Spoil révélable</span></button>
 </div>
 
-<!-- KEYBOARD HELP -->
 <div id="kbd-help">
   <div class="kbd-help-box">
     <h2>⌨️ Raccourcis clavier <button onclick="closeKbdHelp()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);">✕</button></h2>
@@ -618,7 +617,6 @@ footer strong{color:var(--ink);font-weight:500;}
   </div>
 </div>
 
-<!-- MASTHEAD -->
 <header class="masthead">
   <div class="masthead-top">
     <div class="masthead-meta" id="date-display">—</div>
@@ -670,7 +668,6 @@ footer strong{color:var(--ink);font-weight:500;}
 <section class="page-section active" id="page-home">
   <div id="home-loading" class="text-center mt-2"><div class="loading-spinner"></div></div>
 
-  <!-- LOCKED -->
   <div id="home-locked" style="display:none;">
     <div class="locked-hero-wrap">
       <div class="locked-hero">
@@ -748,7 +745,6 @@ footer strong{color:var(--ink);font-weight:500;}
       </div>
     </div>
 
-    <!-- BAS : TRIVIA seul, Snake caché -->
     <div class="locked-bottom-row">
       <div class="trivia-box">
         <div class="trivia-label">🧠 Culture générale</div>
@@ -760,7 +756,6 @@ footer strong{color:var(--ink);font-weight:500;}
       </div>
     </div>
 
-    <!-- SNAKE CACHÉ -->
     <details class="snake-hidden-toggle">
       <summary>· · ·</summary>
       <div class="snake-box" style="margin-top:.75rem;">
@@ -773,7 +768,6 @@ footer strong{color:var(--ink);font-weight:500;}
       </div>
     </details>
   </div>
-  <!-- FIN LOCKED -->
 
   <div id="home-content" style="display:none;">
     <div class="journal-hero">
@@ -926,13 +920,11 @@ footer strong{color:var(--ink);font-weight:500;}
       <div class="contact-hero-title">Bienvenue sur mon blog !</div>
       <div class="contact-hero-sub">Salut à tous ! J'ai 15 ans, curieux de plein de choses et avec une envie : partager, découvrir et créer du contenu sympa.</div>
     </div>
-
     <div class="contact-section">
       <h2>📝 Qui suis-je ?</h2>
       <p>J'ai décidé de lancer ce blog généraliste pour parler un peu de tout ce qui m'intéresse… et aussi de ce qui <em>vous</em> intéresse !</p>
       <p>L'idée, c'est d'avoir un espace où on partage, où on discute, où on apprend des trucs ensemble — sans prise de tête.</p>
     </div>
-
     <div class="contact-section">
       <h2>🎯 De quoi va parler ce blog ?</h2>
       <p>Franchement ? Un peu de tout !</p>
@@ -946,7 +938,6 @@ footer strong{color:var(--ink);font-weight:500;}
       </div>
       <p style="margin-top:.5rem;">Le but, c'est de ne pas se limiter et de garder un blog <strong>vivant, varié et intéressant</strong>.</p>
     </div>
-
     <div class="contact-section">
       <h2>💡 J'ai besoin de vous !</h2>
       <p>Comme je débute, je cherche des idées d'articles. Donc si vous avez des sujets que vous aimeriez voir ici, n'hésitez pas !</p>
@@ -964,13 +955,11 @@ footer strong{color:var(--ink);font-weight:500;}
         <div id="contact-status" style="margin-top:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);min-height:1.2em;"></div>
       </div>
     </div>
-
     <div class="contact-section">
       <h2>✍️ Et pourquoi pas vous ?</h2>
       <p>Si vous aimez écrire, vous pouvez même <strong>proposer vos propres articles</strong> ! Je pourrais les publier sur le blog (avec votre accord bien sûr).</p>
       <p>C'est aussi un moyen de créer un espace où plusieurs personnes peuvent partager leurs idées.</p>
     </div>
-
     <div class="contact-adventure">
       <p>« Le début d'une aventure »</p>
       <small>Ce blog démarre tout juste, donc tout est à construire. Merci à ceux qui passeront, liront, commenteront ou participeront. À très bientôt pour les premiers articles ! 🚀</small>
@@ -1021,6 +1010,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <button class="admin-tab" onclick="switchAdminTab('analytics')" id="atab-analytics">📈 Analytics</button>
         <button class="admin-tab" onclick="switchAdminTab('moderation')" id="atab-moderation">💬 Commentaires</button>
         <button class="admin-tab" onclick="switchAdminTab('subscribers')" id="atab-subscribers">📬 Abonnés</button>
+        <button class="admin-tab" onclick="switchAdminTab('ideas')" id="atab-ideas">💡 Idées <span id="ideas-notif-badge" style="display:none;background:var(--red);color:white;font-size:.6rem;padding:1px 5px;border-radius:10px;margin-left:3px;"></span></button>
         <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
       </div>
       <div class="admin-body">
@@ -1033,19 +1023,23 @@ footer strong{color:var(--ink);font-weight:500;}
             <button class="edit-tab" onclick="switchNewTab('preview');buildNewPreview()" id="ntab-preview">👁 Aperçu</button>
           </div>
           <div id="ntab-body-content">
-            <div class="form-group"><label class="form-label">Titre du journal *</label><input type="text" class="form-input" id="new-title" placeholder="Un titre percutant..." oninput="saveDraft()"></div>
-            <div class="form-group"><label class="form-label">Résumé / accroche</label><textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..." oninput="saveDraft()"></textarea></div>
+            <div class="form-group"><label class="form-label">Titre du journal *</label><input type="text" class="form-input" id="new-title" placeholder="Un titre percutant..."></div>
+            <div class="form-group"><label class="form-label">Résumé / accroche</label><textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea></div>
             <div class="form-group">
               <label class="form-label">Pages du journal *</label>
               <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = un écran dans le lecteur.</p>
               <div class="pages-editor" id="new-pages-editor"></div>
               <button class="add-page-btn" onclick="addNewPage()">+ Ajouter une page</button>
             </div>
-            <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem;margin-top:.75rem;">
-              <div style="display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;">
-                <button id="load-draft-btn" class="btn-secondary" onclick="loadDraft()" style="display:none;">📋 Charger brouillon</button>
-                <button class="btn-secondary" onclick="clearDraft()" style="font-size:.78rem;color:var(--muted);">🗑 Effacer brouillon</button>
-              </div>
+            <!-- ── BROUILLONS MANUELS ── -->
+            <div class="draft-btn-bar">
+              <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-right:.25rem;">💾 Brouillons :</span>
+              <button class="draft-btn draft-btn-save" onclick="saveDraftManual()" title="Sauvegarder le brouillon actuel">💾 Sauvegarder</button>
+              <button class="draft-btn draft-btn-load" id="draft-load-btn" onclick="loadLastDraft()" disabled title="Charger le dernier brouillon">📋 Charger</button>
+              <button class="draft-btn draft-btn-history" id="draft-history-btn" onclick="openDraftHistory()">🗂 Historique (0)</button>
+              <button class="draft-btn draft-btn-clear" onclick="clearCurrentDraft()" title="Vider le formulaire">🗑 Effacer</button>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
               <button class="ai-correct-all-btn" id="new-ai-correct-btn" onclick="aiCorrectAllPages('new-pages-editor','new-ai-correct-btn')">✨ Corriger toutes les pages</button>
             </div>
           </div>
@@ -1106,6 +1100,18 @@ footer strong{color:var(--ink);font-weight:500;}
           </div>
           <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);padding:.6rem;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:3px;margin-bottom:1rem;">🔒 Les clés EmailJS sont configurées dans les <strong>Secrets Cloudflare Worker</strong>. Aucune clé n'est stockée côté client.</p>
           <div id="admin-subscribers-list" style="max-height:400px;overflow-y:auto;"></div>
+        </div>
+        <!-- IDÉES CONTACT -->
+        <div id="atab-body-ideas" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
+            <div>
+              <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);">Propositions d'articles envoyées via la page Contact.</p>
+              <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-top:.3rem;" id="ideas-count">0 idée</p>
+            </div>
+            <button class="btn-danger" onclick="clearAllIdeas()">🗑 Tout effacer</button>
+          </div>
+          <div id="ideas-list"></div>
+          <div id="ideas-empty" class="empty-state" style="display:none;"><p>Aucune idée reçue pour l'instant.<br><span style="font-size:.78rem;">Les propositions envoyées via la page Contact apparaîtront ici.</span></p></div>
         </div>
         <!-- PARAMÈTRES -->
         <div id="atab-body-settings" style="display:none;">
@@ -1188,12 +1194,12 @@ footer strong{color:var(--ink);font-weight:500;}
 <script>
 const WORKER_URL = 'https://capnews-backend.capkychannel.workers.dev';
 const SUBS_STORAGE_KEY = 'capnews_subscribers';
+const DRAFT_LIST_KEY = 'capnews_drafts';
 
 let db = { journals:[], comments:[], settings:{}, reactions:{}, pageviews:{} };
 let adminToken = null;
 let currentJournalId = null;
 let modalJournalId = null;
-// Pour chaque lecteur on stocke la page courante (index 0 = couverture)
 let bookPage = 0, modalPage = 0, previewPage = 0, newPreviewPage = 0;
 let homeBookTotal = 0, modalBookTotal = 0, previewBookTotal = 0, newPreviewBookTotal = 0;
 let bookCommentRating = 0, modalCommentRating = 0;
@@ -1204,7 +1210,6 @@ let swipeStartX = 0;
 let activeRichTarget = null;
 let calendarDate = new Date();
 let isImmersive = false;
-let draftTimer = null;
 let liveViewCount = 0;
 
 const QUOTES = [
@@ -1238,7 +1243,7 @@ const TRIVIA_QUESTIONS = [
   {q:"En quelle langue a été écrit Don Quichotte ?",opts:["Portugais","Italien","Espagnol","Latin"],a:2,exp:"Cervantes l'a écrit en espagnol, publié en 1605."},
   {q:"Combien de couleurs compte l'arc-en-ciel ?",opts:["5","6","7","8"],a:2,exp:"Rouge, orange, jaune, vert, bleu, indigo, violet — 7 couleurs."},
   {q:"Quel animal est le symbole de la France ?",opts:["L'aigle","Le coq","Le lion","Le renard"],a:1,exp:"Le coq gaulois est symbole officieux depuis la Révolution."},
-  {q:"Combien de pays composent l'Union Européenne ?",opts:["24","25","27","30"],a:2,exp:"27 pays depuis le Brexit du Royaume-Uni en 2020."},
+  {q:"Combien y a-t-il de pays dans l'Union Européenne ?",opts:["24","25","27","30"],a:2,exp:"27 pays depuis le Brexit du Royaume-Uni en 2020."},
   {q:"Qui a écrit Les Misérables ?",opts:["Balzac","Zola","Hugo","Flaubert"],a:2,exp:"Victor Hugo l'a publié en 1862."},
   {q:"Quelle est la plus haute montagne du monde ?",opts:["K2","Kangchenjunga","Lhotse","Everest"],a:3,exp:"L'Everest culmine à 8 849 m au Népal."},
   {q:"En quelle année a eu lieu la Révolution française ?",opts:["1776","1789","1799","1815"],a:1,exp:"La Révolution française a débuté en 1789 avec la prise de la Bastille."},
@@ -1278,7 +1283,7 @@ function triviaAnswer(i,q){
 }
 function triviaNext(){ triviaIdx++; triviaLoad(); }
 
-// ── SNAKE ──
+// ── SNAKE — CORRECTION : on vérifie que le focus n'est PAS dans un champ texte ──
 (function initSnake(){
   const cvs=document.getElementById('snake-canvas'); if(!cvs)return;
   const ctx=cvs.getContext('2d'); const COLS=28,ROWS=14,CS=14;
@@ -1291,7 +1296,17 @@ function triviaNext(){ triviaIdx++; triviaLoad(); }
   function tick(){ dir={x:nextDir.x,y:nextDir.y}; const head={x:snake[0].x+dir.x,y:snake[0].y+dir.y}; if(head.x<0||head.x>=COLS||head.y<0||head.y>=ROWS||snake.some(s=>s.x===head.x&&s.y===head.y)){ clearInterval(interval); interval=null; running=false; if(score>best){best=score;const b=document.getElementById('snake-best');if(b)b.textContent=best;} const msg=document.getElementById('snake-msg'); if(msg)msg.textContent='Game over — score : '+score+' · Cliquer pour rejouer'; draw(); return; } snake.unshift(head); if(head.x===food.x&&head.y===food.y){ score++; const sc=document.getElementById('snake-score');if(sc)sc.textContent=score; food=rndFood(); } else{ snake.pop(); } draw(); }
   function startGame(){ if(running)return; running=true; init(); const msg=document.getElementById('snake-msg');if(msg)msg.textContent=''; interval=setInterval(tick,110); }
   cvs.addEventListener('click',startGame);
-  document.addEventListener('keydown',e=>{ const map={'ArrowUp':{x:0,y:-1},'ArrowDown':{x:0,y:1},'ArrowLeft':{x:-1,y:0},'ArrowRight':{x:1,y:0},'z':{x:0,y:-1},'Z':{x:0,y:-1},'q':{x:-1,y:0},'Q':{x:-1,y:0},'s':{x:0,y:1},'S':{x:0,y:1},'d':{x:1,y:0},'D':{x:1,y:0}}; const n=map[e.key]; if(!n)return; if(nextDir.x===-n.x&&nextDir.y===-n.y)return; e.preventDefault(); nextDir={x:n.x,y:n.y}; if(!running)startGame(); });
+
+  // ✅ CORRECTION : ne pas intercepter les touches quand on est dans un champ texte
+  document.addEventListener('keydown',e=>{
+    if(e.target.matches('input,textarea,select,[contenteditable]')) return;
+    const map={'ArrowUp':{x:0,y:-1},'ArrowDown':{x:0,y:1},'ArrowLeft':{x:-1,y:0},'ArrowRight':{x:1,y:0},'z':{x:0,y:-1},'Z':{x:0,y:-1},'q':{x:-1,y:0},'Q':{x:-1,y:0},'s':{x:0,y:1},'S':{x:0,y:1},'d':{x:1,y:0},'D':{x:1,y:0}};
+    const n=map[e.key]; if(!n)return;
+    if(nextDir.x===-n.x&&nextDir.y===-n.y)return;
+    e.preventDefault(); nextDir={x:n.x,y:n.y};
+    if(!running)startGame();
+  });
+
   cvs.addEventListener('touchstart',e=>{touchSX=e.touches[0].clientX;touchSY=e.touches[0].clientY;},{passive:true});
   cvs.addEventListener('touchend',e=>{ const dx=e.changedTouches[0].clientX-touchSX,dy=e.changedTouches[0].clientY-touchSY; if(Math.abs(dx)<10&&Math.abs(dy)<10){startGame();return;} let n; if(Math.abs(dx)>Math.abs(dy))n=dx>0?{x:1,y:0}:{x:-1,y:0}; else n=dy>0?{x:0,y:1}:{x:0,y:-1}; if(nextDir.x===-n.x&&nextDir.y===-n.y)return; nextDir=n; if(!running)startGame(); },{passive:true});
   init();
@@ -1322,8 +1337,8 @@ function removeSubscriberLocal(email){ const subs=getSubscribers().filter(s=>s.e
 async function subscribeViaWorker(email,name){ try{ await api('/api/subscribe',{email,name}); }catch(e){ console.warn('Subscribe worker error:',e.message); } }
 async function unsubscribeViaWorker(email){ try{ await api('/api/unsubscribe',{email}); }catch(e){ console.warn('Unsub worker error:',e.message); } }
 function renderLeaderboard(listId){ const el=document.getElementById(listId); if(!el)return; const subs=getSubscribers().slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5); if(!subs.length){el.innerHTML='<p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);">Sois le premier abonné !</p>';return;} el.innerHTML=subs.map(s=>{const initials=(s.name||'?').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2)||'?';return `<div class="lb-row"><div class="lb-avatar">${escHtml(initials)}</div><div class="lb-name">${escHtml(s.name)}</div><div class="lb-date">${timeSince(s.date)}</div></div>`;}).join(''); }
-async function doSubscribe(emailId,nameId,btnId,statusId,unsubZoneId){ const email=(document.getElementById(emailId)?.value||'').trim(); const rawName=(document.getElementById(nameId)?.value||'').trim(); const name=rawName||'Abonné de la CapNews'; const statusEl=document.getElementById(statusId); const btn=document.getElementById(btnId); if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){if(statusEl){statusEl.textContent='❌ Email invalide.';statusEl.style.color='var(--red)';}return;} const added=addSubscriberLocal(email,name); if(!added){if(statusEl){statusEl.textContent='✓ Déjà abonné !';statusEl.style.color='var(--gold-light)';}return;} if(btn){btn.disabled=true;btn.textContent='⏳...';} await subscribeViaWorker(email,name); if(document.getElementById(emailId))document.getElementById(emailId).value=''; if(document.getElementById(nameId))document.getElementById(nameId).value=''; if(statusEl){statusEl.textContent='🎉 Bienvenue '+name+' !';statusEl.style.color='#a8e6a3';} if(btn){btn.disabled=false;btn.textContent="S'abonner →";} renderLeaderboard('lb-list-locked'); renderAdminSubscribers(); showToast('Abonnement confirmé !','success'); }
-async function doUnsub(emailId,zoneId,statusId){ const email=(document.getElementById(emailId)?.value||'').trim(); if(!email)return; removeSubscriberLocal(email); await unsubscribeViaWorker(email); const z=document.getElementById(zoneId);if(z)z.classList.remove('open'); const s=document.getElementById(statusId);if(s){s.textContent='✓ Désabonnement effectué.';s.style.color='var(--gold-light)';} if(document.getElementById(emailId))document.getElementById(emailId).value=''; renderLeaderboard('lb-list-locked'); renderAdminSubscribers(); showToast('Désabonné.','info'); }
+async function doSubscribe(emailId,nameId,btnId,statusId,unsubZoneId){ const email=(document.getElementById(emailId)?.value||'').trim(); const rawName=(document.getElementById(nameId)?.value||'').trim(); const name=rawName||'Abonné de la CapNews'; const statusEl=document.getElementById(statusId); const btn=document.getElementById(btnId); if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){if(statusEl){statusEl.textContent='❌ Email invalide.';statusEl.style.color='#ff8888';}return;} const added=addSubscriberLocal(email,name); if(!added){if(statusEl){statusEl.textContent='✓ Déjà abonné !';statusEl.style.color='#d4a843';}return;} if(btn){btn.disabled=true;btn.textContent='⏳...';} await subscribeViaWorker(email,name); if(document.getElementById(emailId))document.getElementById(emailId).value=''; if(document.getElementById(nameId))document.getElementById(nameId).value=''; if(statusEl){statusEl.textContent='🎉 Bienvenue '+name+' !';statusEl.style.color='#a8e6a3';} if(btn){btn.disabled=false;btn.textContent="S'abonner →";} renderLeaderboard('lb-list-locked'); renderAdminSubscribers(); showToast('Abonnement confirmé !','success'); }
+async function doUnsub(emailId,zoneId,statusId){ const email=(document.getElementById(emailId)?.value||'').trim(); if(!email)return; removeSubscriberLocal(email); await unsubscribeViaWorker(email); const z=document.getElementById(zoneId);if(z)z.classList.remove('open'); const s=document.getElementById(statusId);if(s){s.textContent='✓ Désabonnement effectué.';s.style.color='#d4a843';} if(document.getElementById(emailId))document.getElementById(emailId).value=''; renderLeaderboard('lb-list-locked'); renderAdminSubscribers(); showToast('Désabonné.','info'); }
 function handleSubscribeLocked(){ doSubscribe('sub-email-locked','sub-name-locked','sub-btn-locked','sub-status-locked','unsub-zone-locked'); }
 function handleUnsubLocked(){ doUnsub('unsub-email-locked','unsub-zone-locked','sub-status-locked'); }
 function handleSubscribe(){ doSubscribe('sub-email','sub-name','sub-btn','sub-status','unsub-zone-home'); }
@@ -1336,21 +1351,228 @@ function submitContactIdea(){
   const msg=(document.getElementById('contact-message')?.value||'').trim();
   const statusEl=document.getElementById('contact-status');
   if(!msg){if(statusEl){statusEl.textContent='❌ Veuillez écrire votre idée !';statusEl.style.color='var(--red)';}return;}
-  // Store local
   const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
-  ideas.push({name:name||'Anonyme',message:msg,date:new Date().toISOString()});
+  ideas.push({name:name||'Anonyme',message:msg,date:new Date().toISOString(),isNew:true});
   localStorage.setItem('capnews_ideas',JSON.stringify(ideas));
   document.getElementById('contact-name').value='';
   document.getElementById('contact-message').value='';
   if(statusEl){statusEl.textContent='✅ Merci '+(name||'')+'! Votre idée a bien été envoyée.';statusEl.style.color='#4caf50';}
   showToast('Idée envoyée, merci !','success');
+  updateIdeasBadge();
   setTimeout(()=>{if(statusEl)statusEl.textContent='';},4000);
+}
+
+function updateIdeasBadge(){
+  const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
+  const badge=document.getElementById('ideas-notif-badge');
+  if(!badge)return;
+  if(ideas.length>0){badge.style.display='inline';badge.textContent=ideas.length;}
+  else{badge.style.display='none';}
+}
+
+// ── BROUILLONS MANUELS ──
+function getDraftList(){ try{ return JSON.parse(localStorage.getItem(DRAFT_LIST_KEY)||'[]'); }catch{ return []; } }
+function saveDraftList(list){ localStorage.setItem(DRAFT_LIST_KEY,JSON.stringify(list)); }
+
+function saveDraftManual(){
+  if(!isAdmin)return;
+  const title=(document.getElementById('new-title')?.value||'').trim();
+  const pages=getPagesFromEditor('new-pages-editor');
+  if(!title&&!pages.length){showToast('Rien à sauvegarder.','info');return;}
+  const draft={
+    id:Date.now().toString(),
+    savedAt:new Date().toISOString(),
+    title:title||'(sans titre)',
+    excerpt:document.getElementById('new-excerpt')?.value||'',
+    pages,
+    date:document.getElementById('new-date')?.value||'',
+    category:document.getElementById('new-category')?.value||'',
+    mood:document.getElementById('new-mood')?.value||'',
+    author:document.getElementById('new-author')?.value||'',
+    tags:document.getElementById('new-tags')?.value||'',
+    readTime:document.getElementById('new-readtime')?.value||'',
+    coverImg:document.getElementById('new-cover-img')?.value||'',
+    audioUrl:document.getElementById('new-audio-url')?.value||'',
+  };
+  const list=getDraftList();
+  list.unshift(draft);
+  if(list.length>10)list.pop();
+  saveDraftList(list);
+  const ind=document.getElementById('draft-indicator');
+  if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);}
+  showToast('💾 Brouillon "'+draft.title+'" sauvegardé !','success');
+  updateDraftBtns();
+}
+
+function loadLastDraft(){
+  const list=getDraftList();
+  if(!list.length){showToast('Aucun brouillon disponible.','info');return;}
+  loadDraftData(list[0]);
+  showToast('📋 Brouillon "'+list[0].title+'" chargé !','success');
+}
+
+function loadDraftData(d){
+  if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title==='(sans titre)'?'':d.title;
+  if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
+  if(d.date&&document.getElementById('new-date'))document.getElementById('new-date').value=d.date;
+  if(d.category&&document.getElementById('new-category'))document.getElementById('new-category').value=d.category;
+  if(d.mood&&document.getElementById('new-mood'))document.getElementById('new-mood').value=d.mood;
+  if(document.getElementById('new-author'))document.getElementById('new-author').value=d.author||'';
+  if(document.getElementById('new-tags'))document.getElementById('new-tags').value=d.tags||'';
+  if(document.getElementById('new-readtime'))document.getElementById('new-readtime').value=d.readTime||'';
+  if(document.getElementById('new-cover-img'))document.getElementById('new-cover-img').value=d.coverImg||'';
+  if(document.getElementById('new-audio-url'))document.getElementById('new-audio-url').value=d.audioUrl||'';
+  const editor=document.getElementById('new-pages-editor');
+  if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
+}
+
+function clearCurrentDraft(){
+  if(!confirm('Vider le formulaire ?'))return;
+  ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('new-date').value=getTodayStr();
+  initNewPagesEditor();
+  showToast('Formulaire vidé.','info');
+}
+
+function openDraftHistory(){
+  const list=getDraftList();
+  document.getElementById('draft-history-modal')?.remove();
+  const modal=document.createElement('div');
+  modal.id='draft-history-modal';
+  modal.style.cssText='position:fixed;inset:0;background:rgba(26,18,9,.8);z-index:9000;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(6px);';
+  let rows='';
+  if(!list.length){
+    rows='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;text-align:center;padding:2rem 0;">Aucun brouillon sauvegardé.</p>';
+  }else{
+    rows=list.map(d=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-family:var(--font-display);font-weight:700;color:var(--ink);font-size:.95rem;">${escHtml(d.title)}</div>
+          <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">${timeSince(d.savedAt)} · ${d.pages?d.pages.length:0} page(s)</div>
+        </div>
+        <div style="display:flex;gap:.4rem;">
+          <button onclick="loadDraftFromHistory('${d.id}')" style="background:var(--gold);color:white;border:none;padding:.35rem .8rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Charger</button>
+          <button onclick="deleteDraftFromHistory('${d.id}')" style="background:none;border:1px solid var(--red);color:var(--red);padding:.35rem .7rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  modal.innerHTML=`
+    <div style="background:var(--parchment);border:1px solid var(--border-strong);border-radius:8px;padding:2rem;max-width:580px;width:100%;box-shadow:0 8px 48px rgba(0,0,0,.4);max-height:80vh;overflow-y:auto;color:var(--ink);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--ink);">🗂 Historique des brouillons</h2>
+        <button onclick="document.getElementById('draft-history-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--muted);">✕</button>
+      </div>
+      <div>${rows}</div>
+      ${list.length?'<div style="margin-top:1rem;text-align:right;"><button onclick="clearAllDrafts()" style="background:none;border:1px solid var(--red);color:var(--red);padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Tout effacer</button></div>':''}
+    </div>
+  `;
+  document.body.appendChild(modal);
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+}
+
+function loadDraftFromHistory(id){
+  const list=getDraftList();
+  const d=list.find(x=>x.id===id);
+  if(!d)return;
+  loadDraftData(d);
+  document.getElementById('draft-history-modal')?.remove();
+  showToast('Brouillon "'+d.title+'" chargé !','success');
+}
+
+function deleteDraftFromHistory(id){
+  const list=getDraftList().filter(x=>x.id!==id);
+  saveDraftList(list);
+  openDraftHistory();
+  updateDraftBtns();
+}
+
+function clearAllDrafts(){
+  if(!confirm('Supprimer tous les brouillons ?'))return;
+  saveDraftList([]);
+  document.getElementById('draft-history-modal')?.remove();
+  updateDraftBtns();
+  showToast('Tous les brouillons effacés.','info');
+}
+
+function clearDraft(){ clearCurrentDraft(); }
+function saveDraft(){ /* auto-save désactivé — boutons manuels uniquement */ }
+
+function updateDraftBtns(){
+  const list=getDraftList();
+  const histBtn=document.getElementById('draft-history-btn');
+  if(histBtn)histBtn.textContent='🗂 Historique ('+list.length+')';
+  const loadBtn=document.getElementById('draft-load-btn');
+  if(loadBtn)loadBtn.disabled=!list.length;
+}
+
+function checkDraft(){ updateDraftBtns(); }
+
+// ── IDÉES (page Contact) ──
+function loadIdeas(){
+  const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
+  const listEl=document.getElementById('ideas-list');
+  const emptyEl=document.getElementById('ideas-empty');
+  const countEl=document.getElementById('ideas-count');
+  if(!listEl)return;
+  if(countEl)countEl.textContent=ideas.length+' idée'+(ideas.length>1?'s':'');
+  if(!ideas.length){listEl.innerHTML='';if(emptyEl)emptyEl.style.display='block';return;}
+  if(emptyEl)emptyEl.style.display='none';
+  listEl.innerHTML=[...ideas].reverse().map((idea,ri)=>{
+    const realIdx=ideas.length-1-ri;
+    return `<div class="idea-card">
+      <div class="idea-card-header">
+        <div class="idea-card-author">
+          <div class="idea-avatar">${escHtml((idea.name||'?')[0].toUpperCase())}</div>
+          <span style="font-weight:600;font-size:.9rem;color:var(--ink);">${escHtml(idea.name||'Anonyme')}</span>
+          ${idea.isNew?'<span class="idea-new-badge">Nouveau</span>':''}
+        </div>
+        <div class="idea-card-actions">
+          <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">${timeSince(idea.date)}</span>
+          <button onclick="deleteIdea(${realIdx})" style="background:none;border:1px solid var(--red);color:var(--red);padding:2px 7px;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;margin-left:.5rem;">✕</button>
+        </div>
+      </div>
+      <p style="font-size:.95rem;color:var(--ink-light);line-height:1.65;margin-top:.5rem;">${escHtml(idea.message)}</p>
+      <button onclick="useIdeaAsTitle('${escHtml(idea.message.slice(0,60)).replace(/'/g,'&apos;')}')" style="margin-top:.6rem;background:rgba(184,134,11,.1);border:1px solid rgba(184,134,11,.3);color:var(--gold);padding:.3rem .75rem;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;">✍ Utiliser comme titre →</button>
+    </div>`;
+  }).join('');
+  // Marquer comme lus
+  const updated=ideas.map(x=>({...x,isNew:false}));
+  localStorage.setItem('capnews_ideas',JSON.stringify(updated));
+  updateIdeasBadge();
+}
+
+function deleteIdea(realIdx){
+  const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
+  ideas.splice(realIdx,1);
+  localStorage.setItem('capnews_ideas',JSON.stringify(ideas));
+  loadIdeas();
+  updateIdeasBadge();
+  showToast('Idée supprimée.','info');
+}
+
+function clearAllIdeas(){
+  if(!confirm('Supprimer toutes les idées ?'))return;
+  localStorage.removeItem('capnews_ideas');
+  loadIdeas();
+  updateIdeasBadge();
+  showToast('Idées effacées.','info');
+}
+
+function useIdeaAsTitle(text){
+  switchAdminTab('new');
+  setTimeout(()=>{
+    const titleEl=document.getElementById('new-title');
+    if(titleEl){titleEl.value=text;titleEl.focus();}
+    showToast('Titre prérempli !','success');
+  },100);
 }
 
 // ── INIT ──
 window.onload = async () => {
   loadTheme(); updateDateDisplay(); startCountdown(); setupContextMenu(); checkFestive(); setupReadingProgress(); showQuote();
   await loadData(); applyBranding(); renderHome(); renderSidebarCalendar(); checkDraft(); startLiveSimulation(); checkUnsubLink(); loadWeather();
+  updateIdeasBadge();
   const p=new URLSearchParams(location.search).get('j'); if(p)setTimeout(()=>openModal(p),800);
 };
 
@@ -1419,7 +1641,7 @@ function buildRichEditor(text,idx,editorId){
   const ta=document.createElement('textarea'); ta.className='richtext-area'; ta.value=text||''; ta.setAttribute('data-page-idx',idx);
   const charCount=document.createElement('div'); charCount.className='richtext-charcount';
   function updateCC(){ charCount.textContent=ta.value.length+' caractères · '+calcReadTime([ta.value]); }
-  ta.addEventListener('input',()=>{activeRichTarget=ta;updateCC();saveDraft();});
+  ta.addEventListener('input',()=>{activeRichTarget=ta;updateCC();});
   ta.addEventListener('focus',()=>{activeRichTarget=ta;});
   ta.addEventListener('contextmenu',e=>{activeRichTarget=ta;e.preventDefault();showCtxMenu(e.clientX,e.clientY);});
   updateCC();
@@ -1442,8 +1664,8 @@ function applyRichCmd(cmd,ta){
   ta.value=ta.value.substring(0,start)+r+ta.value.substring(end); ta.selectionStart=start; ta.selectionEnd=start+r.length; ta.focus(); hideCtxMenu();
 }
 
-// ── CORRECTEUR IA (toutes les pages) ──
-async function aiCorrectAllPages(editorId, btnId){
+// ── CORRECTEUR IA ──
+async function aiCorrectAllPages(editorId,btnId){
   if(!isAdmin){showToast('Réservé à l\'admin.','error');return;}
   const areas=document.querySelectorAll('#'+editorId+' .richtext-area');
   if(!areas.length){showToast('Aucune page à corriger.','info');return;}
@@ -1452,10 +1674,8 @@ async function aiCorrectAllPages(editorId, btnId){
   let corrected=0;
   for(const ta of areas){
     const text=ta.value.trim(); if(!text)continue;
-    try{
-      const res=await api('/api/spellcheck',{text});
-      if(res.corrected){ta.value=res.corrected;corrected++;}
-    }catch(e){showToast('Erreur sur une page : '+e.message,'error');}
+    try{const res=await api('/api/spellcheck',{text});if(res.corrected){ta.value=res.corrected;corrected++;}}
+    catch(e){showToast('Erreur sur une page : '+e.message,'error');}
   }
   if(btn){btn.disabled=false;btn.textContent='✨ Corriger toutes les pages';}
   showToast(corrected>0?'✅ '+corrected+' page'+(corrected>1?'s':'')+' corrigée'+(corrected>1?'s':'')+'!':'Aucune correction nécessaire.','success');
@@ -1466,13 +1686,10 @@ function showCtxMenu(x,y){ const menu=document.getElementById('rich-ctx-menu'); 
 function hideCtxMenu(){ document.getElementById('rich-ctx-menu').classList.remove('visible'); }
 function rtCmd(cmd){ applyRichCmd(cmd,activeRichTarget); }
 
-// ── BOOK RENDERER (page par page, couverture séparée) ──
-// Retourne le nombre total de pages (couverture + pages texte + commentaires)
+// ── BOOK RENDERER ──
 function buildBookPages(j,readerEl,onStartRead,searchQ){
-  const pages=getPages(j); const total=pages.length+1; // +1 = couverture
+  const pages=getPages(j); const total=pages.length+1;
   readerEl.innerHTML='';
-
-  // COUVERTURE
   const cover=document.createElement('div'); cover.className='book-page cover-page';
   let chips=''; if(j.category)chips+='<span class="chip cat">'+escHtml(j.category)+'</span>'; if(j.mood)chips+='<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>'; if(j.author)chips+='<span class="chip">✒ '+escHtml(j.author)+'</span>';
   let coverExtra=''; if(j.coverImg)coverExtra+=`<div style="margin-bottom:1rem;border-radius:4px;overflow:hidden;max-height:180px;"><img src="${j.coverImg}" style="width:100%;max-height:180px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
@@ -1480,14 +1697,11 @@ function buildBookPages(j,readerEl,onStartRead,searchQ){
   const rt=j.readTime||calcReadTime(pages);
   cover.innerHTML='<div class="cover-edition">'+escHtml((db.settings.siteName||'CapNews').toUpperCase())+' · '+formatDateFr(j.date)+'</div>'+'<div class="cover-title">'+escHtml(j.title)+'</div>'+(j.excerpt?'<div class="cover-excerpt">'+parseRichText(j.excerpt)+'</div>':'')+coverExtra+'<div class="cover-meta">'+chips+'</div>'+'<div class="cover-readtime">⏱ '+escHtml(rt)+'</div>'+'<button class="cover-start-btn" id="cover-start-'+readerEl.id+'">Lire le journal →</button>'+'<span class="cover-page-num">Couverture · '+pages.length+' page'+(pages.length>1?'s':'')+'</span>';
   readerEl.appendChild(cover);
-
-  // PAGES TEXTE — chacune dans son propre div.book-page
   pages.forEach((p,i)=>{
     const pg=document.createElement('div'); pg.className='book-page';
     pg.innerHTML='<p class="page-body-text'+(i===0?' page-drop-cap':'')+'">'+parseRichText(p,searchQ)+'</p><span class="cover-page-num">Page '+(i+1)+' / '+pages.length+'</span>';
     readerEl.appendChild(pg);
   });
-
   const startBtn=readerEl.querySelector('#cover-start-'+readerEl.id); if(startBtn)startBtn.onclick=()=>onStartRead(1);
   return total;
 }
@@ -1504,16 +1718,13 @@ function setBookPage(readerEl,pageIdx,total,dotsEl,counterEl,btnPrev,btnNext,onP
 
 // ── HOME BOOK ──
 function renderBook(j){
-  const pages=getPages(j); homeBookTotal=pages.length+2; // couverture + pages + commentaires
+  const pages=getPages(j); homeBookTotal=pages.length+2;
   const reader=document.getElementById('book-reader');
   buildBookPages(j,reader,(p)=>{bookPage=p;goToBookPage(j);},'');
-
-  // PAGE COMMENTAIRES
   const cp=document.createElement('div'); cp.className='book-page comments-book-page';
   const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
   cp.innerHTML='<h2>💬 Avis des lecteurs</h2><div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;color:var(--ink);">Laisser un avis</h3><div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div><p class="email-hint">L\'email reste privé.</p><div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div><textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);transition:border-color .2s;"></textarea><button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div><div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div><div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div><span class="cover-page-num">Commentaires</span>';
   reader.appendChild(cp);
-
   reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
   reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
   goToBookPage(j);
@@ -1629,6 +1840,7 @@ async function submitModalComment(){
   catch(e){showToast('Erreur : '+e.message,'error');}
 }
 function renderComments(jid,containerId,starFilter=0){
+  if(!containerId)return;
   const list=document.getElementById(containerId); if(!list)return;
   let top=(db.comments||[]).filter(c=>c.journalId===jid&&!c.flagged&&!c.isReply).sort((a,b)=>new Date(b.date)-new Date(a.date));
   if(starFilter>0)top=top.filter(c=>c.rating===starFilter);
@@ -1649,8 +1861,8 @@ async function submitReply(parentId,jid,containerId){ if(!isAdmin)return; const 
 async function deleteComment(id,containerId,jid){ if(!isAdmin)return; if(!confirm('Supprimer cet avis ?'))return; try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);if(containerId&&jid)renderComments(jid,containerId,0);if(currentJournalId)renderReactions(currentJournalId);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');} }
 
 // ── RECENT / TAGS ──
-function renderRecentList(){ const list=document.getElementById('recent-list'); list.innerHTML=''; const todayStr=getTodayStr(); db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j=>{const isToday=j.date===todayStr;const li=document.createElement('li');li.innerHTML='<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\''+j.id+'\')">'+escHtml(j.title)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+'</span></div>';list.appendChild(li);}); if(!list.children.length)list.innerHTML='<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>'; }
-function renderTagsCloud(){ const cloud=document.getElementById('tags-cloud'); cloud.innerHTML=''; const tc={}; db.journals.filter(j=>isPublished(j)).forEach(j=>{(j.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>{tc[t]=(tc[t]||0)+1;});}); Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([tag,count])=>{const s=document.createElement('span');s.className='chip';s.style.cursor='pointer';s.textContent='#'+tag+' ('+count+')';s.onclick=()=>{showPage('history');setTimeout(()=>{document.getElementById('search-input').value=tag;filterHistory();},100);};cloud.appendChild(s);}); }
+function renderRecentList(){ const list=document.getElementById('recent-list'); if(!list)return; list.innerHTML=''; const todayStr=getTodayStr(); db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j=>{const isToday=j.date===todayStr;const li=document.createElement('li');li.innerHTML='<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\''+j.id+'\')">'+escHtml(j.title)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+'</span></div>';list.appendChild(li);}); if(!list.children.length)list.innerHTML='<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>'; }
+function renderTagsCloud(){ const cloud=document.getElementById('tags-cloud'); if(!cloud)return; cloud.innerHTML=''; const tc={}; db.journals.filter(j=>isPublished(j)).forEach(j=>{(j.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>{tc[t]=(tc[t]||0)+1;});}); Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([tag,count])=>{const s=document.createElement('span');s.className='chip';s.style.cursor='pointer';s.textContent='#'+tag+' ('+count+')';s.onclick=()=>{showPage('history');setTimeout(()=>{document.getElementById('search-input').value=tag;filterHistory();},100);};cloud.appendChild(s);}); }
 
 // ── HISTORY ──
 function renderHistory(){
@@ -1696,14 +1908,35 @@ function openModal(jid){
   document.getElementById('journal-modal').classList.remove('hidden'); document.body.style.overflow='hidden';
   api('/api/pageview',{journalId:jid}).catch(()=>{});
 }
-function closeModal(){ document.getElementById('journal-modal').classList.add('hidden'); document.body.style.overflow=''; modalJournalId=null; }
+function closeModal(){
+  document.getElementById('journal-modal').classList.add('hidden');
+  document.body.style.overflow='';
+  modalJournalId=null;
+}
 document.getElementById('journal-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 
 // ── ADMIN LOGIN ──
 async function adminLogin(){
   const pw=document.getElementById('admin-pw-input').value; const btn=document.getElementById('admin-login-btn'); const err=document.getElementById('admin-err');
   if(!pw)return; btn.disabled=true; btn.textContent='Vérification...'; err.textContent='';
-  try{const res=await api('/api/login',{password:pw});adminToken=res.token;document.getElementById('admin-login-screen').style.display='none';document.getElementById('admin-panel').style.display='block';document.getElementById('admin-pw-input').value='';document.getElementById('new-date').value=getTodayStr();initNewPagesEditor();loadManageList();loadModeration();loadSettings();const j=getTodayJournal();if(j){currentJournalId=j.id;document.getElementById('edit-fab').classList.remove('hidden');}showToast('Connecté en tant qu\'admin.','success');updateAutoReadTime();checkDraft();}
+  try{
+    const res=await api('/api/login',{password:pw});
+    adminToken=res.token;
+    document.getElementById('admin-login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('admin-pw-input').value='';
+    document.getElementById('new-date').value=getTodayStr();
+    initNewPagesEditor();
+    loadManageList();
+    loadModeration();
+    loadSettings();
+    const j=getTodayJournal();
+    if(j){currentJournalId=j.id;document.getElementById('edit-fab').classList.remove('hidden');}
+    showToast('Connecté en tant qu\'admin.','success');
+    updateAutoReadTime();
+    checkDraft();
+    updateIdeasBadge();
+  }
   catch(e){err.textContent='❌ '+e.message;}
   btn.disabled=false; btn.textContent='Se connecter →';
 }
@@ -1711,7 +1944,21 @@ function adminLogout(){ adminToken=null; document.getElementById('admin-login-sc
 function updateAutoReadTime(){ const newPages=getPagesFromEditor('new-pages-editor'); const el=document.getElementById('new-readtime-auto'); if(el&&newPages.length)el.textContent='Auto : '+calcReadTime(newPages); }
 
 // ── ADMIN TABS ──
-function switchAdminTab(tab){ ['new','manage','calendar','analytics','moderation','subscribers','settings'].forEach(t=>{document.getElementById('atab-'+t).classList.toggle('active',t===tab);document.getElementById('atab-body-'+t).style.display=t===tab?'block':'none';}); if(tab==='manage')loadManageList();if(tab==='moderation')loadModeration();if(tab==='settings')loadSettings();if(tab==='calendar')renderAdminCalendar();if(tab==='analytics')loadAnalytics();if(tab==='subscribers')renderAdminSubscribers(); }
+function switchAdminTab(tab){
+  ['new','manage','calendar','analytics','moderation','subscribers','ideas','settings'].forEach(t=>{
+    const btn=document.getElementById('atab-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    const body=document.getElementById('atab-body-'+t);
+    if(body)body.style.display=t===tab?'block':'none';
+  });
+  if(tab==='manage')loadManageList();
+  if(tab==='moderation')loadModeration();
+  if(tab==='settings')loadSettings();
+  if(tab==='calendar')renderAdminCalendar();
+  if(tab==='analytics')loadAnalytics();
+  if(tab==='subscribers')renderAdminSubscribers();
+  if(tab==='ideas')loadIdeas();
+}
 function switchEditTab(tab){ ['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';}); if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);} }
 function switchNewTab(tab){ ['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';}); if(tab==='meta')updateAutoReadTime(); }
 
@@ -1731,16 +1978,22 @@ function initNewPagesEditor(){ const e=document.getElementById('new-pages-editor
 
 // ── PUBLISH ──
 async function publishJournal(){
-  if(!isAdmin)return; const title=document.getElementById('new-title').value.trim(); const date=document.getElementById('new-date').value; const pages=getPagesFromEditor('new-pages-editor');
-  if(!title||!date){showToast('Titre et date requis.','error');return;}if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  if(!isAdmin)return;
+  const title=document.getElementById('new-title').value.trim();
+  const date=document.getElementById('new-date').value;
+  const pages=getPagesFromEditor('new-pages-editor');
+  if(!title||!date){showToast('Titre et date requis.','error');return;}
+  if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
   const autoRt=calcReadTime(pages);
   const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),readTime:document.getElementById('new-readtime').value.trim()||autoRt,coverImg:document.getElementById('new-cover-img').value.trim(),audioUrl:document.getElementById('new-audio-url').value.trim()};
   const btn=document.getElementById('publish-btn'); btn.disabled=true; btn.textContent='Enregistrement...';
   try{
     const res=await api('/api/admin/save',j); j.id=res.id; j.createdAt=new Date().toISOString(); db.journals.push(j);
-    showToast('Journal enregistré !','success'); clearDraft();
+    showToast('Journal enregistré !','success');
     ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    document.getElementById('new-date').value=getTodayStr(); document.getElementById('new-cover-img-preview').style.display='none'; document.getElementById('new-audio-preview').style.display='none';
+    document.getElementById('new-date').value=getTodayStr();
+    document.getElementById('new-cover-img-preview').style.display='none';
+    document.getElementById('new-audio-preview').style.display='none';
     initNewPagesEditor(); renderHome(); loadManageList(); renderSidebarCalendar();
     if(isPublished(j)){const subCount=getSubscribers().length;if(subCount>0){showToast('📧 Envoi des notifications...','info');api('/api/admin/notify',{journalId:j.id}).then(r=>{if(r.sent>0)showToast('✅ '+r.sent+' notification'+(r.sent>1?'s':'')+' envoyée'+(r.sent>1?'s':'')+'!','success');}).catch(()=>{});}}
   }catch(e){showToast('Erreur : '+e.message,'error');}
@@ -1750,13 +2003,25 @@ async function publishJournal(){
 // ── EDIT MODAL ──
 function openEditModal(){
   if(!isAdmin)return; const j=db.journals.find(x=>x.id===currentJournalId); if(!j)return;
-  document.getElementById('edit-title').value=j.title||''; document.getElementById('edit-excerpt').value=j.excerpt||''; document.getElementById('edit-author').value=j.author||''; document.getElementById('edit-tags').value=j.tags||''; document.getElementById('edit-date').value=j.date||''; document.getElementById('edit-readtime').value=j.readTime||''; document.getElementById('edit-category').value=j.category||'Autre'; document.getElementById('edit-mood').value=j.mood||'neutral'; document.getElementById('edit-cover-img').value=j.coverImg||''; document.getElementById('edit-audio-url').value=j.audioUrl||''; document.getElementById('cover-img-preview').style.display='none'; document.getElementById('audio-preview').style.display='none';
+  document.getElementById('edit-title').value=j.title||'';
+  document.getElementById('edit-excerpt').value=j.excerpt||'';
+  document.getElementById('edit-author').value=j.author||'';
+  document.getElementById('edit-tags').value=j.tags||'';
+  document.getElementById('edit-date').value=j.date||'';
+  document.getElementById('edit-readtime').value=j.readTime||'';
+  document.getElementById('edit-category').value=j.category||'Autre';
+  document.getElementById('edit-mood').value=j.mood||'neutral';
+  document.getElementById('edit-cover-img').value=j.coverImg||'';
+  document.getElementById('edit-audio-url').value=j.audioUrl||'';
+  document.getElementById('cover-img-preview').style.display='none';
+  document.getElementById('audio-preview').style.display='none';
   const editor=document.getElementById('edit-pages-editor'); editor.innerHTML=''; getPages(j).forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'edit-pages-editor')));
   previewPage=0; switchEditTab('content'); document.getElementById('edit-modal-bg').classList.remove('hidden'); document.body.style.overflow='hidden';
 }
 function closeEditModal(){ document.getElementById('edit-modal-bg').classList.add('hidden'); document.body.style.overflow=''; }
 async function saveEditJournal(){
-  if(!isAdmin)return; const j=db.journals.find(x=>x.id===currentJournalId); if(!j)return; const pages=getPagesFromEditor('edit-pages-editor'); if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  if(!isAdmin)return; const j=db.journals.find(x=>x.id===currentJournalId); if(!j)return;
+  const pages=getPagesFromEditor('edit-pages-editor'); if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
   const autoRt=calcReadTime(pages);
   const updated={...j,title:document.getElementById('edit-title').value.trim()||j.title,excerpt:document.getElementById('edit-excerpt').value.trim(),pages,author:document.getElementById('edit-author').value.trim(),tags:document.getElementById('edit-tags').value.trim(),date:document.getElementById('edit-date').value||j.date,readTime:document.getElementById('edit-readtime').value.trim()||autoRt,category:document.getElementById('edit-category').value,mood:document.getElementById('edit-mood').value,coverImg:document.getElementById('edit-cover-img').value.trim(),audioUrl:document.getElementById('edit-audio-url').value.trim()};
   try{await api('/api/admin/save',updated);const idx=db.journals.findIndex(x=>x.id===currentJournalId);if(idx>=0)db.journals[idx]=updated;closeEditModal();bookPage=0;renderHome();renderSidebarCalendar();showToast('Journal mis à jour !','success');}
@@ -1783,18 +2048,31 @@ async function loadAnalytics(){
   }catch(e){document.getElementById('analytics-loading').innerHTML='<p style="color:var(--red);font-family:var(--font-mono);">Erreur : '+escHtml(e.message)+'</p>';}
 }
 
-// ─── MODÉRATION ────────────────────────────────────────────────
+// ── MODÉRATION ──
 function loadModeration(){
-  const list=document.getElementById('mod-list');const all=(db.comments||[]).filter(c=>!c.isReply);list.innerHTML='';if(!all.length){document.getElementById('mod-empty').style.display='block';return;}document.getElementById('mod-empty').style.display='none';
-  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c=>{const j=db.journals.find(x=>x.id===c.journalId);const replies=(db.comments||[]).filter(r=>r.parentId===c.id);const li=document.createElement('li');li.style.cssText='display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';const row=document.createElement('div');row.style.cssText='display:flex;align-items:center;justify-content:space-between;';row.innerHTML='<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br><span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br><span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>'+(replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'')+'</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\')">↩</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
-  const replyBox=document.createElement('div');replyBox.id='mod-reply-'+c.id;replyBox.style.cssText='display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';replyBox.innerHTML='<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;background:var(--bg-card);color:var(--ink);" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
-  li.appendChild(row);li.appendChild(replyBox);list.appendChild(li);});
+  const list=document.getElementById('mod-list');const all=(db.comments||[]).filter(c=>!c.isReply);list.innerHTML='';
+  if(!all.length){document.getElementById('mod-empty').style.display='block';return;}
+  document.getElementById('mod-empty').style.display='none';
+  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c=>{
+    const j=db.journals.find(x=>x.id===c.journalId);
+    const replies=(db.comments||[]).filter(r=>r.parentId===c.id);
+    const li=document.createElement('li');
+    li.style.cssText='display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;';
+    row.innerHTML='<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br><span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br><span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>'+(replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'')+'</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\')">↩</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
+    const replyBox=document.createElement('div');
+    replyBox.id='mod-reply-'+c.id;
+    replyBox.style.cssText='display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';
+    replyBox.innerHTML='<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;background:var(--bg-card);color:var(--ink);" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
+    li.appendChild(row);li.appendChild(replyBox);list.appendChild(li);
+  });
 }
 function toggleModReply(id){const b=document.getElementById('mod-reply-'+id);if(!b)return;b.style.display=b.style.display==='none'?'block':'none';if(b.style.display==='block'){const ta=document.getElementById('mod-reply-text-'+id);if(ta)ta.focus();}}
 async function submitModReply(parentId,jid){if(!isAdmin)return;const ta=document.getElementById('mod-reply-text-'+parentId);const text=ta?ta.value.trim():'';if(!text){showToast('Veuillez écrire une réponse.','error');return;}try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);toggleModReply(parentId);loadModeration();showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
 async function deleteCommentAdmin(id){if(!isAdmin)return;if(!confirm('Supprimer cet avis (et ses réponses) ?'))return;try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);loadModeration();if(currentJournalId)renderComments(currentJournalId,'book-comment-list',0);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
 
-// ─── ADMIN ABONNÉS ─────────────────────────────────────────────
+// ── ADMIN ABONNÉS ──
 function renderAdminSubscribers(){
   const el=document.getElementById('admin-subscribers-list');if(!el)return;
   const subs=getSubscribers();
@@ -1834,13 +2112,11 @@ async function adminTestNotif(){
   const email=prompt('Ton adresse email pour le test :','');
   if(!email)return;
   showToast('Envoi du test via le Worker...','info');
-  try{
-    await api('/api/admin/notify-test',{email});
-    showToast('✅ Email de test envoyé à '+email,'success');
-  }catch(e){showToast('❌ Erreur : '+e.message,'error');}
+  try{await api('/api/admin/notify-test',{email});showToast('✅ Email de test envoyé à '+email,'success');}
+  catch(e){showToast('❌ Erreur : '+e.message,'error');}
 }
 
-// ─── SETTINGS ──────────────────────────────────────────────────
+// ── SETTINGS ──
 function loadSettings(){
   document.getElementById('setting-sitename').value=db.settings.siteName||'CapNews';
   document.getElementById('setting-tagline').value=db.settings.tagline||'';
@@ -1858,7 +2134,7 @@ async function saveSettings(){
   }catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
-// ─── BRANDING ──────────────────────────────────────────────────
+// ── BRANDING ──
 function applyBranding(){
   const name=db.settings.siteName||'CapNews',tagline=db.settings.tagline||'Réflexions du quotidien',hour=db.settings.pubHour??18,hourStr=pad(hour)+'h00';
   document.title=name;
@@ -1874,7 +2150,7 @@ function applyBranding(){
   const ls=document.getElementById('locked-subtitle');if(ls)ls.textContent='La publication a lieu chaque jour à '+hourStr+'. Revenez plus tard !';
 }
 
-// ─── COUNTDOWN (bannière nav) ───────────────────────────────────
+// ── COUNTDOWN ──
 function startCountdown(){updateCountdown();setInterval(updateCountdown,1000);}
 function updateCountdown(){
   const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);if(now>=pub)pub.setDate(pub.getDate()+1);const diff=pub-now;
@@ -1891,40 +2167,14 @@ function updateCountdown(){
   document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
 }
 
-// ─── LIVE SIMULATION ───────────────────────────────────────────
+// ── LIVE SIMULATION ──
 function startLiveSimulation(){
   const badge=document.getElementById('live-badge');const count=document.getElementById('live-count');if(!badge||!count)return;
   liveViewCount=Math.floor(Math.random()*8)+1;count.textContent=liveViewCount;badge.style.display='inline-flex';
   setInterval(()=>{liveViewCount=Math.max(1,Math.min(12,liveViewCount+(Math.random()>.5?1:-1)));count.textContent=liveViewCount;},8000);
 }
 
-// ─── DRAFT ─────────────────────────────────────────────────────
-function saveDraft(){
-  clearTimeout(draftTimer);
-  draftTimer=setTimeout(()=>{
-    const title=(document.getElementById('new-title')?.value||'').trim();if(!title)return;
-    const draft={title,excerpt:document.getElementById('new-excerpt')?.value||'',pages:getPagesFromEditor('new-pages-editor'),date:document.getElementById('new-date')?.value||''};
-    localStorage.setItem('capnews_draft',JSON.stringify(draft));
-    const ind=document.getElementById('draft-indicator');ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);
-  },1500);
-}
-function checkDraft(){
-  const draft=localStorage.getItem('capnews_draft');
-  if(draft){const btn=document.getElementById('load-draft-btn');if(btn){const d=JSON.parse(draft);btn.textContent='📋 Charger brouillon : "'+d.title.slice(0,30)+'..."';btn.style.display='inline-flex';}}
-}
-function loadDraft(){
-  const draft=localStorage.getItem('capnews_draft');if(!draft)return;
-  const d=JSON.parse(draft);
-  if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title||'';
-  if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
-  if(d.date&&document.getElementById('new-date'))document.getElementById('new-date').value=d.date;
-  const editor=document.getElementById('new-pages-editor');
-  if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
-  showToast('Brouillon chargé !','success');
-}
-function clearDraft(){localStorage.removeItem('capnews_draft');const btn=document.getElementById('load-draft-btn');if(btn)btn.style.display='none';showToast('Brouillon effacé.','info');}
-
-// ─── AUDIO ─────────────────────────────────────────────────────
+// ── AUDIO ──
 function openPersistentPlayer(src,title){
   const pp=document.getElementById('persistent-player');const audio=document.getElementById('pp-audio');const info=document.getElementById('pp-info');
   if(!pp||!audio)return;audio.src=src;info.textContent='🔊 '+title;pp.classList.add('show');audio.play().catch(()=>{});
@@ -1934,7 +2184,7 @@ function closePersistentPlayer(){
   if(!pp||!audio)return;audio.pause();pp.classList.remove('show');
 }
 
-// ─── FESTIVITÉS ────────────────────────────────────────────────
+// ── FESTIVITÉS ──
 const BIRTHDAY_MONTH=4,BIRTHDAY_DAY=10,BIRTHDAY_YEAR=2025;
 function checkFestive(){
   const now=new Date();const m=now.getMonth()+1;const d=now.getDate();
@@ -1947,14 +2197,21 @@ function checkFestive(){
 }
 function launchParticles(emojis){let count=0;const interval=setInterval(()=>{if(count>=30){clearInterval(interval);return;}count++;const el=document.createElement('div');el.className='festive-particle';el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=Math.random()*100+'vw';el.style.animationDuration=(Math.random()*3+2)+'s';el.style.animationDelay=(Math.random()*2)+'s';el.style.fontSize=(Math.random()*1.5+0.8)+'rem';document.body.appendChild(el);setTimeout(()=>el.remove(),6000);},150);}
 
-// ─── KBD HELP ──────────────────────────────────────────────────
+// ── KBD HELP ──
 function showKbdHelp(){document.getElementById('kbd-help').classList.add('show');}
 function closeKbdHelp(){document.getElementById('kbd-help').classList.remove('show');}
 
-// ─── KEYBOARD SHORTCUTS ────────────────────────────────────────
+// ── KEYBOARD SHORTCUTS ──
 document.addEventListener('keydown',e=>{
-  const inField=e.target.matches('input,textarea,select');
-  if(e.key==='Escape'){hideCtxMenu();closeModal();closeEditModal();closeImmersive();document.getElementById('kbd-help').classList.remove('show');}
+  const inField=e.target.matches('input,textarea,select,[contenteditable]');
+  if(e.key==='Escape'){
+    hideCtxMenu();
+    closeModal();
+    closeEditModal();
+    closeImmersive();
+    document.getElementById('kbd-help').classList.remove('show');
+    document.getElementById('draft-history-modal')?.remove();
+  }
   if(inField)return;
   if(e.key==='ArrowRight')bookNext();
   if(e.key==='ArrowLeft')bookPrev();
