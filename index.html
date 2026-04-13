@@ -2619,15 +2619,18 @@ async function saveSettings() {
 
 // ── LIVE SIMULATION ──
 function startLiveSimulation() {
-  const badge = document.getElementById('live-badge');
-  const countEl = document.getElementById('live-count');
-  function update() {
-    liveViewCount = Math.floor(Math.random() * 8) + 1;
-    if (countEl) countEl.textContent = liveViewCount;
-    if (badge) badge.style.display = liveViewCount > 1 ? 'inline-flex' : 'none';
+  async function ping() {
+    try {
+      const res = await api('/api/ping', {});
+      const count = res.count || 1;
+      const badge = document.getElementById('live-badge');
+      const countEl = document.getElementById('live-count');
+      if (countEl) countEl.textContent = count;
+      if (badge) badge.style.display = count >= 1 ? 'inline-flex' : 'none';
+    } catch(e) {}
   }
-  update();
-  setInterval(update, 30000);
+  ping();
+  setInterval(ping, 30000);
 }
 
 // ── AUDIO PERSISTANT ──
