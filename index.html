@@ -1609,7 +1609,28 @@ function setupReadingProgress(){ const reader=document.getElementById('book-read
 function updateReadingProgress(){ const page=document.querySelector('.book-page.active'); if(!page)return; const{scrollTop,scrollHeight,clientHeight}=page; const pct=scrollHeight<=clientHeight?100:(scrollTop/(scrollHeight-clientHeight))*100; document.getElementById('reading-progress').style.width=pct+'%'; }
 function toggleImmersive(){ isImmersive=!isImmersive; document.body.classList.toggle('immersive-mode',isImmersive); document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍'; if(isImmersive){const j=db.journals.find(x=>x.id===currentJournalId);if(j)document.getElementById('imm-title').textContent=j.title;showToast('Mode lecture immersif — F ou Esc pour quitter','info');} }
 function closeImmersive(){ if(isImmersive)toggleImmersive(); }
-function showQuote(){ const q=QUOTES[currentQuoteIdx]; const el=document.getElementById('quote-text'); const au=document.getElementById('quote-author'); if(!el)return; el.style.opacity='0'; setTimeout(()=>{el.textContent='« '+q.text+' »';if(au)au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200); }
+function showQuote() {
+  const q = QUOTES[currentQuoteIdx];
+  const el = document.getElementById('quote-text');
+  const au = document.getElementById('quote-author');
+  
+  if (!el) return;
+
+  el.style.opacity = '0';
+
+  setTimeout(() => {
+    el.textContent = '« ' + q.text + ' »';
+    el.style.color = '#c8a27a'; // 👉 marron clair
+
+    if (au) {
+      au.textContent = '— ' + q.author;
+      au.style.color = '#c8a27a'; // optionnel pour l’auteur
+    }
+
+    el.style.transition = 'opacity .4s';
+    el.style.opacity = '1';
+  }, 200);
+}
 function refreshQuote(){ currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length; showQuote(); }
 function updateLockedCountdown(){ const now=new Date(),pub=new Date(); pub.setHours(getPubHour(),0,0,0); if(now>=pub)pub.setDate(pub.getDate()+1); const diff=pub-now; const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000); const pad2=n=>String(Math.max(0,n)).padStart(2,'0'); const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=pad2(v);}; setEl('lcd-h',h);setEl('lcd-m',m);setEl('lcd-s',s); }
 setInterval(updateLockedCountdown,1000);
