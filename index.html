@@ -121,9 +121,8 @@ body.immersive-mode #immersive-bar{display:flex;}
 #immersive-bar .imm-btn{background:none;border:1px solid rgba(255,255,255,.2);border-radius:20px;color:rgba(247,243,235,.7);font-family:var(--font-mono);font-size:.75rem;padding:.3rem .8rem;cursor:pointer;transition:all .15s;}
 #immersive-bar .imm-btn:hover{border-color:var(--gold-light);color:var(--gold-light);}
 
-/* ── JOURNAL SCROLL — pas de navigation pages ── */
-.book-wrapper .book-nav{display:none!important;}
-.book-reader{position:relative;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius);overflow-y:auto;max-height:78vh;box-shadow:var(--shadow);}
+.book-wrapper{display:flex;flex-direction:column;}
+.book-reader{position:relative;min-height:520px;background:var(--bg-card);border:1px solid var(--border-strong);border-radius:var(--radius) var(--radius) 0 0;overflow:hidden;box-shadow:var(--shadow);}
 .book-page{display:none;padding:2.5rem 2.8rem;overflow-y:auto;min-height:520px;animation:pageIn .28s cubic-bezier(.4,0,.2,1);}
 .book-page.active{display:block;}
 @keyframes pageIn{from{opacity:0;transform:translateX(22px);}to{opacity:1;transform:none;}}
@@ -200,13 +199,12 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .sidebar-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--parchment-mid);padding:1.2rem;}
 .sidebar-box h3{font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--ink);margin-bottom:.85rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);}
 
-/* ── CITATION BOX — couleur marron lisible en clair ET en sombre ── */
+/* ── CITATION BOX — couleurs fixes indépendantes du thème ── */
 #quote-box{border:1px solid var(--border-strong);border-radius:3px;background:var(--ink);padding:1.2rem;}
 #quote-box h3{font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--gold-light);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;}
-/* FIX : couleur marron chaud lisible sur fond sombre ET clair */
-#quote-text{font-family:var(--font-display);font-style:italic;font-size:1rem;color:#c8a27a!important;line-height:1.55;margin-bottom:.5rem;}
-#quote-author{font-family:var(--font-mono);font-size:.72rem;color:rgba(200,162,122,0.65)!important;}
-#quote-refresh{background:none;border:none;color:rgba(200,162,122,.4)!important;cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;}
+#quote-text{font-family:var(--font-display);font-style:italic;font-size:1rem;color:rgba(247,243,235,.88)!important;line-height:1.55;margin-bottom:.5rem;}
+#quote-author{font-family:var(--font-mono);font-size:.72rem;color:rgba(247,243,235,.45)!important;}
+#quote-refresh{background:none;border:none;color:rgba(247,243,235,.35)!important;cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;}
 #quote-refresh:hover{color:var(--gold-light)!important;}
 
 /* ── SUBSCRIBE BOX — couleurs fixes indépendantes du thème ── */
@@ -351,6 +349,7 @@ mark.search-hl{background:rgba(184,134,11,.28);color:inherit;border-radius:2px;p
 .wx-day-icon{font-size:1.1rem;display:block;margin:.2rem 0;}
 .wx-day-t{font-size:.72rem;font-weight:500;color:var(--ink);}
 
+/* ── BROUILLONS — boutons manuels ── */
 .draft-btn-bar{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.75rem;padding:.75rem;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:4px;}
 .draft-btn{padding:.42rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.78rem;cursor:pointer;transition:all .13s;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;}
 .draft-btn-save{background:var(--gold);color:white;border:none;}
@@ -565,6 +564,7 @@ kbd{background:var(--parchment-dark);border:1px solid var(--border-strong);borde
 .contact-adventure p{font-family:var(--font-display);font-size:1.05rem;font-style:italic;color:var(--ink);margin-bottom:.3rem;}
 .contact-adventure small{font-family:var(--font-mono);font-size:.72rem;color:var(--muted);}
 
+/* ── IDÉES ADMIN ── */
 .idea-card{border:1px solid var(--border-strong);border-radius:4px;background:var(--bg-card);padding:1rem 1.2rem;margin-bottom:.75rem;position:relative;transition:border-color .15s;}
 .idea-card:hover{border-color:var(--gold);}
 .idea-card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem;flex-wrap:wrap;gap:.3rem;}
@@ -611,6 +611,8 @@ footer strong{color:var(--ink);font-weight:500;}
 <div id="kbd-help">
   <div class="kbd-help-box">
     <h2>⌨️ Raccourcis clavier <button onclick="closeKbdHelp()" style="background:none;border:none;cursor:pointer;font-size:1.1rem;color:var(--muted);">✕</button></h2>
+    <div class="kbd-row"><span class="kbd-desc">Page suivante</span><div class="kbd-keys"><kbd>→</kbd></div></div>
+    <div class="kbd-row"><span class="kbd-desc">Page précédente</span><div class="kbd-keys"><kbd>←</kbd></div></div>
     <div class="kbd-row"><span class="kbd-desc">Mode lecture immersif</span><div class="kbd-keys"><kbd>F</kbd></div></div>
     <div class="kbd-row"><span class="kbd-desc">Fermer / Quitter</span><div class="kbd-keys"><kbd>Esc</kbd></div></div>
     <div class="kbd-row"><span class="kbd-desc">Recherche</span><div class="kbd-keys"><kbd>Ctrl</kbd><kbd>K</kbd></div></div>
@@ -654,6 +656,8 @@ footer strong{color:var(--ink);font-weight:500;}
 
 <div id="immersive-bar">
   <span class="imm-title" id="imm-title">—</span>
+  <button class="imm-btn" onclick="bookPrev()">← Préc.</button>
+  <button class="imm-btn" onclick="bookNext()">Suiv. →</button>
   <button class="imm-btn" onclick="toggleImmersive()">✕ Quitter</button>
 </div>
 
@@ -715,13 +719,12 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
       </div>
 
-      <!-- Sidebar page locked — IDs uniques avec suffixe -locked -->
       <div class="sidebar">
-        <div id="quote-box-locked" style="border:1px solid var(--border-strong);border-radius:3px;background:var(--ink);padding:1.2rem;">
-          <button onclick="refreshQuote()" title="Nouvelle citation" style="background:none;border:none;color:rgba(200,162,122,.4);cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;">↻</button>
-          <h3 style="font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--gold-light);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;">✦ Citation du jour</h3>
-          <div class="quote-text-shared" style="font-family:var(--font-display);font-style:italic;font-size:1rem;color:#c8a27a;line-height:1.55;margin-bottom:.5rem;">Chargement...</div>
-          <div class="quote-author-shared" style="font-family:var(--font-mono);font-size:.72rem;color:rgba(200,162,122,0.65);"></div>
+        <div id="quote-box">
+          <button id="quote-refresh" onclick="refreshQuote()" title="Nouvelle citation">↻</button>
+          <h3>✦ Citation du jour</h3>
+          <div id="quote-text">Chargement...</div>
+          <div id="quote-author"></div>
         </div>
         <div class="subscribe-box" id="subscribe-box-locked">
           <h3>📬 Recevoir les journaux</h3>
@@ -744,7 +747,7 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
         <div class="sidebar-box">
           <h3>📅 Calendrier</h3>
-          <div class="sidebar-cal-target"></div>
+          <div id="sidebar-calendar"></div>
         </div>
       </div>
     </div>
@@ -777,23 +780,21 @@ footer strong{color:var(--ink);font-weight:500;}
     <div class="journal-hero">
       <div class="book-wrapper">
         <div class="book-reader" id="book-reader"></div>
-        <!-- book-nav masquée par CSS en mode scroll -->
-        <div class="book-nav" style="display:none;">
-          <button class="book-nav-btn" id="btn-prev">← Précédente</button>
+        <div class="book-nav">
+          <button class="book-nav-btn" id="btn-prev" onclick="bookPrev()">← Précédente</button>
           <div class="book-progress">
             <div class="progress-dots" id="progress-dots"></div>
             <span id="page-counter"></span>
           </div>
-          <button class="book-nav-btn" id="btn-next">Suivante →</button>
+          <button class="book-nav-btn" id="btn-next" onclick="bookNext()">Suivante →</button>
         </div>
       </div>
       <aside class="sidebar">
-        <!-- Quote sidebar visible quand journal publié — classe commune pour update groupé -->
-        <div style="border:1px solid var(--border-strong);border-radius:3px;background:var(--ink);padding:1.2rem;">
-          <button onclick="refreshQuote()" title="Nouvelle citation" style="background:none;border:none;color:rgba(200,162,122,.4);cursor:pointer;font-size:.9rem;float:right;margin-top:-.5rem;transition:color .15s;">↻</button>
-          <h3 style="font-family:var(--font-display);font-size:.9rem;font-weight:700;color:var(--gold-light);margin-bottom:.75rem;letter-spacing:.08em;text-transform:uppercase;">✦ Citation du jour</h3>
-          <div class="quote-text-shared" style="font-family:var(--font-display);font-style:italic;font-size:1rem;color:#c8a27a;line-height:1.55;margin-bottom:.5rem;">Chargement...</div>
-          <div class="quote-author-shared" style="font-family:var(--font-mono);font-size:.72rem;color:rgba(200,162,122,0.65);"></div>
+        <div id="quote-box">
+          <button id="quote-refresh" onclick="refreshQuote()" title="Nouvelle citation">↻</button>
+          <h3>✦ Citation du jour</h3>
+          <div id="quote-text">Chargement...</div>
+          <div id="quote-author"></div>
         </div>
         <div class="sidebar-box">
           <h3>📊 Réactions</h3>
@@ -821,7 +822,7 @@ footer strong{color:var(--ink);font-weight:500;}
         </div>
         <div class="sidebar-box">
           <h3>📅 Calendrier</h3>
-          <div class="sidebar-cal-target"></div>
+          <div id="sidebar-calendar"></div>
         </div>
         <div class="sidebar-box">
           <h3>📰 Derniers journaux</h3>
@@ -893,6 +894,11 @@ footer strong{color:var(--ink);font-weight:500;}
       <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.75rem;">Aperçu du rendu final.</p>
       <div style="border:1px solid var(--border-strong);border-radius:4px;overflow:hidden;">
         <div class="book-reader" id="edit-preview-reader" style="min-height:400px;box-shadow:none;border:none;"></div>
+        <div class="book-nav" style="border-radius:0;">
+          <button class="book-nav-btn" id="preview-btn-prev" onclick="previewPrev()">← Précédente</button>
+          <div class="book-progress"><div class="progress-dots" id="preview-dots"></div><span id="preview-counter"></span></div>
+          <button class="book-nav-btn" id="preview-btn-next" onclick="previewNext()">Suivante →</button>
+        </div>
       </div>
     </div>
     <div style="display:flex;gap:1rem;margin-top:1.2rem;flex-wrap:wrap;">
@@ -927,9 +933,11 @@ footer strong{color:var(--ink);font-weight:500;}
       <p>Ne sachant pas comment me lancer sur les réseaux, j'ai décidé de lancer ce blog généraliste pour parler un peu de tout ce qui m'intéresse… et aussi de ce qui <em>vous</em> intéresse !</p>
       <p>L'idée, c'est d'avoir un espace où on partage, où on discute, où on apprend des trucs ensemble, sans prise de tête.</p>
     </div>
+
     <div class="contact-section">
       <h2>🎯 De quoi va parler ce blog ?</h2>
       <p>Franchement ? Un peu de tout !</p>
+
       <div class="contact-topics">
         <div class="contact-topic"><span class="contact-topic-emoji">🎮</span> Jeux vidéo</div>
         <div class="contact-topic"><span class="contact-topic-emoji">🎬</span> Films et séries</div>
@@ -937,33 +945,47 @@ footer strong{color:var(--ink);font-weight:500;}
         <div class="contact-topic"><span class="contact-topic-emoji">🏫</span> Vie de tous les jours / quotidien</div>
         <div class="contact-topic"><span class="contact-topic-emoji">💭</span> Réflexions, idées, actus</div>
         <div class="contact-topic"><span class="contact-topic-emoji">🧠</span> Conseils, découvertes...</div>
-        <h3 style="white-space: nowrap; text-align: center; width: 100%;"><em>✨ Et encore plein d'autres ! 🎉</em></h3>
-      </div>
-      <p style="margin-top:.5rem;">Le but, c'est de ne pas se limiter et de garder un blog <strong>vivant, varié et intéressant</strong>.</p>
+
+        <h3 style="white-space: nowrap; text-align: center; width: 100%;">
+          <em>✨ Et encore plein d’autres ! 🎉</em>
+        </h3>
+      </div> <!-- ✅ fermeture corrigée -->
+
+      <p style="margin-top:.5rem;">
+        Le but, c'est de ne pas se limiter et de garder un blog <strong>vivant, varié et intéressant</strong>.
+      </p>
     </div>
+
     <div class="contact-section">
       <h2>💡 J'ai besoin de vous !</h2>
       <p>Je cherche des idées d'articles. Donc si vous avez des sujets que vous aimeriez voir ici, n'hésitez pas !</p>
+
       <div class="contact-actions">
         <div class="contact-action-item"><span class="contact-action-dot"></span>Proposer des idées d'articles</div>
         <div class="contact-action-item"><span class="contact-action-dot"></span>Poser des questions</div>
         <div class="contact-action-item"><span class="contact-action-dot"></span>Suggérer des thèmes ou débats</div>
       </div>
+
       <div class="contact-idea-form" style="margin-top:1.5rem;">
         <label>Votre prénom</label>
         <input type="text" id="contact-name" placeholder="Votre prénom...">
+
         <label>Votre idée d'article ou message</label>
         <textarea id="contact-message" placeholder="Partagez votre idée, suggestion ou question ici..."></textarea>
+
         <button class="contact-idea-submit" onclick="submitContactIdea()">Envoyer l'idée →</button>
+
         <div id="contact-status" style="margin-top:.6rem;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);min-height:1.2em;"></div>
       </div>
     </div>
+
     <div class="contact-section">
       <h2>✍️ Et pourquoi pas vous ?</h2>
       <p>Si vous aimez écrire, vous pouvez même <strong>proposer vos propres articles</strong> ! Je pourrais les publier sur le blog (avec votre accord bien sûr).</p>
       <p>C'est aussi un moyen de créer un espace où plusieurs personnes peuvent partager leurs idées !</p>
       <p>Pour proposer vos <em>idées</em>, remontez un peu et <em>décrivez votre article !</em></p>
     </div>
+
     <div class="contact-adventure">
       <p>« Le début d'une aventure »</p>
       <small>Ce blog démarre tout juste, donc tout est à construire. Merci à ceux qui passeront, liront, commenteront ou participeront. À très bientôt pour les premiers articles ! 🚀</small>
@@ -1018,6 +1040,7 @@ footer strong{color:var(--ink);font-weight:500;}
         <button class="admin-tab" onclick="switchAdminTab('settings')" id="atab-settings">⚙️ Paramètres</button>
       </div>
       <div class="admin-body">
+        <!-- NOUVEAU -->
         <div id="atab-body-new">
           <div class="edit-tabs" style="margin-bottom:1rem;">
             <button class="edit-tab active" onclick="switchNewTab('content')" id="ntab-content">Contenu</button>
@@ -1030,16 +1053,17 @@ footer strong{color:var(--ink);font-weight:500;}
             <div class="form-group"><label class="form-label">Résumé / accroche</label><textarea class="form-textarea" id="new-excerpt" style="min-height:70px;" placeholder="Une phrase d'introduction captivante..."></textarea></div>
             <div class="form-group">
               <label class="form-label">Pages du journal *</label>
-              <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = une section dans l'article.</p>
+              <p style="font-size:.8rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:.6rem;">Chaque page = un écran dans le lecteur.</p>
               <div class="pages-editor" id="new-pages-editor"></div>
               <button class="add-page-btn" onclick="addNewPage()">+ Ajouter une page</button>
             </div>
+            <!-- ── BROUILLONS MANUELS ── -->
             <div class="draft-btn-bar">
               <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-right:.25rem;">💾 Brouillons :</span>
-              <button class="draft-btn draft-btn-save" onclick="saveDraftManual()">💾 Sauvegarder</button>
-              <button class="draft-btn draft-btn-load" id="draft-load-btn" onclick="loadLastDraft()" disabled>📋 Charger</button>
+              <button class="draft-btn draft-btn-save" onclick="saveDraftManual()" title="Sauvegarder le brouillon actuel">💾 Sauvegarder</button>
+              <button class="draft-btn draft-btn-load" id="draft-load-btn" onclick="loadLastDraft()" disabled title="Charger le dernier brouillon">📋 Charger</button>
               <button class="draft-btn draft-btn-history" id="draft-history-btn" onclick="openDraftHistory()">🗂 Historique (0)</button>
-              <button class="draft-btn draft-btn-clear" onclick="clearCurrentDraft()">🗑 Effacer</button>
+              <button class="draft-btn draft-btn-clear" onclick="clearCurrentDraft()" title="Vider le formulaire">🗑 Effacer</button>
             </div>
             <div style="display:flex;justify-content:flex-end;margin-top:.5rem;">
               <button class="ai-correct-all-btn" id="new-ai-correct-btn" onclick="aiCorrectAllPages('new-pages-editor','new-ai-correct-btn')">✨ Corriger toutes les pages</button>
@@ -1063,7 +1087,12 @@ footer strong{color:var(--ink);font-weight:500;}
           </div>
           <div id="ntab-body-preview" style="display:none;">
             <div style="border:1px solid var(--border-strong);border-radius:4px;overflow:hidden;">
-              <div class="book-reader" id="new-preview-reader" style="min-height:380px;box-shadow:none;border:none;max-height:500px;overflow-y:auto;"></div>
+              <div class="book-reader" id="new-preview-reader" style="min-height:380px;box-shadow:none;border:none;"></div>
+              <div class="book-nav" style="border-radius:0;">
+                <button class="book-nav-btn" id="new-preview-prev" onclick="newPreviewPrev()">← Précédente</button>
+                <div class="book-progress"><div class="progress-dots" id="new-preview-dots"></div><span id="new-preview-counter"></span></div>
+                <button class="book-nav-btn" id="new-preview-next" onclick="newPreviewNext()">Suivante →</button>
+              </div>
             </div>
           </div>
           <div style="display:flex;gap:.75rem;margin-top:1rem;flex-wrap:wrap;">
@@ -1072,13 +1101,18 @@ footer strong{color:var(--ink);font-weight:500;}
           </div>
           <div id="publish-status" style="margin-top:.75rem;font-family:var(--font-mono);font-size:.82rem;color:var(--muted);"></div>
         </div>
+        <!-- GÉRER -->
         <div id="atab-body-manage" style="display:none;"><div id="manage-list-loading" class="text-center"><div class="loading-spinner"></div></div><ul class="admin-list" id="manage-list"></ul></div>
+        <!-- CALENDRIER -->
         <div id="atab-body-calendar" style="display:none;">
           <p style="font-size:.85rem;color:var(--muted);font-family:var(--font-mono);margin-bottom:1rem;"><span style="display:inline-block;width:12px;height:12px;background:rgba(76,175,80,.3);border-radius:2px;margin-right:4px;"></span>Publié <span style="display:inline-block;width:12px;height:12px;background:rgba(184,134,11,.3);border-radius:2px;margin:0 4px 0 12px;"></span>Programmé</p>
           <div id="admin-calendar-full"></div>
         </div>
+        <!-- ANALYTICS -->
         <div id="atab-body-analytics" style="display:none;"><div id="analytics-loading" class="text-center"><div class="loading-spinner"></div></div><div id="analytics-content" style="display:none;"><div class="analytics-stats" id="analytics-stats"></div><p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Vues — 30 derniers jours</p><div class="chart-wrapper"><div class="chart-bars" id="analytics-chart"></div></div><p style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-top:1.5rem;margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.1em;">Top journaux par vues</p><div class="top-journals" id="top-journals"></div></div></div>
+        <!-- MODÉRATION -->
         <div id="atab-body-moderation" style="display:none;"><p style="color:var(--muted);font-size:.88rem;margin-bottom:1.2rem;font-family:var(--font-mono);">Tous les avis récents.</p><ul class="admin-list" id="mod-list" style="display:flex;flex-direction:column;gap:0;"></ul><div id="mod-empty" class="empty-state" style="display:none;"><p>Aucun avis.</p></div></div>
+        <!-- ABONNÉS -->
         <div id="atab-body-subscribers" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
             <div>
@@ -1093,6 +1127,7 @@ footer strong{color:var(--ink);font-weight:500;}
           <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);padding:.6rem;background:rgba(184,134,11,.06);border:1px solid rgba(184,134,11,.2);border-radius:3px;margin-bottom:1rem;">🔒 Les clés EmailJS sont configurées dans les <strong>Secrets Cloudflare Worker</strong>. Aucune clé n'est stockée côté client.</p>
           <div id="admin-subscribers-list" style="max-height:400px;overflow-y:auto;"></div>
         </div>
+        <!-- IDÉES CONTACT -->
         <div id="atab-body-ideas" style="display:none;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:.5rem;">
             <div>
@@ -1104,6 +1139,7 @@ footer strong{color:var(--ink);font-weight:500;}
           <div id="ideas-list"></div>
           <div id="ideas-empty" class="empty-state" style="display:none;"><p>Aucune idée reçue pour l'instant.<br><span style="font-size:.78rem;">Les propositions envoyées via la page Contact apparaîtront ici.</span></p></div>
         </div>
+        <!-- PARAMÈTRES -->
         <div id="atab-body-settings" style="display:none;">
           <div class="form-group"><label class="form-label">Nom du site</label><input type="text" class="form-input" id="setting-sitename" placeholder="CapNews"></div>
           <div class="form-group"><label class="form-label">Tagline / sous-titre</label><input type="text" class="form-input" id="setting-tagline"></div>
@@ -1273,7 +1309,7 @@ function triviaAnswer(i,q){
 }
 function triviaNext(){ triviaIdx++; triviaLoad(); }
 
-// ── SNAKE ──
+// ── SNAKE — CORRECTION : on vérifie que le focus n'est PAS dans un champ texte ──
 (function initSnake(){
   const cvs=document.getElementById('snake-canvas'); if(!cvs)return;
   const ctx=cvs.getContext('2d'); const COLS=28,ROWS=14,CS=14;
@@ -1287,14 +1323,11 @@ function triviaNext(){ triviaIdx++; triviaLoad(); }
   function startGame(){ if(running)return; running=true; init(); const msg=document.getElementById('snake-msg');if(msg)msg.textContent=''; interval=setInterval(tick,110); }
   cvs.addEventListener('click',startGame);
 
-  // Touches Snake — uniquement si pas dans un champ texte ET canvas visible
+  // ✅ CORRECTION : ne pas intercepter les touches quand on est dans un champ texte
   document.addEventListener('keydown',e=>{
     if(e.target.matches('input,textarea,select,[contenteditable]')) return;
     const map={'ArrowUp':{x:0,y:-1},'ArrowDown':{x:0,y:1},'ArrowLeft':{x:-1,y:0},'ArrowRight':{x:1,y:0},'z':{x:0,y:-1},'Z':{x:0,y:-1},'q':{x:-1,y:0},'Q':{x:-1,y:0},'s':{x:0,y:1},'S':{x:0,y:1},'d':{x:1,y:0},'D':{x:1,y:0}};
-    const n=map[e.key]; if(!n) return;
-    // Ne prendre le contrôle que si le snake est actif ou si on est dans le <details> ouvert
-    const details=cvs.closest('details');
-    if(!details || !details.open) return; // snake caché → ignorer
+    const n=map[e.key]; if(!n)return;
     if(nextDir.x===-n.x&&nextDir.y===-n.y)return;
     e.preventDefault(); nextDir={x:n.x,y:n.y};
     if(!running)startGame();
@@ -1354,6 +1387,7 @@ function submitContactIdea(){
   updateIdeasBadge();
   setTimeout(()=>{if(statusEl)statusEl.textContent='';},4000);
 }
+
 function updateIdeasBadge(){
   const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
   const badge=document.getElementById('ideas-notif-badge');
@@ -1365,17 +1399,44 @@ function updateIdeasBadge(){
 // ── BROUILLONS MANUELS ──
 function getDraftList(){ try{ return JSON.parse(localStorage.getItem(DRAFT_LIST_KEY)||'[]'); }catch{ return []; } }
 function saveDraftList(list){ localStorage.setItem(DRAFT_LIST_KEY,JSON.stringify(list)); }
+
 function saveDraftManual(){
   if(!isAdmin)return;
   const title=(document.getElementById('new-title')?.value||'').trim();
   const pages=getPagesFromEditor('new-pages-editor');
   if(!title&&!pages.length){showToast('Rien à sauvegarder.','info');return;}
-  const draft={id:Date.now().toString(),savedAt:new Date().toISOString(),title:title||'(sans titre)',excerpt:document.getElementById('new-excerpt')?.value||'',pages,date:document.getElementById('new-date')?.value||'',category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'',author:document.getElementById('new-author')?.value||'',tags:document.getElementById('new-tags')?.value||'',readTime:document.getElementById('new-readtime')?.value||'',coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};
-  const list=getDraftList(); list.unshift(draft); if(list.length>10)list.pop(); saveDraftList(list);
-  const ind=document.getElementById('draft-indicator'); if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);}
-  showToast('💾 Brouillon "'+draft.title+'" sauvegardé !','success'); updateDraftBtns();
+  const draft={
+    id:Date.now().toString(),
+    savedAt:new Date().toISOString(),
+    title:title||'(sans titre)',
+    excerpt:document.getElementById('new-excerpt')?.value||'',
+    pages,
+    date:document.getElementById('new-date')?.value||'',
+    category:document.getElementById('new-category')?.value||'',
+    mood:document.getElementById('new-mood')?.value||'',
+    author:document.getElementById('new-author')?.value||'',
+    tags:document.getElementById('new-tags')?.value||'',
+    readTime:document.getElementById('new-readtime')?.value||'',
+    coverImg:document.getElementById('new-cover-img')?.value||'',
+    audioUrl:document.getElementById('new-audio-url')?.value||'',
+  };
+  const list=getDraftList();
+  list.unshift(draft);
+  if(list.length>10)list.pop();
+  saveDraftList(list);
+  const ind=document.getElementById('draft-indicator');
+  if(ind){ind.classList.add('show');setTimeout(()=>ind.classList.remove('show'),2000);}
+  showToast('💾 Brouillon "'+draft.title+'" sauvegardé !','success');
+  updateDraftBtns();
 }
-function loadLastDraft(){ const list=getDraftList(); if(!list.length){showToast('Aucun brouillon disponible.','info');return;} loadDraftData(list[0]); showToast('📋 Brouillon "'+list[0].title+'" chargé !','success'); }
+
+function loadLastDraft(){
+  const list=getDraftList();
+  if(!list.length){showToast('Aucun brouillon disponible.','info');return;}
+  loadDraftData(list[0]);
+  showToast('📋 Brouillon "'+list[0].title+'" chargé !','success');
+}
+
 function loadDraftData(d){
   if(document.getElementById('new-title'))document.getElementById('new-title').value=d.title==='(sans titre)'?'':d.title;
   if(document.getElementById('new-excerpt'))document.getElementById('new-excerpt').value=d.excerpt||'';
@@ -1390,12 +1451,15 @@ function loadDraftData(d){
   const editor=document.getElementById('new-pages-editor');
   if(editor&&d.pages&&d.pages.length){editor.innerHTML='';d.pages.forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'new-pages-editor')));}
 }
+
 function clearCurrentDraft(){
   if(!confirm('Vider le formulaire ?'))return;
   ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('new-date').value=getTodayStr();
-  initNewPagesEditor(); showToast('Formulaire vidé.','info');
+  initNewPagesEditor();
+  showToast('Formulaire vidé.','info');
 }
+
 function openDraftHistory(){
   const list=getDraftList();
   document.getElementById('draft-history-modal')?.remove();
@@ -1403,16 +1467,71 @@ function openDraftHistory(){
   modal.id='draft-history-modal';
   modal.style.cssText='position:fixed;inset:0;background:rgba(26,18,9,.8);z-index:9000;display:flex;align-items:center;justify-content:center;padding:2rem;backdrop-filter:blur(6px);';
   let rows='';
-  if(!list.length){rows='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;text-align:center;padding:2rem 0;">Aucun brouillon sauvegardé.</p>';}
-  else{rows=list.map(d=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap;"><div style="flex:1;"><div style="font-family:var(--font-display);font-weight:700;color:var(--ink);font-size:.95rem;">${escHtml(d.title)}</div><div style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">${timeSince(d.savedAt)} · ${d.pages?d.pages.length:0} page(s)</div></div><div style="display:flex;gap:.4rem;"><button onclick="loadDraftFromHistory('${d.id}')" style="background:var(--gold);color:white;border:none;padding:.35rem .8rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Charger</button><button onclick="deleteDraftFromHistory('${d.id}')" style="background:none;border:1px solid var(--red);color:var(--red);padding:.35rem .7rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">✕</button></div></div>`).join('');}
-  modal.innerHTML=`<div style="background:var(--parchment);border:1px solid var(--border-strong);border-radius:8px;padding:2rem;max-width:580px;width:100%;box-shadow:0 8px 48px rgba(0,0,0,.4);max-height:80vh;overflow-y:auto;color:var(--ink);"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;"><h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--ink);">🗂 Historique des brouillons</h2><button onclick="document.getElementById('draft-history-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--muted);">✕</button></div><div>${rows}</div>${list.length?'<div style="margin-top:1rem;text-align:right;"><button onclick="clearAllDrafts()" style="background:none;border:1px solid var(--red);color:var(--red);padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Tout effacer</button></div>':''}</div>`;
+  if(!list.length){
+    rows='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;text-align:center;padding:2rem 0;">Aucun brouillon sauvegardé.</p>';
+  }else{
+    rows=list.map(d=>`
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--border);gap:.5rem;flex-wrap:wrap;">
+        <div style="flex:1;">
+          <div style="font-family:var(--font-display);font-weight:700;color:var(--ink);font-size:.95rem;">${escHtml(d.title)}</div>
+          <div style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">${timeSince(d.savedAt)} · ${d.pages?d.pages.length:0} page(s)</div>
+        </div>
+        <div style="display:flex;gap:.4rem;">
+          <button onclick="loadDraftFromHistory('${d.id}')" style="background:var(--gold);color:white;border:none;padding:.35rem .8rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Charger</button>
+          <button onclick="deleteDraftFromHistory('${d.id}')" style="background:none;border:1px solid var(--red);color:var(--red);padding:.35rem .7rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">✕</button>
+        </div>
+      </div>
+    `).join('');
+  }
+  modal.innerHTML=`
+    <div style="background:var(--parchment);border:1px solid var(--border-strong);border-radius:8px;padding:2rem;max-width:580px;width:100%;box-shadow:0 8px 48px rgba(0,0,0,.4);max-height:80vh;overflow-y:auto;color:var(--ink);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;">
+        <h2 style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--ink);">🗂 Historique des brouillons</h2>
+        <button onclick="document.getElementById('draft-history-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:1.2rem;color:var(--muted);">✕</button>
+      </div>
+      <div>${rows}</div>
+      ${list.length?'<div style="margin-top:1rem;text-align:right;"><button onclick="clearAllDrafts()" style="background:none;border:1px solid var(--red);color:var(--red);padding:.4rem .9rem;border-radius:3px;font-family:var(--font-mono);font-size:.75rem;cursor:pointer;">Tout effacer</button></div>':''}
+    </div>
+  `;
   document.body.appendChild(modal);
   modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
 }
-function loadDraftFromHistory(id){ const list=getDraftList(); const d=list.find(x=>x.id===id); if(!d)return; loadDraftData(d); document.getElementById('draft-history-modal')?.remove(); showToast('Brouillon "'+d.title+'" chargé !','success'); }
-function deleteDraftFromHistory(id){ const list=getDraftList().filter(x=>x.id!==id); saveDraftList(list); openDraftHistory(); updateDraftBtns(); }
-function clearAllDrafts(){ if(!confirm('Supprimer tous les brouillons ?'))return; saveDraftList([]); document.getElementById('draft-history-modal')?.remove(); updateDraftBtns(); showToast('Tous les brouillons effacés.','info'); }
-function updateDraftBtns(){ const list=getDraftList(); const histBtn=document.getElementById('draft-history-btn'); if(histBtn)histBtn.textContent='🗂 Historique ('+list.length+')'; const loadBtn=document.getElementById('draft-load-btn'); if(loadBtn)loadBtn.disabled=!list.length; }
+
+function loadDraftFromHistory(id){
+  const list=getDraftList();
+  const d=list.find(x=>x.id===id);
+  if(!d)return;
+  loadDraftData(d);
+  document.getElementById('draft-history-modal')?.remove();
+  showToast('Brouillon "'+d.title+'" chargé !','success');
+}
+
+function deleteDraftFromHistory(id){
+  const list=getDraftList().filter(x=>x.id!==id);
+  saveDraftList(list);
+  openDraftHistory();
+  updateDraftBtns();
+}
+
+function clearAllDrafts(){
+  if(!confirm('Supprimer tous les brouillons ?'))return;
+  saveDraftList([]);
+  document.getElementById('draft-history-modal')?.remove();
+  updateDraftBtns();
+  showToast('Tous les brouillons effacés.','info');
+}
+
+function clearDraft(){ clearCurrentDraft(); }
+function saveDraft(){ /* auto-save désactivé — boutons manuels uniquement */ }
+
+function updateDraftBtns(){
+  const list=getDraftList();
+  const histBtn=document.getElementById('draft-history-btn');
+  if(histBtn)histBtn.textContent='🗂 Historique ('+list.length+')';
+  const loadBtn=document.getElementById('draft-load-btn');
+  if(loadBtn)loadBtn.disabled=!list.length;
+}
+
 function checkDraft(){ updateDraftBtns(); }
 
 // ── IDÉES (page Contact) ──
@@ -1427,15 +1546,53 @@ function loadIdeas(){
   if(emptyEl)emptyEl.style.display='none';
   listEl.innerHTML=[...ideas].reverse().map((idea,ri)=>{
     const realIdx=ideas.length-1-ri;
-    return `<div class="idea-card"><div class="idea-card-header"><div class="idea-card-author"><div class="idea-avatar">${escHtml((idea.name||'?')[0].toUpperCase())}</div><span style="font-weight:600;font-size:.9rem;color:var(--ink);">${escHtml(idea.name||'Anonyme')}</span>${idea.isNew?'<span class="idea-new-badge">Nouveau</span>':''}</div><div class="idea-card-actions"><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">${timeSince(idea.date)}</span><button onclick="deleteIdea(${realIdx})" style="background:none;border:1px solid var(--red);color:var(--red);padding:2px 7px;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;margin-left:.5rem;">✕</button></div></div><p style="font-size:.95rem;color:var(--ink-light);line-height:1.65;margin-top:.5rem;">${escHtml(idea.message)}</p><button onclick="useIdeaAsTitle('${escHtml(idea.message.slice(0,60)).replace(/'/g,'&apos;')}')" style="margin-top:.6rem;background:rgba(184,134,11,.1);border:1px solid rgba(184,134,11,.3);color:var(--gold);padding:.3rem .75rem;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;">✍ Utiliser comme titre →</button></div>`;
+    return `<div class="idea-card">
+      <div class="idea-card-header">
+        <div class="idea-card-author">
+          <div class="idea-avatar">${escHtml((idea.name||'?')[0].toUpperCase())}</div>
+          <span style="font-weight:600;font-size:.9rem;color:var(--ink);">${escHtml(idea.name||'Anonyme')}</span>
+          ${idea.isNew?'<span class="idea-new-badge">Nouveau</span>':''}
+        </div>
+        <div class="idea-card-actions">
+          <span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">${timeSince(idea.date)}</span>
+          <button onclick="deleteIdea(${realIdx})" style="background:none;border:1px solid var(--red);color:var(--red);padding:2px 7px;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;margin-left:.5rem;">✕</button>
+        </div>
+      </div>
+      <p style="font-size:.95rem;color:var(--ink-light);line-height:1.65;margin-top:.5rem;">${escHtml(idea.message)}</p>
+      <button onclick="useIdeaAsTitle('${escHtml(idea.message.slice(0,60)).replace(/'/g,'&apos;')}')" style="margin-top:.6rem;background:rgba(184,134,11,.1);border:1px solid rgba(184,134,11,.3);color:var(--gold);padding:.3rem .75rem;border-radius:3px;font-family:var(--font-mono);font-size:.72rem;cursor:pointer;">✍ Utiliser comme titre →</button>
+    </div>`;
   }).join('');
+  // Marquer comme lus
   const updated=ideas.map(x=>({...x,isNew:false}));
   localStorage.setItem('capnews_ideas',JSON.stringify(updated));
   updateIdeasBadge();
 }
-function deleteIdea(realIdx){ const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]'); ideas.splice(realIdx,1); localStorage.setItem('capnews_ideas',JSON.stringify(ideas)); loadIdeas(); updateIdeasBadge(); showToast('Idée supprimée.','info'); }
-function clearAllIdeas(){ if(!confirm('Supprimer toutes les idées ?'))return; localStorage.removeItem('capnews_ideas'); loadIdeas(); updateIdeasBadge(); showToast('Idées effacées.','info'); }
-function useIdeaAsTitle(text){ switchAdminTab('new'); setTimeout(()=>{const titleEl=document.getElementById('new-title');if(titleEl){titleEl.value=text;titleEl.focus();}showToast('Titre prérempli !','success');},100); }
+
+function deleteIdea(realIdx){
+  const ideas=JSON.parse(localStorage.getItem('capnews_ideas')||'[]');
+  ideas.splice(realIdx,1);
+  localStorage.setItem('capnews_ideas',JSON.stringify(ideas));
+  loadIdeas();
+  updateIdeasBadge();
+  showToast('Idée supprimée.','info');
+}
+
+function clearAllIdeas(){
+  if(!confirm('Supprimer toutes les idées ?'))return;
+  localStorage.removeItem('capnews_ideas');
+  loadIdeas();
+  updateIdeasBadge();
+  showToast('Idées effacées.','info');
+}
+
+function useIdeaAsTitle(text){
+  switchAdminTab('new');
+  setTimeout(()=>{
+    const titleEl=document.getElementById('new-title');
+    if(titleEl){titleEl.value=text;titleEl.focus();}
+    showToast('Titre prérempli !','success');
+  },100);
+}
 
 // ── INIT ──
 window.onload = async () => {
@@ -1444,55 +1601,21 @@ window.onload = async () => {
   updateIdeasBadge();
   const p=new URLSearchParams(location.search).get('j'); if(p)setTimeout(()=>openModal(p),800);
 };
-  
+
 // ── THEME ──
 function loadTheme(){ const t=localStorage.getItem('capnews_theme')||'light'; document.documentElement.setAttribute('data-theme',t); document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre'; }
 function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme'); const next=cur==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',next); localStorage.setItem('capnews_theme',next); document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Clair':'🌙 Sombre'; }
-function setupReadingProgress(){ const reader=document.getElementById('book-reader'); if(!reader)return; reader.addEventListener('scroll',()=>{ const{scrollTop,scrollHeight,clientHeight}=reader; const pct=scrollHeight<=clientHeight?100:(scrollTop/(scrollHeight-clientHeight))*100; document.getElementById('reading-progress').style.width=pct+'%'; }); }
+function setupReadingProgress(){ const reader=document.getElementById('book-reader'); if(!reader)return; reader.addEventListener('scroll',updateReadingProgress); }
+function updateReadingProgress(){ const page=document.querySelector('.book-page.active'); if(!page)return; const{scrollTop,scrollHeight,clientHeight}=page; const pct=scrollHeight<=clientHeight?100:(scrollTop/(scrollHeight-clientHeight))*100; document.getElementById('reading-progress').style.width=pct+'%'; }
 function toggleImmersive(){ isImmersive=!isImmersive; document.body.classList.toggle('immersive-mode',isImmersive); document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍'; if(isImmersive){const j=db.journals.find(x=>x.id===currentJournalId);if(j)document.getElementById('imm-title').textContent=j.title;showToast('Mode lecture immersif — F ou Esc pour quitter','info');} }
 function closeImmersive(){ if(isImmersive)toggleImmersive(); }
-
-// ── CITATION — met à jour TOUTES les instances (.quote-text-shared) ──
-function showQuote(){
-  const q=QUOTES[currentQuoteIdx];
-  document.querySelectorAll('.quote-text-shared').forEach(el=>{
-    el.style.opacity='0';
-    setTimeout(()=>{
-      el.textContent='« '+q.text+' »';
-      el.style.transition='opacity .4s';
-      el.style.opacity='1';
-    },200);
-  });
-  document.querySelectorAll('.quote-author-shared').forEach(au=>{
-    setTimeout(()=>{ au.textContent='— '+q.author; },200);
-  });
-}
+function showQuote(){ const q=QUOTES[currentQuoteIdx]; const el=document.getElementById('quote-text'); const au=document.getElementById('quote-author'); if(!el)return; el.style.opacity='0'; setTimeout(()=>{el.textContent='« '+q.text+' »';if(au)au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200); }
 function refreshQuote(){ currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length; showQuote(); }
 function updateLockedCountdown(){ const now=new Date(),pub=new Date(); pub.setHours(getPubHour(),0,0,0); if(now>=pub)pub.setDate(pub.getDate()+1); const diff=pub-now; const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000); const pad2=n=>String(Math.max(0,n)).padStart(2,'0'); const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=pad2(v);}; setEl('lcd-h',h);setEl('lcd-m',m);setEl('lcd-s',s); }
 setInterval(updateLockedCountdown,1000);
 
 // ── API ──
-async function api(path, body, method = 'POST') {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 8000); // 8s max
-  const opts = {
-    method,
-    headers: { 'Content-Type': 'application/json' },
-    signal: controller.signal
-  };
-  if (adminToken) opts.headers['Authorization'] = 'Bearer ' + adminToken;
-  if (body !== undefined) opts.body = JSON.stringify(body);
-  try {
-    const res = await fetch(WORKER_URL + path, opts);
-    clearTimeout(timeout);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || 'Erreur ' + res.status);
-    return data;
-  } catch(e) {
-    clearTimeout(timeout);
-    throw e;
-  }
-}
+async function api(path,body,method='POST'){ const opts={method,headers:{'Content-Type':'application/json'}}; if(adminToken)opts.headers['Authorization']='Bearer '+adminToken; if(body!==undefined)opts.body=JSON.stringify(body); const res=await fetch(WORKER_URL+path,opts); const data=await res.json(); if(!res.ok)throw new Error(data.error||'Erreur '+res.status); return data; }
 async function loadData(){ try{ db=await api('/api/data',undefined,'GET'); if(!db.journals)db.journals=[]; if(!db.comments)db.comments=[]; if(!db.reactions)db.reactions={}; if(!db.settings)db.settings={}; if(!db.pageviews)db.pageviews={}; userReactions=JSON.parse(localStorage.getItem('capnews_reactions')||'{}'); }catch(e){ showToast('Erreur de connexion : '+e.message,'error'); } }
 
 // ── NAVIGATION ──
@@ -1589,7 +1712,7 @@ function showCtxMenu(x,y){ const menu=document.getElementById('rich-ctx-menu'); 
 function hideCtxMenu(){ document.getElementById('rich-ctx-menu').classList.remove('visible'); }
 function rtCmd(cmd){ applyRichCmd(cmd,activeRichTarget); }
 
-// ── BOOK RENDERER (modal / preview — conservé pour les archives) ──
+// ── BOOK RENDERER ──
 function buildBookPages(j,readerEl,onStartRead,searchQ){
   const pages=getPages(j); const total=pages.length+1;
   readerEl.innerHTML='';
@@ -1608,6 +1731,7 @@ function buildBookPages(j,readerEl,onStartRead,searchQ){
   const startBtn=readerEl.querySelector('#cover-start-'+readerEl.id); if(startBtn)startBtn.onclick=()=>onStartRead(1);
   return total;
 }
+
 function setBookPage(readerEl,pageIdx,total,dotsEl,counterEl,btnPrev,btnNext,onPageChange){
   const pages=readerEl.querySelectorAll('.book-page');
   pages.forEach((p,i)=>p.classList.toggle('active',i===pageIdx));
@@ -1615,62 +1739,30 @@ function setBookPage(readerEl,pageIdx,total,dotsEl,counterEl,btnPrev,btnNext,onP
   if(btnPrev)btnPrev.disabled=pageIdx===0; if(btnNext)btnNext.disabled=pageIdx===total-1;
   if(counterEl)counterEl.textContent=(pageIdx+1)+' / '+total;
   if(dotsEl){ dotsEl.innerHTML=''; for(let i=0;i<total;i++){const dot=document.createElement('span');dot.className='progress-dot'+(i===pageIdx?' active':'');dot.onclick=()=>onPageChange(i);dotsEl.appendChild(dot);} }
+  updateReadingProgress();
 }
 
-// ── HOME BOOK — MODE SCROLL UNIQUE ──
+// ── HOME BOOK ──
 function renderBook(j){
-  const pages=getPages(j);
+  const pages=getPages(j); homeBookTotal=pages.length+2;
   const reader=document.getElementById('book-reader');
-  reader.innerHTML='';
-  reader.style.overflowY='auto';
-  reader.style.maxHeight='78vh';
-
-  // En-tête couverture
-  const cover=document.createElement('div');
-  cover.style.cssText='padding:2rem 2.5rem 1.5rem;background:var(--ink);color:var(--parchment);position:relative;overflow:hidden;';
-  let chips='';
-  if(j.category)chips+='<span class="chip cat">'+escHtml(j.category)+'</span>';
-  if(j.mood)chips+='<span class="chip '+moodClass(j.mood)+'">'+moodLabel(j.mood)+'</span>';
-  if(j.author)chips+='<span style="font-family:var(--font-mono);font-size:.72rem;padding:.2rem .65rem;border-radius:2px;border:1px solid rgba(255,255,255,.2);color:rgba(247,243,235,.8);background:rgba(255,255,255,.08);letter-spacing:.08em;text-transform:uppercase;">✒ '+escHtml(j.author)+'</span>';
-  const rt=j.readTime||calcReadTime(pages);
-  let coverExtra='';
-  if(j.coverImg)coverExtra+=`<div style="margin:1rem 0;border-radius:6px;overflow:hidden;max-height:220px;"><img src="${j.coverImg}" style="width:100%;max-height:220px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
-  if(j.audioUrl)coverExtra+=`<div class="page-audio-block" style="margin:1rem 0;"><span class="page-audio-label" style="cursor:pointer" onclick="openPersistentPlayer('${j.audioUrl}','${escHtml(j.title)}')">🔊 Écouter</span><audio controls src="${j.audioUrl}"></audio></div>`;
-  cover.innerHTML=`<div style="position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(184,134,11,.12) 0%,transparent 60%);pointer-events:none;"></div>
-    <div style="font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1rem;opacity:.8;position:relative;">${escHtml((db.settings.siteName||'CapNews').toUpperCase())} · ${formatDateFr(j.date)}</div>
-    <div style="font-family:var(--font-display);font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:900;font-style:italic;color:var(--parchment);line-height:1.1;margin-bottom:.75rem;position:relative;">${escHtml(j.title)}</div>
-    ${j.excerpt?`<div style="font-style:italic;color:rgba(247,243,235,.75);border-left:2px solid var(--gold);padding-left:1rem;margin-bottom:1rem;font-size:.97rem;line-height:1.65;position:relative;">${parseRichText(j.excerpt)}</div>`:''}
-    ${coverExtra}
-    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.75rem;position:relative;">${chips}</div>
-    <div style="font-family:var(--font-mono);font-size:.75rem;color:rgba(247,243,235,.45);position:relative;">⏱ ${escHtml(rt)}</div>`;
-  reader.appendChild(cover);
-
-  // Corps — toutes les pages en scroll continu
-  const body=document.createElement('div');
-  body.style.cssText='padding:2rem 2.5rem;background:var(--bg-card);';
-  let combined='';
-  pages.forEach((p,i)=>{
-    if(i>0)combined+='<hr style="border:none;border-top:1px solid var(--border);margin:2rem 0;">';
-    combined+='<div class="page-body-text'+(i===0?' page-drop-cap':'')+'" style="margin-bottom:1rem;">'+parseRichText(p)+'</div>';
-  });
-  body.innerHTML=combined;
-  reader.appendChild(body);
-
-  // Section commentaires intégrée en bas
-  const commDiv=document.createElement('div');
-  commDiv.style.cssText='padding:1.5rem 2.5rem 2rem;background:var(--parchment-mid);border-top:2px solid var(--border-strong);';
+  buildBookPages(j,reader,(p)=>{bookPage=p;goToBookPage(j);},'');
+  const cp=document.createElement('div'); cp.className='book-page comments-book-page';
   const starsHtml=[1,2,3,4,5].map(v=>'<span class="star-pick" data-v="'+v+'" onclick="setBookCommentRating('+v+')">★</span>').join('');
-  commDiv.innerHTML='<h2 style="font-family:var(--font-display);font-size:1.2rem;font-weight:700;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:2px solid var(--border-strong);color:var(--ink);">💬 Avis des lecteurs</h2><div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1.5rem;"><div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div><p class="email-hint">L\'email reste privé.</p><div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div><textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);"></textarea><button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div><div class="star-filter-bar" style="margin-top:.5rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div><div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div>';
-  reader.appendChild(commDiv);
-
-  // Charger les commentaires tout de suite
-  renderComments(j.id,'book-comment-list',0);
-  currentJournalId=j.id;
+  cp.innerHTML='<h2>💬 Avis des lecteurs</h2><div class="comment-form-wrapper"><h3 style="font-family:var(--font-display);font-weight:700;margin-bottom:.85rem;color:var(--ink);">Laisser un avis</h3><div class="comment-form-row"><input type="text" id="book-comment-name" placeholder="Votre prénom *"><input type="email" id="book-comment-email" placeholder="Email (optionnel, privé)" style="flex:1.4;"></div><p class="email-hint">L\'email reste privé.</p><div class="star-picker" id="book-star-picker"><label>Note :</label>'+starsHtml+'</div><textarea id="book-comment-text" placeholder="Partagez votre avis..." rows="3" style="width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:.6rem .85rem;font-family:var(--font-body);font-size:.95rem;resize:vertical;outline:none;margin-bottom:.75rem;background:var(--bg-card);color:var(--ink);transition:border-color .2s;"></textarea><button class="comment-submit" onclick="submitBookComment()">Publier mon avis →</button></div><div class="star-filter-bar" style="margin-top:1rem;"><label>Filtrer :</label><button class="star-filter-btn active" data-filter="0" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">Tous</button>'+[5,4,3,2,1].map(v=>'<button class="star-filter-btn" data-filter="'+v+'" onclick="setStarFilter(this,\'book-comment-list\',\''+j.id+'\')">'+'★'.repeat(v)+'</button>').join('')+'</div><div class="comment-list" id="book-comment-list" style="margin-top:.75rem;"></div><span class="cover-page-num">Commentaires</span>';
+  reader.appendChild(cp);
+  reader.ontouchstart=e=>{swipeStartX=e.touches[0].clientX;};
+  reader.ontouchend=e=>{const dx=e.changedTouches[0].clientX-swipeStartX;if(Math.abs(dx)>50){dx<0?bookNext():bookPrev();}};
+  goToBookPage(j);
 }
-// no-op en mode scroll
-function goToBookPage(j){}
-function bookNext(){}
-function bookPrev(){}
+function goToBookPage(j){
+  bookPage=Math.max(0,Math.min(bookPage,homeBookTotal-1));
+  const reader=document.getElementById('book-reader');
+  setBookPage(reader,bookPage,homeBookTotal,document.getElementById('progress-dots'),document.getElementById('page-counter'),document.getElementById('btn-prev'),document.getElementById('btn-next'),(i)=>{bookPage=i;goToBookPage(j);});
+  if(bookPage===homeBookTotal-1){const listEl=document.getElementById('book-comment-list');if(listEl&&!listEl.dataset.loaded){listEl.dataset.loaded='1';renderComments(j.id,'book-comment-list',0);}}
+}
+function bookNext(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage<homeBookTotal-1){bookPage++;goToBookPage(j);}}
+function bookPrev(){const j=db.journals.find(x=>x.id===currentJournalId);if(j&&bookPage>0){bookPage--;goToBookPage(j);}}
 function setBookCommentRating(v){bookCommentRating=v;document.querySelectorAll('#book-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v));}
 async function submitBookComment(){
   const name=(document.getElementById('book-comment-name')?.value||'').trim(); const email=(document.getElementById('book-comment-email')?.value||'').trim(); const text=(document.getElementById('book-comment-text')?.value||'').trim();
@@ -1697,1114 +1789,465 @@ function modalBookNext(){const j=db.journals.find(x=>x.id===modalJournalId);if(!
 function modalBookPrev(){const j=db.journals.find(x=>x.id===modalJournalId);if(!j)return;if(modalPage>0){modalPage--;goToModalPage(j);}}
 
 // ── PREVIEWS ──
-function buildPreview(){
-  switchEditTab('preview');
-  const j=buildJournalFromEditForm();
-  const reader=document.getElementById('edit-preview-reader');
-  reader.innerHTML=''; reader.style.overflowY='auto'; reader.style.maxHeight='500px';
-  // Utiliser le même rendu scroll pour l'aperçu édit
-  const tmpJ={...j,id:'preview'};
-  const realId=currentJournalId; currentJournalId='preview';
-  renderBookInto(tmpJ,reader);
-  currentJournalId=realId;
-}
-function buildNewPreview(){
-  switchNewTab('preview');
-  const j=buildJournalFromNewForm();
-  const reader=document.getElementById('new-preview-reader');
-  reader.innerHTML=''; reader.style.overflowY='auto'; reader.style.maxHeight='500px';
-  renderBookInto(j,reader);
-}
-// ══════════════════════════════════════════════════════════════════
-// SUITE ET FIN DU SCRIPT CAPNEWS — à coller après renderBookInto()
-// ══════════════════════════════════════════════════════════════════
+function buildPreview(){ switchEditTab('preview'); const j=buildJournalFromEditForm(); const reader=document.getElementById('edit-preview-reader'); previewBookTotal=buildBookPages(j,reader,(p)=>{previewPage=p;goToPreviewPage();}); goToPreviewPage(); }
+function goToPreviewPage(){ previewPage=Math.max(0,Math.min(previewPage,previewBookTotal-1)); setBookPage(document.getElementById('edit-preview-reader'),previewPage,previewBookTotal,document.getElementById('preview-dots'),document.getElementById('preview-counter'),document.getElementById('preview-btn-prev'),document.getElementById('preview-btn-next'),(i)=>{previewPage=i;goToPreviewPage();}); }
+function previewNext(){if(previewPage<previewBookTotal-1){previewPage++;goToPreviewPage();}}
+function previewPrev(){if(previewPage>0){previewPage--;goToPreviewPage();}}
+function buildNewPreview(){ switchNewTab('preview'); const j=buildJournalFromNewForm(); const reader=document.getElementById('new-preview-reader'); newPreviewBookTotal=buildBookPages(j,reader,(p)=>{newPreviewPage=p;goToNewPreviewPage();}); goToNewPreviewPage(); }
+function goToNewPreviewPage(){ newPreviewPage=Math.max(0,Math.min(newPreviewPage,newPreviewBookTotal-1)); setBookPage(document.getElementById('new-preview-reader'),newPreviewPage,newPreviewBookTotal,document.getElementById('new-preview-dots'),document.getElementById('new-preview-counter'),document.getElementById('new-preview-prev'),document.getElementById('new-preview-next'),(i)=>{newPreviewPage=i;goToNewPreviewPage();}); }
+function newPreviewNext(){if(newPreviewPage<newPreviewBookTotal-1){newPreviewPage++;goToNewPreviewPage();}}
+function newPreviewPrev(){if(newPreviewPage>0){newPreviewPage--;goToNewPreviewPage();}}
+function buildJournalFromEditForm(){ const pages=getPagesFromEditor('edit-pages-editor'); const autoRt=calcReadTime(pages); return{title:document.getElementById('edit-title')?.value||'Sans titre',excerpt:document.getElementById('edit-excerpt')?.value||'',pages,category:document.getElementById('edit-category')?.value||'',mood:document.getElementById('edit-mood')?.value||'neutral',author:document.getElementById('edit-author')?.value||'',readTime:document.getElementById('edit-readtime')?.value||autoRt,date:document.getElementById('edit-date')?.value||getTodayStr(),coverImg:document.getElementById('edit-cover-img')?.value||'',audioUrl:document.getElementById('edit-audio-url')?.value||''};}
+function buildJournalFromNewForm(){ const pages=getPagesFromEditor('new-pages-editor'); const autoRt=calcReadTime(pages); return{title:document.getElementById('new-title')?.value||'Sans titre',excerpt:document.getElementById('new-excerpt')?.value||'',pages,category:document.getElementById('new-category')?.value||'',mood:document.getElementById('new-mood')?.value||'neutral',author:document.getElementById('new-author')?.value||'',readTime:document.getElementById('new-readtime')?.value||autoRt,date:document.getElementById('new-date')?.value||getTodayStr(),coverImg:document.getElementById('new-cover-img')?.value||'',audioUrl:document.getElementById('new-audio-url')?.value||''};}
+function previewCoverImg(){ const url=document.getElementById('edit-cover-img').value.trim(); const d=document.getElementById('cover-img-preview'); if(!url){d.style.display='none';return;} d.style.display='block'; d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">'; }
+function previewAudio(){ const url=document.getElementById('edit-audio-url').value.trim(); const d=document.getElementById('audio-preview'); if(!url){d.style.display='none';return;} d.style.display='block'; d.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>'; }
+function previewNewCoverImg(){ const url=document.getElementById('new-cover-img').value.trim(); const d=document.getElementById('new-cover-img-preview'); if(!url){d.style.display='none';return;} d.style.display='block'; d.innerHTML='<img src="'+url+'" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display=\'none\'">'; }
+function previewNewAudio(){ const url=document.getElementById('new-audio-url').value.trim(); const d=document.getElementById('new-audio-preview'); if(!url){d.style.display='none';return;} d.style.display='block'; d.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>'; }
 
-// ── renderBookInto (suite — chips + body) ──
-// Le début de la fonction s'arrêtait sur :
-//   if(j.category)chips+='<span class="chip cat">'+escHtml(
-// Voici la fin complète de renderBookInto() :
-
-function renderBookInto(j, reader) {
-  const pages = getPages(j);
-  const cover = document.createElement('div');
-  cover.style.cssText = 'padding:1.5rem 2rem;background:var(--ink);color:var(--parchment);';
-  let chips = '';
-  if (j.category) chips += '<span class="chip cat">' + escHtml(j.category) + '</span>';
-  if (j.mood) chips += '<span class="chip ' + moodClass(j.mood) + '">' + moodLabel(j.mood) + '</span>';
-  if (j.author) chips += '<span style="font-family:var(--font-mono);font-size:.72rem;padding:.2rem .65rem;border-radius:2px;border:1px solid rgba(255,255,255,.2);color:rgba(247,243,235,.8);background:rgba(255,255,255,.08);">✒ ' + escHtml(j.author) + '</span>';
-  const rt = j.readTime || calcReadTime(pages);
-  let coverExtra = '';
-  if (j.coverImg) coverExtra += `<div style="margin:.75rem 0;border-radius:4px;overflow:hidden;max-height:160px;"><img src="${j.coverImg}" style="width:100%;max-height:160px;object-fit:cover;" onerror="this.parentElement.style.display='none'" loading="lazy"></div>`;
-  cover.innerHTML = `<div style="font-family:var(--font-mono);font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold-light);margin-bottom:.75rem;opacity:.8;">${escHtml((db.settings.siteName || 'CapNews').toUpperCase())} · ${formatDateFr(j.date)}</div>
-    <div style="font-family:var(--font-display);font-size:clamp(1.3rem,3vw,2rem);font-weight:900;font-style:italic;color:var(--parchment);line-height:1.1;margin-bottom:.6rem;">${escHtml(j.title)}</div>
-    ${j.excerpt ? `<div style="font-style:italic;color:rgba(247,243,235,.7);border-left:2px solid var(--gold);padding-left:.85rem;margin-bottom:.85rem;font-size:.93rem;line-height:1.6;">${parseRichText(j.excerpt)}</div>` : ''}
-    ${coverExtra}
-    <div style="display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.6rem;">${chips}</div>
-    <div style="font-family:var(--font-mono);font-size:.73rem;color:rgba(247,243,235,.4);">⏱ ${escHtml(rt)}</div>`;
-  reader.appendChild(cover);
-
-  const body = document.createElement('div');
-  body.style.cssText = 'padding:1.5rem 2rem;background:var(--bg-card);';
-  let combined = '';
-  pages.forEach((p, i) => {
-    if (i > 0) combined += '<hr style="border:none;border-top:1px solid var(--border);margin:1.5rem 0;">';
-    combined += '<div class="page-body-text' + (i === 0 ? ' page-drop-cap' : '') + '" style="margin-bottom:1rem;">' + parseRichText(p) + '</div>';
-  });
-  body.innerHTML = combined;
-  reader.appendChild(body);
-}
-
-// ── BRANDING ──
-function applyBranding() {
-  const s = db.settings || {};
-  const name = s.siteName || 'CapNews';
-  const tagline = s.tagline || 'Édition numérique';
-  const logoEl = document.getElementById('site-logo');
-  if (logoEl) logoEl.innerHTML = name.slice(0, -4) + '<span>' + name.slice(-4) + '</span>';
-  const tagEl = document.getElementById('site-tagline');
-  if (tagEl) tagEl.textContent = tagline;
-  const footerName = document.getElementById('footer-name');
-  if (footerName) footerName.textContent = name;
-  const footerTagline = document.getElementById('footer-tagline');
-  if (footerTagline) footerTagline.textContent = tagline;
-  document.title = name;
-  const aboutTitle = document.getElementById('about-title');
-  if (aboutTitle) aboutTitle.textContent = 'À propos de ' + name;
-  const aboutDesc = document.getElementById('about-desc');
-  if (aboutDesc) aboutDesc.textContent = s.description || name + ' est un blog quotidien indépendant.';
-  const settingName = document.getElementById('setting-sitename');
-  if (settingName) settingName.value = name;
-  const settingTagline = document.getElementById('setting-tagline');
-  if (settingTagline) settingTagline.value = tagline;
-  const settingHour = document.getElementById('setting-hour');
-  if (settingHour) settingHour.value = s.pubHour ?? 18;
-}
-
-// ── COUNTDOWN BANNER ──
-function startCountdown() {
-  function tick() {
-    const now = new Date(), pub = new Date();
-    pub.setHours(getPubHour(), 0, 0, 0);
-    const banner = document.getElementById('countdown-banner');
-    const textEl = document.getElementById('countdown-text');
-    const timerEl = document.getElementById('countdown-timer');
-    const j = getTodayJournal();
-    if (j && isPublished(j)) {
-      if (banner) banner.className = 'published';
-      if (textEl) textEl.textContent = '✓ Journal publié · ' + escHtml(j.title);
-      if (timerEl) timerEl.textContent = '';
-    } else {
-      if (banner) banner.className = '';
-      if (now >= pub) pub.setDate(pub.getDate() + 1);
-      const diff = pub - now;
-      const h = Math.floor(diff / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
-      if (textEl) textEl.textContent = 'Prochain journal dans';
-      if (timerEl) timerEl.textContent = pad(h) + 'h ' + pad(m) + 'm ' + pad(s) + 's';
-    }
+// ── HOME ──
+function renderHome(){
+  document.getElementById('home-loading').style.display='none';
+  const j=getTodayJournal(); const fab=document.getElementById('edit-fab');
+  const lockedEl=document.getElementById('home-locked'); const contentEl=document.getElementById('home-content');
+  if(!j||!isPublished(j)){
+    lockedEl.style.display='block'; contentEl.style.display='none';
+    if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');
+    updateLockedCountdown(); triviaLoad(); renderLeaderboard('lb-list-locked'); return;
   }
-  tick();
-  setInterval(tick, 1000);
+  lockedEl.style.display='none'; contentEl.style.display='block';
+  currentJournalId=j.id; bookPage=0; homeBookTotal=getPages(j).length+2;
+  if(isAdmin)fab.classList.remove('hidden');else fab.classList.add('hidden');
+  renderBook(j); renderReactions(j.id); renderRecentList(); renderTagsCloud();
+  api('/api/pageview',{journalId:j.id}).catch(()=>{});
 }
 
-// ── HOME RENDERER ──
-function renderHome() {
-  const loadingEl = document.getElementById('home-loading');
-  const lockedEl = document.getElementById('home-locked');
-  const contentEl = document.getElementById('home-content');
-  if (loadingEl) loadingEl.style.display = 'none';
+function shareJournal(){ const url=window.location.href.split('?')[0]; if(navigator.share){navigator.share({title:'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');} }
+function shareModalJournal(){ if(!modalJournalId)return; const j=db.journals.find(x=>x.id===modalJournalId); const url=window.location.href.split('?')[0]+'?j='+modalJournalId; const txt=j?('"'+j.title+'" — '+url):url; if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');} }
 
-  const j = getTodayJournal();
-  const fab = document.getElementById('edit-fab');
-
-  if (j && isPublished(j)) {
-    if (lockedEl) lockedEl.style.display = 'none';
-    if (contentEl) contentEl.style.display = 'block';
-    if (fab) fab.classList.remove('hidden');
-    renderBook(j);
-    renderReactions(j.id);
-    renderRecentList();
-    renderTagsCloud();
-    incrementView(j.id);
-    triviaLoad();
-  } else {
-    if (lockedEl) lockedEl.style.display = 'block';
-    if (contentEl) contentEl.style.display = 'none';
-    if (fab) fab.classList.add('hidden');
-    renderLeaderboard('lb-list-locked');
-    triviaLoad();
+// ── CALENDAR ──
+function renderCalendar(containerId,year,month){
+  const container=document.getElementById(containerId); if(!container)return;
+  const days=['Lu','Ma','Me','Je','Ve','Sa','Di']; const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const journalsByDate={}; db.journals.forEach(j=>{journalsByDate[j.date]=j;});
+  const today=getTodayStr(); const firstDay=new Date(year,month,1); const lastDay=new Date(year,month+1,0);
+  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
+  let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},-1)">‹</button><span class="cal-month-label">${monthNames[month]} ${year}</span><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},1)">›</button></div><div class="calendar-grid">`;
+  days.forEach(d=>{html+=`<div class="cal-header">${d}</div>`;});
+  let col=0; for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
+  for(let d=1;d<=lastDay.getDate();d++){
+    const dateStr=`${year}-${pad(month+1)}-${pad(d)}`; const j=journalsByDate[dateStr];
+    const pub=j&&isPublished(j); const sched=j&&!pub;
+    let cls='cal-day'; if(dateStr===today)cls+=' today'; if(pub)cls+=' published'; else if(sched&&isAdmin)cls+=' scheduled';
+    const canClick=pub||(sched&&isAdmin); const onclick=canClick?`onclick="openModal('${j.id}')"`:''; const titleAttr=canClick?`title="${escHtml(j.title)+(sched?' (programmé)':'')}"`:'' ;
+    html+=`<div class="${cls}" ${onclick} ${titleAttr}>${d}</div>`; col++;
   }
-  if (fab && isAdmin) fab.classList.remove('hidden');
+  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;} html+='</div>'; container.innerHTML=html;
 }
+function changeCalMonth(containerId,year,month,delta){ let m=month+delta,y=year; if(m<0){m=11;y--;}else if(m>11){m=0;y++;} if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m); }
+function renderSidebarCalendar(){ renderCalendar('sidebar-calendar',calendarDate.getFullYear(),calendarDate.getMonth()); }
+function renderAdminCalendar(){ const now=new Date(); renderCalendar('admin-calendar-full',now.getFullYear(),now.getMonth()); }
 
 // ── REACTIONS ──
-function renderReactions(journalId, prefix) {
-  const pfx = prefix || '';
-  const r = db.reactions[journalId] || { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-  const total = (r.positive || 0) + (r.neutral || 0) + (r.negative || 0);
-  const stars = r.stars || [];
-  const avg = stars.length ? (stars.reduce((a, b) => a + b, 0) / stars.length) : 0;
+function renderReactionBars(jid,barsId,vcIds,vbtnIds){ const r=db.reactions[jid]||{positive:0,neutral:0,negative:0,stars:[],total:0}; const total=(r.positive||0)+(r.neutral||0)+(r.negative||0); const bars=document.getElementById(barsId); if(bars){bars.innerHTML='';[{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(item=>{const count=r[item.k]||0,pct=total>0?Math.round((count/total)*100):0;bars.innerHTML+='<div class="vote-row"><span class="vote-emoji">'+item.e+'</span><div class="vote-bar-bg"><div class="vote-bar '+item.cls+'" style="width:'+pct+'%"></div></div><span class="vote-count">'+count+'</span></div>';});}['positive','neutral','negative'].forEach(k=>{const vc=document.getElementById(vcIds[k]);if(vc)vc.textContent=r[k]||0;const btn=document.getElementById(vbtnIds[k]);if(btn)btn.classList.toggle('active',userReactions[jid]===k);}); }
+function renderReactions(jid){ const r=db.reactions[jid]||{stars:[]}; const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—'; document.getElementById('avg-stars').textContent=stars; document.getElementById('total-comments').textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length; const sv=document.getElementById('avg-stars-visual'); sv.innerHTML=''; const v=parseFloat(stars)||0; for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);} renderReactionBars(jid,'reaction-bars',{positive:'vc-positive',neutral:'vc-neutral',negative:'vc-negative'},{positive:'vbtn-positive',neutral:'vbtn-neutral',negative:'vbtn-negative'}); }
+function renderModalReactions(jid){ const r=db.reactions[jid]||{stars:[]}; const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):'—'; const a=document.getElementById('modal-avg-stars');if(a)a.textContent=stars; const t=document.getElementById('modal-total-comments');if(t)t.textContent=(db.comments||[]).filter(c=>c.journalId===jid&&!c.isReply).length; const sv=document.getElementById('modal-avg-stars-visual'); if(sv){sv.innerHTML='';const v=parseFloat(stars)||0;for(let i=1;i<=5;i++){const s=document.createElement('span');s.className='star'+(i<=Math.round(v)?' filled':'');s.textContent='★';sv.appendChild(s);}} renderReactionBars(jid,'modal-reaction-bars',{positive:'modal-vc-positive',neutral:'modal-vc-neutral',negative:'modal-vc-negative'},{positive:'modal-vbtn-positive',neutral:'modal-vbtn-neutral',negative:'modal-vbtn-negative'}); }
+async function castReaction(type){if(!currentJournalId)return;await toggleReaction(currentJournalId,type);renderReactions(currentJournalId);}
+async function castModalReaction(type){if(!modalJournalId)return;await toggleReaction(modalJournalId,type);renderModalReactions(modalJournalId);showToast('Réaction enregistrée !','success');}
+async function toggleReaction(jid,type){ const prev=userReactions[jid]; if(!db.reactions[jid])db.reactions[jid]={positive:0,neutral:0,negative:0,stars:[],total:0}; if(prev===type){db.reactions[jid][type]=Math.max(0,(db.reactions[jid][type]||0)-1);delete userReactions[jid];}else{if(prev)db.reactions[jid][prev]=Math.max(0,(db.reactions[jid][prev]||0)-1);db.reactions[jid][type]=(db.reactions[jid][type]||0)+1;userReactions[jid]=type;} localStorage.setItem('capnews_reactions',JSON.stringify(userReactions)); try{await api('/api/react',{journalId:jid,type});}catch(e){showToast('Erreur réseau','error');} }
 
-  const avgEl = document.getElementById(pfx + 'avg-stars');
-  if (avgEl) avgEl.textContent = avg ? avg.toFixed(1) : '—';
-  const avgVisual = document.getElementById(pfx + 'avg-stars-visual');
-  if (avgVisual) {
-    avgVisual.innerHTML = '';
-    for (let i = 1; i <= 5; i++) {
-      const s = document.createElement('span');
-      s.className = 'star' + (i <= Math.round(avg) ? ' filled' : '');
-      s.textContent = '★';
-      avgVisual.appendChild(s);
-    }
-  }
-  const totalEl = document.getElementById(pfx + 'total-comments');
-  if (totalEl) totalEl.textContent = (db.comments || []).filter(c => c.journalId === journalId && !c.isReply).length;
+function setStarFilter(btn,containerId,jid){ const bar=btn.closest('.star-filter-bar');if(bar)bar.querySelectorAll('.star-filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');const filterVal=parseInt(btn.dataset.filter)||0;renderComments(jid,containerId,filterVal); }
 
-  const barsEl = document.getElementById(pfx + 'reaction-bars');
-  if (barsEl) {
-    const items = [
-      { key: 'positive', emoji: '👍', cls: 'positive', val: r.positive || 0 },
-      { key: 'neutral', emoji: '🤔', cls: 'neutral', val: r.neutral || 0 },
-      { key: 'negative', emoji: '👎', cls: 'negative', val: r.negative || 0 },
-    ];
-    barsEl.innerHTML = items.map(it => {
-      const pct = total ? Math.round((it.val / total) * 100) : 0;
-      return `<div class="vote-row"><span class="vote-emoji">${it.emoji}</span><div class="vote-bar-bg"><div class="vote-bar ${it.cls}" style="width:${pct}%"></div></div><span class="vote-count">${it.val}</span></div>`;
-    }).join('');
-  }
-
-  ['positive', 'neutral', 'negative'].forEach(k => {
-    const vc = document.getElementById(pfx + 'vc-' + k);
-    if (vc) vc.textContent = r[k] || 0;
-    const btn = document.getElementById(pfx + 'vbtn-' + k);
-    if (btn) btn.classList.toggle('active', (userReactions[journalId] || '') === k);
-  });
+// ── COMMENTS ──
+function setModalCommentRating(v){ modalCommentRating=v; document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.toggle('active',parseInt(s.dataset.v)<=v)); }
+async function submitModalComment(){
+  const name=(document.getElementById('modal-comment-name').value||'').trim(); const email=(document.getElementById('modal-comment-email').value||'').trim(); const text=(document.getElementById('modal-comment-text').value||'').trim();
+  if(!name){showToast('Veuillez entrer votre prénom.','error');return;}if(!text){showToast('Veuillez écrire un avis.','error');return;}if(!isValidEmail(email)){showToast('Email invalide.','error');return;}if(!modalJournalId)return;
+  try{const res=await api('/api/comment',{journalId:modalJournalId,name,text,rating:modalCommentRating});db.comments.push(res.comment);document.getElementById('modal-comment-name').value='';document.getElementById('modal-comment-email').value='';document.getElementById('modal-comment-text').value='';setModalCommentRating(0);renderComments(modalJournalId,'modal-comments',0);renderModalReactions(modalJournalId);showToast('Votre avis a été publié !','success');}
+  catch(e){showToast('Erreur : '+e.message,'error');}
 }
-
-async function castReaction(type) {
-  if (!currentJournalId) return;
-  if (userReactions[currentJournalId] === type) return;
-  try {
-    const res = await api('/api/react', { journalId: currentJournalId, type });
-    if (!db.reactions[currentJournalId]) db.reactions[currentJournalId] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-    const old = userReactions[currentJournalId];
-    if (old) db.reactions[currentJournalId][old] = Math.max(0, (db.reactions[currentJournalId][old] || 0) - 1);
-    db.reactions[currentJournalId][type] = (db.reactions[currentJournalId][type] || 0) + 1;
-    userReactions[currentJournalId] = type;
-    localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
-    renderReactions(currentJournalId);
-    showToast('Réaction enregistrée !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
+function renderComments(jid,containerId,starFilter=0){
+  if(!containerId)return;
+  const list=document.getElementById(containerId); if(!list)return;
+  let top=(db.comments||[]).filter(c=>c.journalId===jid&&!c.flagged&&!c.isReply).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  if(starFilter>0)top=top.filter(c=>c.rating===starFilter);
+  list.innerHTML=''; if(!top.length){list.innerHTML='<p style="color:var(--muted);font-size:.9rem;font-family:var(--font-mono);">'+(starFilter>0?'Aucun avis avec cette note.':'Aucun avis. Soyez le premier !')+'</p>';return;}
+  top.forEach(c=>{list.appendChild(buildCommentEl(c,jid,containerId));(db.comments||[]).filter(r=>r.parentId===c.id&&!r.flagged).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(reply=>list.appendChild(buildReplyEl(reply)));});
 }
-
-async function castModalReaction(type) {
-  if (!modalJournalId) return;
-  if (userReactions[modalJournalId] === type) return;
-  try {
-    await api('/api/react', { journalId: modalJournalId, type });
-    if (!db.reactions[modalJournalId]) db.reactions[modalJournalId] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-    const old = userReactions[modalJournalId];
-    if (old) db.reactions[modalJournalId][old] = Math.max(0, (db.reactions[modalJournalId][old] || 0) - 1);
-    db.reactions[modalJournalId][type] = (db.reactions[modalJournalId][type] || 0) + 1;
-    userReactions[modalJournalId] = type;
-    localStorage.setItem('capnews_reactions', JSON.stringify(userReactions));
-    renderReactions(modalJournalId, 'modal-');
-    showToast('Réaction enregistrée !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
+function buildCommentEl(c,jid,containerId){
+  const initials=c.name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const stars=Array.from({length:5},(_,i)=>'<span class="comment-star'+(i<c.rating?' filled':'')+'">★</span>').join('');
+  const badge=getCommentBadge(c.name);
+  const div=document.createElement('div'); div.className='comment-card';
+  div.innerHTML='<div class="comment-header"><div class="comment-avatar">'+initials+'</div><span class="comment-name">'+escHtml(c.name)+(badge?'<span class="comment-badge">'+badge+'</span>':'')+'</span>'+(c.rating?'<div class="comment-stars">'+stars+'</div>':'')+'<span class="comment-date">'+timeSince(c.date)+'</span></div><div class="comment-text">'+escHtml(c.text)+'</div><div class="comment-actions">'+(isAdmin?'<button class="comment-action-btn" onclick="toggleReplyForm(\''+c.id+'\')">↩ Répondre</button>':'')+' '+(isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\''+c.id+'\',\''+containerId+'\',\''+jid+'\')">Supprimer</button>':'')+'</div>'+(isAdmin?'<div class="reply-form" id="reply-form-'+c.id+'"><textarea placeholder="Votre réponse..."></textarea><div class="reply-form-actions"><button class="reply-submit" onclick="submitReply(\''+c.id+'\',\''+jid+'\',\''+containerId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleReplyForm(\''+c.id+'\')">Annuler</button></div></div>':'');
+  return div;
 }
+function buildReplyEl(r){ const div=document.createElement('div'); div.className='comment-card reply-card'; div.innerHTML='<div class="comment-header"><div class="comment-avatar" style="background:var(--gold);">✍</div><span class="comment-name">'+escHtml(r.name)+'</span><span class="comment-date">'+timeSince(r.date)+'</span></div><div class="comment-text">'+escHtml(r.text)+'</div><div class="comment-actions">'+(isAdmin?'<button class="comment-action-btn delete" onclick="deleteComment(\''+r.id+'\',\'\',\'\')">Supprimer</button>':'')+'</div>'; return div; }
+function toggleReplyForm(id){ const f=document.getElementById('reply-form-'+id); if(f){f.classList.toggle('open');if(f.classList.contains('open'))f.querySelector('textarea').focus();} }
+async function submitReply(parentId,jid,containerId){ if(!isAdmin)return; const form=document.getElementById('reply-form-'+parentId); const text=form?form.querySelector('textarea').value.trim():''; if(!text){showToast('Veuillez écrire une réponse.','error');return;} try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);if(form){form.querySelector('textarea').value='';form.classList.remove('open');}renderComments(jid,containerId,0);showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');} }
+async function deleteComment(id,containerId,jid){ if(!isAdmin)return; if(!confirm('Supprimer cet avis ?'))return; try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);if(containerId&&jid)renderComments(jid,containerId,0);if(currentJournalId)renderReactions(currentJournalId);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');} }
 
-// ── COMMENTAIRES ──
-function renderComments(journalId, listId, starFilter) {
-  const listEl = document.getElementById(listId);
-  if (!listEl) return;
-  let comments = (db.comments || []).filter(c => c.journalId === journalId && !c.isReply);
-  if (starFilter > 0) comments = comments.filter(c => c.rating === starFilter);
-  comments.sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (!comments.length) { listEl.innerHTML = '<p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);text-align:center;padding:1.5rem 0;">Aucun avis ' + (starFilter ? 'pour cette note' : 'pour le moment') + '.</p>'; return; }
-  listEl.innerHTML = comments.map(c => {
-    const stars = c.rating ? [1, 2, 3, 4, 5].map(i => '<span class="comment-star' + (i <= c.rating ? ' filled' : '') + '">★</span>').join('') : '';
-    const badge = getCommentBadge(c.name);
-    const replies = (db.comments || []).filter(r => r.isReply && r.parentId === c.id);
-    const repliesHtml = replies.map(r => `<div class="comment-card reply-card"><div class="comment-header"><div class="comment-avatar" style="background:var(--gold);">${escHtml((r.name || '?')[0].toUpperCase())}</div><div><div class="comment-name">${escHtml(r.name)}<span class="comment-badge">Réponse</span></div><div class="comment-date">${timeSince(r.date)}</div></div></div><p class="comment-text">${escHtml(r.text)}</p></div>`).join('');
-    return `<div class="comment-card" id="comment-${c.id}">
-      <div class="comment-header">
-        <div class="comment-avatar">${escHtml((c.name || '?')[0].toUpperCase())}</div>
-        <div style="flex:1;">
-          <div class="comment-name">${escHtml(c.name)}${badge ? `<span class="comment-badge">${badge}</span>` : ''}</div>
-          <div class="comment-date">${timeSince(c.date)}</div>
-        </div>
-        ${stars ? `<div class="comment-stars">${stars}</div>` : ''}
-      </div>
-      <p class="comment-text">${escHtml(c.text)}</p>
-      <div class="comment-actions">
-        <button class="comment-action-btn" onclick="toggleReplyForm('${c.id}','${listId}','${journalId}')">↩ Répondre</button>
-        ${isAdmin ? `<button class="comment-action-btn delete" onclick="deleteComment('${c.id}','${journalId}','${listId}')">✕ Supprimer</button>` : ''}
-      </div>
-      <div class="reply-form" id="reply-form-${c.id}">
-        <textarea placeholder="Votre réponse..."></textarea>
-        <div class="reply-form-actions">
-          <input type="text" placeholder="Votre prénom *" style="border:1px solid var(--border-strong);border-radius:3px;padding:.4rem .7rem;font-family:var(--font-body);font-size:.88rem;outline:none;background:var(--bg-card);color:var(--ink);margin-bottom:.4rem;width:100%;">
-          <button class="reply-submit" onclick="submitReply('${c.id}','${journalId}','${listId}')">Publier</button>
-          <button class="reply-cancel" onclick="toggleReplyForm('${c.id}','${listId}','${journalId}')">Annuler</button>
-        </div>
-      </div>
-      ${repliesHtml}
-    </div>`;
-  }).join('');
-}
-
-function toggleReplyForm(commentId, listId, journalId) {
-  const form = document.getElementById('reply-form-' + commentId);
-  if (form) form.classList.toggle('open');
-}
-
-async function submitReply(parentId, journalId, listId) {
-  const form = document.getElementById('reply-form-' + parentId);
-  if (!form) return;
-  const textarea = form.querySelector('textarea');
-  const nameInput = form.querySelector('input[type="text"]');
-  const name = (nameInput?.value || '').trim();
-  const text = (textarea?.value || '').trim();
-  if (!name || !text) { showToast('Prénom et texte requis.', 'error'); return; }
-  try {
-    const res = await api('/api/comment', { journalId, name, text, parentId, isReply: true });
-    db.comments.push(res.comment);
-    renderComments(journalId, listId, 0);
-    showToast('Réponse publiée !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
-}
-
-async function deleteComment(commentId, journalId, listId) {
-  if (!isAdmin) return;
-  if (!confirm('Supprimer ce commentaire ?')) return;
-  try {
-    await api('/api/comment/delete', { commentId });
-    db.comments = db.comments.filter(c => c.id !== commentId && c.parentId !== commentId);
-    renderComments(journalId, listId, 0);
-    showToast('Commentaire supprimé.', 'info');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
-}
-
-function setStarFilter(btn, listId, journalId) {
-  btn.closest('.star-filter-bar').querySelectorAll('.star-filter-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  renderComments(journalId, listId, parseInt(btn.dataset.filter));
-}
-
-function setModalCommentRating(v) {
-  modalCommentRating = v;
-  document.querySelectorAll('#modal-star-picker .star-pick').forEach(s => s.classList.toggle('active', parseInt(s.dataset.v) <= v));
-}
-
-async function submitModalComment() {
-  const name = (document.getElementById('modal-comment-name')?.value || '').trim();
-  const email = (document.getElementById('modal-comment-email')?.value || '').trim();
-  const text = (document.getElementById('modal-comment-text')?.value || '').trim();
-  if (!name) { showToast('Veuillez entrer votre prénom.', 'error'); return; }
-  if (!text) { showToast('Veuillez écrire un avis.', 'error'); return; }
-  if (!isValidEmail(email)) { showToast('Email invalide.', 'error'); return; }
-  if (!modalJournalId) return;
-  try {
-    const res = await api('/api/comment', { journalId: modalJournalId, name, text, rating: modalCommentRating });
-    db.comments.push(res.comment);
-    if (modalCommentRating) {
-      if (!db.reactions[modalJournalId]) db.reactions[modalJournalId] = { positive: 0, neutral: 0, negative: 0, stars: [], total: 0 };
-      if (!db.reactions[modalJournalId].stars) db.reactions[modalJournalId].stars = [];
-      db.reactions[modalJournalId].stars.push(modalCommentRating);
-    }
-    document.getElementById('modal-comment-name').value = '';
-    document.getElementById('modal-comment-email').value = '';
-    document.getElementById('modal-comment-text').value = '';
-    setModalCommentRating(0);
-    renderComments(modalJournalId, 'modal-comments', 0);
-    renderReactions(modalJournalId, 'modal-');
-    showToast('Votre avis a été publié !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
-}
-
-// ── PARTAGE ──
-function shareJournal() {
-  const url = location.origin + location.pathname + '?j=' + currentJournalId;
-  if (navigator.share) { navigator.share({ title: document.title, url }); }
-  else { navigator.clipboard.writeText(url); showToast('Lien copié !', 'success'); }
-}
-function shareModalJournal() {
-  const url = location.origin + location.pathname + '?j=' + modalJournalId;
-  if (navigator.share) { navigator.share({ title: document.title, url }); }
-  else { navigator.clipboard.writeText(url); showToast('Lien copié !', 'success'); }
-}
-
-// ── VUES ──
-async function incrementView(journalId) {
-  try {
-    await api('/api/view', { journalId });
-    if (!db.pageviews[journalId]) db.pageviews[journalId] = 0;
-    db.pageviews[journalId]++;
-  } catch (e) { /* silencieux */ }
-}
-
-// ── CALENDAR SIDEBAR ──
-function renderSidebarCalendar() {
-  const targets = document.querySelectorAll('.sidebar-cal-target');
-  targets.forEach(target => {
-    target.innerHTML = '';
-    target.appendChild(buildCalendarWidget());
-  });
-}
-
-function buildCalendarWidget() {
-  const now = new Date();
-  const year = calendarDate.getFullYear();
-  const month = calendarDate.getMonth();
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  const dayNames = ['D','L','M','M','J','V','S'];
-
-  const wrap = document.createElement('div');
-  wrap.innerHTML = `<div class="cal-nav">
-    <button class="cal-nav-btn" onclick="calShift(-1)">←</button>
-    <span class="cal-month-label">${monthNames[month]} ${year}</span>
-    <button class="cal-nav-btn" onclick="calShift(1)">→</button>
-  </div>
-  <div class="calendar-grid">
-    ${dayNames.map(d => `<div class="cal-header">${d}</div>`).join('')}
-    ${Array(firstDay === 0 ? 6 : firstDay - 1).fill('<div></div>').join('')}
-    ${Array.from({ length: daysInMonth }, (_, i) => {
-      const day = i + 1;
-      const dateStr = year + '-' + pad(month + 1) + '-' + pad(day);
-      const j = db.journals.find(x => x.date === dateStr);
-      const isToday = dateStr === getTodayStr();
-      let cls = 'cal-day';
-      let onclick = '';
-      if (j) {
-        if (isPublished(j)) { cls += ' published'; onclick = `onclick="openModal('${j.id}')"` }
-        else { cls += ' scheduled'; }
-      }
-      if (isToday) cls += ' today';
-      return `<div class="${cls}" ${onclick} title="${j ? j.title : ''}">${day}</div>`;
-    }).join('')}
-  </div>`;
-  return wrap;
-}
-
-function calShift(dir) {
-  calendarDate.setMonth(calendarDate.getMonth() + dir);
-  renderSidebarCalendar();
-  renderAdminCalendar();
-}
-
-// ── RECENT LIST / TAGS ──
-function renderRecentList() {
-  const el = document.getElementById('recent-list');
-  if (!el) return;
-  const recent = [...db.journals].filter(j => isPublished(j)).sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
-  el.innerHTML = recent.map(j => `<li><div><div class="admin-list-title" style="cursor:pointer;" onclick="openModal('${j.id}')">${escHtml(j.title)}</div><div class="admin-list-date">${formatDateShort(j.date)}</div></div></li>`).join('');
-}
-
-function renderTagsCloud() {
-  const el = document.getElementById('tags-cloud');
-  if (!el) return;
-  const tagCounts = {};
-  db.journals.filter(j => isPublished(j)).forEach(j => {
-    (j.tags || '').split(',').map(t => t.trim()).filter(Boolean).forEach(t => { tagCounts[t] = (tagCounts[t] || 0) + 1; });
-  });
-  el.innerHTML = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 20)
-    .map(([tag, count]) => `<span class="chip" style="cursor:pointer;" onclick="filterByTag('${escHtml(tag)}')">${escHtml(tag)} <span style="opacity:.6;">${count}</span></span>`).join('');
-}
-
-function filterByTag(tag) {
-  showPage('history');
-  document.getElementById('search-input').value = tag;
-  filterHistory();
-}
+// ── RECENT / TAGS ──
+function renderRecentList(){ const list=document.getElementById('recent-list'); if(!list)return; list.innerHTML=''; const todayStr=getTodayStr(); db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date)).slice(0,5).forEach(j=>{const isToday=j.date===todayStr;const li=document.createElement('li');li.innerHTML='<div><span class="admin-list-title" style="cursor:pointer" onclick="openModal(\''+j.id+'\')">'+escHtml(j.title)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+'</span></div>';list.appendChild(li);}); if(!list.children.length)list.innerHTML='<li style="color:var(--muted);font-size:.85rem;">Aucun journal publié</li>'; }
+function renderTagsCloud(){ const cloud=document.getElementById('tags-cloud'); if(!cloud)return; cloud.innerHTML=''; const tc={}; db.journals.filter(j=>isPublished(j)).forEach(j=>{(j.tags||'').split(',').map(t=>t.trim()).filter(Boolean).forEach(t=>{tc[t]=(tc[t]||0)+1;});}); Object.entries(tc).sort((a,b)=>b[1]-a[1]).slice(0,12).forEach(([tag,count])=>{const s=document.createElement('span');s.className='chip';s.style.cursor='pointer';s.textContent='#'+tag+' ('+count+')';s.onclick=()=>{showPage('history');setTimeout(()=>{document.getElementById('search-input').value=tag;filterHistory();},100);};cloud.appendChild(s);}); }
 
 // ── HISTORY ──
-function renderHistory() {
-  const grid = document.getElementById('history-grid');
-  const emptyEl = document.getElementById('history-empty');
-  const statsEl = document.getElementById('history-stats');
-  const filterRow = document.getElementById('cat-filters');
-  if (!grid) return;
-
-  const journals = [...db.journals].filter(j => isPublished(j)).sort((a, b) => new Date(b.date) - new Date(a.date));
-  const cats = [...new Set(journals.map(j => j.category).filter(Boolean))];
-
-  // Stats
-  if (statsEl) {
-    const totalComments = (db.comments || []).filter(c => !c.isReply).length;
-    const allStars = Object.values(db.reactions).flatMap(r => r.stars || []);
-    const avgAll = allStars.length ? (allStars.reduce((a, b) => a + b, 0) / allStars.length).toFixed(1) : '—';
-    statsEl.innerHTML = [
-      { num: journals.length, lbl: 'Journaux' },
-      { num: totalComments, lbl: 'Avis' },
-      { num: avgAll, lbl: 'Note moyenne' },
-      { num: Object.values(db.pageviews).reduce((a, b) => a + b, 0), lbl: 'Vues totales' },
-    ].map(s => `<div class="stat-card"><div class="stat-num">${s.num}</div><div class="stat-lbl">${s.lbl}</div></div>`).join('');
-  }
-
-  // Filtres catégories
-  if (filterRow) {
-    filterRow.innerHTML = '<button class="filter-btn' + (activeFilter === 'all' ? ' active' : '') + '" onclick="setCatFilter(\'all\')">Tous</button>'
-      + cats.map(c => `<button class="filter-btn${activeFilter === c ? ' active' : ''}" onclick="setCatFilter('${escHtml(c)}')">${escHtml(c)}</button>`).join('');
-  }
-
+function renderHistory(){
+  const published=db.journals.filter(j=>isPublished(j)); allCategories=new Set(published.map(j=>j.category).filter(Boolean));
+  const fr=document.getElementById('cat-filters'); fr.innerHTML='';
+  const allBtn=document.createElement('button'); allBtn.className='filter-btn'+(activeFilter==='all'?' active':''); allBtn.textContent='Tout'; allBtn.onclick=()=>{activeFilter='all';renderHistory();}; fr.appendChild(allBtn);
+  allCategories.forEach(cat=>{const b=document.createElement('button');b.className='filter-btn'+(activeFilter===cat?' active':'');b.textContent=cat;b.onclick=()=>{activeFilter=cat;renderHistory();};fr.appendChild(b);});
+  let allStars=[]; Object.values(db.reactions).forEach(r=>{if(r.stars)allStars=allStars.concat(r.stars);});
+  const avgR=allStars.length?(allStars.reduce((a,b)=>a+b,0)/allStars.length).toFixed(1):'—';
+  const totalViews=Object.values(db.pageviews||{}).reduce((s,pv)=>s+(pv.total||0),0);
+  document.getElementById('history-stats').innerHTML='<div class="stat-card"><div class="stat-num">'+published.length+'</div><div class="stat-lbl">Journaux</div></div>'+'<div class="stat-card"><div class="stat-num">'+((db.comments||[]).filter(c=>!c.isReply).length)+'</div><div class="stat-lbl">Avis</div></div>'+'<div class="stat-card"><div class="stat-num">'+avgR+'</div><div class="stat-lbl">Note moy.</div></div>'+'<div class="stat-card"><div class="stat-num">'+totalViews+'</div><div class="stat-lbl">Vues total</div></div>';
   filterHistory();
 }
-
-function setCatFilter(cat) {
-  activeFilter = cat;
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.textContent.trim() === (cat === 'all' ? 'Tous' : cat)));
-  filterHistory();
+function filterHistory(){
+  const q=(document.getElementById('search-input')?.value||'').toLowerCase().trim();
+  let filtered=db.journals.filter(j=>isPublished(j)).sort((a,b)=>b.date.localeCompare(a.date));
+  if(activeFilter!=='all')filtered=filtered.filter(j=>j.category===activeFilter);
+  if(q)filtered=filtered.filter(j=>j.title.toLowerCase().includes(q)||(j.excerpt||'').toLowerCase().includes(q)||stripRichTags(getPages(j).join(' ')).toLowerCase().includes(q)||(j.tags||'').toLowerCase().includes(q));
+  const countEl=document.getElementById('search-results-count'); if(countEl)countEl.textContent=q?(filtered.length+' résultat'+(filtered.length!==1?'s':'')):'' ;
+  const grid=document.getElementById('history-grid'); grid.innerHTML='';
+  document.getElementById('history-empty').style.display=filtered.length?'none':'block';
+  const todayStr=getTodayStr();
+  filtered.forEach(j=>{const r=db.reactions[j.id]||{};const stars=r.stars&&r.stars.length?(r.stars.reduce((a,b)=>a+b,0)/r.stars.length).toFixed(1):null;const cc=(db.comments||[]).filter(c=>c.journalId===j.id&&!c.isReply).length;const views=(db.pageviews||{})[j.id]?.total||0;const isToday=j.date===todayStr;
+    const div=document.createElement('div'); div.className='history-card'; div.onclick=()=>openModal(j.id);
+    let titleHtml=escHtml(j.title); if(q)titleHtml=titleHtml.replace(new RegExp('('+q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi'),'<mark class="search-hl">$1</mark>');
+    div.innerHTML='<div class="history-card-date">'+formatDateFr(j.date)+(isToday?'<span class="badge-new">Nouveau</span>':'')+'</div><div class="history-card-title">'+titleHtml+'</div><div class="history-card-excerpt">'+escHtml(stripRichTags(j.excerpt||getPages(j)[0]||'').slice(0,120))+'</div><div class="history-card-footer">'+(j.category?'<span class="history-card-cat">'+escHtml(j.category)+'</span>':'')+(stars?'<span class="history-card-rating">★ '+stars+'</span>':'')+'<span class="history-card-comments">'+cc+' avis</span><span class="history-card-views">👁 '+views+'</span></div>';
+    grid.appendChild(div);});
 }
 
-function filterHistory() {
-  const q = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
-  const grid = document.getElementById('history-grid');
-  const emptyEl = document.getElementById('history-empty');
-  const countEl = document.getElementById('search-results-count');
-  if (!grid) return;
-
-  let journals = [...db.journals].filter(j => isPublished(j)).sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (activeFilter !== 'all') journals = journals.filter(j => j.category === activeFilter);
-  if (q) {
-    journals = journals.filter(j =>
-      (j.title || '').toLowerCase().includes(q) ||
-      (j.excerpt || '').toLowerCase().includes(q) ||
-      (j.tags || '').toLowerCase().includes(q) ||
-      (j.category || '').toLowerCase().includes(q) ||
-      (j.author || '').toLowerCase().includes(q)
-    );
-  }
-
-  if (countEl) countEl.textContent = q || activeFilter !== 'all' ? journals.length + ' résultat' + (journals.length > 1 ? 's' : '') : '';
-  if (!journals.length) { grid.innerHTML = ''; if (emptyEl) emptyEl.style.display = 'block'; return; }
-  if (emptyEl) emptyEl.style.display = 'none';
-
-  grid.innerHTML = journals.map(j => {
-    const r = db.reactions[j.id] || {};
-    const stars = r.stars || [];
-    const avg = stars.length ? (stars.reduce((a, b) => a + b, 0) / stars.length).toFixed(1) : null;
-    const commentCount = (db.comments || []).filter(c => c.journalId === j.id && !c.isReply).length;
-    const views = db.pageviews[j.id] || 0;
-    const excerpt = stripRichTags(j.excerpt || getPages(j)[0] || '').slice(0, 120) + '...';
-    return `<div class="history-card" onclick="openModal('${j.id}')">
-      <div class="history-card-date">${formatDateFr(j.date)}</div>
-      <div class="history-card-title">${escHtml(j.title)}</div>
-      <div class="history-card-excerpt">${escHtml(excerpt)}</div>
-      <div class="history-card-footer">
-        ${j.category ? `<span class="history-card-cat">${escHtml(j.category)}</span>` : ''}
-        ${avg ? `<span class="history-card-rating">★ ${avg}</span>` : ''}
-        ${commentCount ? `<span class="history-card-comments">💬 ${commentCount}</span>` : ''}
-        <span class="history-card-views">👁 ${views}</span>
-      </div>
-    </div>`;
-  }).join('');
+// ── MODAL ──
+function openModal(jid){
+  const j=db.journals.find(x=>x.id===jid); if(!j)return;
+  modalJournalId=jid; modalPage=0;
+  renderModalBook(j); renderModalReactions(jid);
+  ['modal-comment-name','modal-comment-email','modal-comment-text'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  modalCommentRating=0; document.querySelectorAll('#modal-star-picker .star-pick').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('#modal-star-filter .star-filter-btn').forEach((b,i)=>b.classList.toggle('active',i===0));
+  renderComments(jid,'modal-comments',0);
+  let scheduledBanner=document.getElementById('modal-scheduled-banner');
+  if(!scheduledBanner){scheduledBanner=document.createElement('div');scheduledBanner.id='modal-scheduled-banner';scheduledBanner.style.cssText='padding:.6rem 1rem;background:rgba(184,134,11,.12);border:1px solid rgba(184,134,11,.3);border-radius:4px;font-family:var(--font-mono);font-size:.78rem;color:var(--gold);margin-bottom:1rem;text-align:center;';document.querySelector('.modal-content').insertBefore(scheduledBanner,document.querySelector('.modal-content').firstChild);}
+  if(!isPublished(j)){scheduledBanner.style.display='block';scheduledBanner.textContent='🕐 Ce journal est programmé pour le '+formatDateFr(j.date)+' à '+pad(getPubHour())+'h00 — aperçu disponible.';}
+  else{scheduledBanner.style.display='none';}
+  document.getElementById('journal-modal').classList.remove('hidden'); document.body.style.overflow='hidden';
+  api('/api/pageview',{journalId:jid}).catch(()=>{});
 }
-
-// ── MODAL (archives) ──
-function openModal(journalId) {
-  const j = db.journals.find(x => x.id === journalId);
-  if (!j) { showToast('Journal introuvable.', 'error'); return; }
-  modalJournalId = journalId;
-  modalPage = 0;
-  document.getElementById('journal-modal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  renderModalBook(j);
-  renderReactions(journalId, 'modal-');
-  renderComments(journalId, 'modal-comments', 0);
-  incrementView(journalId);
-  history.pushState({}, '', location.pathname + '?j=' + journalId);
-}
-
-function closeModal() {
+function closeModal(){
   document.getElementById('journal-modal').classList.add('hidden');
-  document.body.style.overflow = '';
-  history.pushState({}, '', location.pathname);
+  document.body.style.overflow='';
+  modalJournalId=null;
+}
+document.getElementById('journal-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+
+// ── ADMIN LOGIN ──
+async function adminLogin(){
+  const pw=document.getElementById('admin-pw-input').value; const btn=document.getElementById('admin-login-btn'); const err=document.getElementById('admin-err');
+  if(!pw)return; btn.disabled=true; btn.textContent='Vérification...'; err.textContent='';
+  try{
+    const res=await api('/api/login',{password:pw});
+    adminToken=res.token;
+    document.getElementById('admin-login-screen').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('admin-pw-input').value='';
+    document.getElementById('new-date').value=getTodayStr();
+    initNewPagesEditor();
+    loadManageList();
+    loadModeration();
+    loadSettings();
+    const j=getTodayJournal();
+    if(j){currentJournalId=j.id;document.getElementById('edit-fab').classList.remove('hidden');}
+    showToast('Connecté en tant qu\'admin.','success');
+    updateAutoReadTime();
+    checkDraft();
+    updateIdeasBadge();
+  }
+  catch(e){err.textContent='❌ '+e.message;}
+  btn.disabled=false; btn.textContent='Se connecter →';
+}
+function adminLogout(){ adminToken=null; document.getElementById('admin-login-screen').style.display='block'; document.getElementById('admin-panel').style.display='none'; document.getElementById('admin-pw-input').value=''; document.getElementById('edit-fab').classList.add('hidden'); showToast('Déconnecté.','info'); }
+function updateAutoReadTime(){ const newPages=getPagesFromEditor('new-pages-editor'); const el=document.getElementById('new-readtime-auto'); if(el&&newPages.length)el.textContent='Auto : '+calcReadTime(newPages); }
+
+// ── ADMIN TABS ──
+function switchAdminTab(tab){
+  ['new','manage','calendar','analytics','moderation','subscribers','ideas','settings'].forEach(t=>{
+    const btn=document.getElementById('atab-'+t);
+    if(btn)btn.classList.toggle('active',t===tab);
+    const body=document.getElementById('atab-body-'+t);
+    if(body)body.style.display=t===tab?'block':'none';
+  });
+  if(tab==='manage')loadManageList();
+  if(tab==='moderation')loadModeration();
+  if(tab==='settings')loadSettings();
+  if(tab==='calendar')renderAdminCalendar();
+  if(tab==='analytics')loadAnalytics();
+  if(tab==='subscribers')renderAdminSubscribers();
+  if(tab==='ideas')loadIdeas();
+}
+function switchEditTab(tab){ ['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('etab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('etab-body-'+t);if(body)body.style.display=t===tab?'block':'none';}); if(tab==='meta'){const pages=getPagesFromEditor('edit-pages-editor');const el=document.getElementById('edit-readtime-auto');if(el)el.textContent='Auto : '+calcReadTime(pages);} }
+function switchNewTab(tab){ ['content','media','meta','preview'].forEach(t=>{const btn=document.getElementById('ntab-'+t);if(btn)btn.classList.toggle('active',t===tab);const body=document.getElementById('ntab-body-'+t);if(body)body.style.display=t===tab?'block':'none';}); if(tab==='meta')updateAutoReadTime(); }
+
+// ── PAGES EDITOR ──
+function buildPageItem(text,idx,editorId){
+  const item=document.createElement('div'); item.className='page-editor-item'; item.dataset.pageIdx=idx;
+  const header=document.createElement('div'); header.className='page-editor-header';
+  header.innerHTML='<span>Page '+(idx+1)+'</span><span style="display:flex;gap:8px;"><button onclick="event.stopPropagation();removePage(this,\''+editorId+'\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-family:var(--font-mono);font-size:.75rem;">Suppr.</button><span>▾</span></span>';
+  const body=document.createElement('div'); body.className='page-editor-body open'; header.onclick=()=>body.classList.toggle('open'); body.appendChild(buildRichEditor(text,idx,editorId)); item.appendChild(header); item.appendChild(body); return item;
+}
+function removePage(btn,editorId){ btn.closest('.page-editor-item').remove(); renumberPages(editorId); }
+function renumberPages(editorId){ document.querySelectorAll('#'+editorId+' .page-editor-item').forEach((item,i)=>{item.dataset.pageIdx=i;item.querySelector('.page-editor-header span:first-child').textContent='Page '+(i+1);const ta=item.querySelector('.richtext-area');if(ta)ta.setAttribute('data-page-idx',i);}); }
+function getPagesFromEditor(editorId){ return Array.from(document.querySelectorAll('#'+editorId+' .richtext-area')).map(ta=>ta.value.trim()).filter(Boolean); }
+function addNewPage(){ const e=document.getElementById('new-pages-editor'); e.appendChild(buildPageItem('',e.querySelectorAll('.page-editor-item').length,'new-pages-editor')); updateAutoReadTime(); }
+function addEditPage(){ const e=document.getElementById('edit-pages-editor'); e.appendChild(buildPageItem('',e.querySelectorAll('.page-editor-item').length,'edit-pages-editor')); }
+function initNewPagesEditor(){ const e=document.getElementById('new-pages-editor'); e.innerHTML=''; e.appendChild(buildPageItem('',0,'new-pages-editor')); }
+
+// ── PUBLISH ──
+async function publishJournal(){
+  if(!isAdmin)return;
+  const title=document.getElementById('new-title').value.trim();
+  const date=document.getElementById('new-date').value;
+  const pages=getPagesFromEditor('new-pages-editor');
+  if(!title||!date){showToast('Titre et date requis.','error');return;}
+  if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  const autoRt=calcReadTime(pages);
+  const j={title,excerpt:document.getElementById('new-excerpt').value.trim(),pages,date,category:document.getElementById('new-category').value,mood:document.getElementById('new-mood').value,author:document.getElementById('new-author').value.trim(),tags:document.getElementById('new-tags').value.trim(),readTime:document.getElementById('new-readtime').value.trim()||autoRt,coverImg:document.getElementById('new-cover-img').value.trim(),audioUrl:document.getElementById('new-audio-url').value.trim()};
+  const btn=document.getElementById('publish-btn'); btn.disabled=true; btn.textContent='Enregistrement...';
+  try{
+    const res=await api('/api/admin/save',j); j.id=res.id; j.createdAt=new Date().toISOString(); db.journals.push(j);
+    showToast('Journal enregistré !','success');
+    ['new-title','new-excerpt','new-author','new-tags','new-readtime','new-cover-img','new-audio-url'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('new-date').value=getTodayStr();
+    document.getElementById('new-cover-img-preview').style.display='none';
+    document.getElementById('new-audio-preview').style.display='none';
+    initNewPagesEditor(); renderHome(); loadManageList(); renderSidebarCalendar();
+    if(isPublished(j)){const subCount=getSubscribers().length;if(subCount>0){showToast('📧 Envoi des notifications...','info');api('/api/admin/notify',{journalId:j.id}).then(r=>{if(r.sent>0)showToast('✅ '+r.sent+' notification'+(r.sent>1?'s':'')+' envoyée'+(r.sent>1?'s':'')+'!','success');}).catch(()=>{});}}
+  }catch(e){showToast('Erreur : '+e.message,'error');}
+  btn.disabled=false; btn.textContent='Enregistrer le journal →';
 }
 
 // ── EDIT MODAL ──
-function openEditModal() {
-  const j = db.journals.find(x => x.id === currentJournalId);
-  if (!j || !isAdmin) return;
-  document.getElementById('edit-modal-bg').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-  document.getElementById('edit-title').value = j.title || '';
-  document.getElementById('edit-excerpt').value = j.excerpt || '';
-  document.getElementById('edit-category').value = j.category || 'Réflexion';
-  document.getElementById('edit-mood').value = j.mood || 'positive';
-  document.getElementById('edit-readtime').value = j.readTime || '';
-  document.getElementById('edit-author').value = j.author || '';
-  document.getElementById('edit-tags').value = j.tags || '';
-  document.getElementById('edit-date').value = j.date || getTodayStr();
-  document.getElementById('edit-cover-img').value = j.coverImg || '';
-  document.getElementById('edit-audio-url').value = j.audioUrl || '';
-  const editor = document.getElementById('edit-pages-editor');
-  if (editor) {
-    editor.innerHTML = '';
-    getPages(j).forEach((p, i) => editor.appendChild(buildPageItem(p, i, 'edit-pages-editor')));
-  }
-  switchEditTab('content');
+function openEditModal(){
+  if(!isAdmin)return; const j=db.journals.find(x=>x.id===currentJournalId); if(!j)return;
+  document.getElementById('edit-title').value=j.title||'';
+  document.getElementById('edit-excerpt').value=j.excerpt||'';
+  document.getElementById('edit-author').value=j.author||'';
+  document.getElementById('edit-tags').value=j.tags||'';
+  document.getElementById('edit-date').value=j.date||'';
+  document.getElementById('edit-readtime').value=j.readTime||'';
+  document.getElementById('edit-category').value=j.category||'Autre';
+  document.getElementById('edit-mood').value=j.mood||'neutral';
+  document.getElementById('edit-cover-img').value=j.coverImg||'';
+  document.getElementById('edit-audio-url').value=j.audioUrl||'';
+  document.getElementById('cover-img-preview').style.display='none';
+  document.getElementById('audio-preview').style.display='none';
+  const editor=document.getElementById('edit-pages-editor'); editor.innerHTML=''; getPages(j).forEach((p,i)=>editor.appendChild(buildPageItem(p,i,'edit-pages-editor')));
+  previewPage=0; switchEditTab('content'); document.getElementById('edit-modal-bg').classList.remove('hidden'); document.body.style.overflow='hidden';
+}
+function closeEditModal(){ document.getElementById('edit-modal-bg').classList.add('hidden'); document.body.style.overflow=''; }
+async function saveEditJournal(){
+  if(!isAdmin)return; const j=db.journals.find(x=>x.id===currentJournalId); if(!j)return;
+  const pages=getPagesFromEditor('edit-pages-editor'); if(!pages.length){showToast('Ajoutez au moins une page.','error');return;}
+  const autoRt=calcReadTime(pages);
+  const updated={...j,title:document.getElementById('edit-title').value.trim()||j.title,excerpt:document.getElementById('edit-excerpt').value.trim(),pages,author:document.getElementById('edit-author').value.trim(),tags:document.getElementById('edit-tags').value.trim(),date:document.getElementById('edit-date').value||j.date,readTime:document.getElementById('edit-readtime').value.trim()||autoRt,category:document.getElementById('edit-category').value,mood:document.getElementById('edit-mood').value,coverImg:document.getElementById('edit-cover-img').value.trim(),audioUrl:document.getElementById('edit-audio-url').value.trim()};
+  try{await api('/api/admin/save',updated);const idx=db.journals.findIndex(x=>x.id===currentJournalId);if(idx>=0)db.journals[idx]=updated;closeEditModal();bookPage=0;renderHome();renderSidebarCalendar();showToast('Journal mis à jour !','success');}
+  catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
-function closeEditModal() {
-  document.getElementById('edit-modal-bg').classList.add('hidden');
-  document.body.style.overflow = '';
+// ── MANAGE ──
+function loadManageList(){ document.getElementById('manage-list-loading').style.display='none'; const list=document.getElementById('manage-list'); list.innerHTML=''; const sorted=[...db.journals].sort((a,b)=>b.date.localeCompare(a.date)); if(!sorted.length){list.innerHTML='<li style="color:var(--muted);">Aucun journal</li>';return;} sorted.forEach(j=>{const li=document.createElement('li');const pub=isPublished(j);li.innerHTML='<div><span class="admin-list-title">'+escHtml(j.title)+'</span><br><span class="admin-list-date">'+formatDateShort(j.date)+' · '+(pub?'<span style="color:green;font-weight:500;">Publié</span>':'<span style="color:var(--gold);">Programmé</span>')+'</span></div><div class="admin-list-actions"><button class="btn-primary" style="padding:.35rem .8rem;font-size:.78rem;" onclick="editFromManage(\''+j.id+'\')">Modifier</button><button class="btn-danger" onclick="deleteJournal(\''+j.id+'\')">Suppr.</button></div>';list.appendChild(li);}); }
+async function deleteJournal(id){ if(!isAdmin)return; if(!confirm('Supprimer ce journal définitivement ?'))return; try{await api('/api/admin/delete-journal',{id});db.journals=db.journals.filter(j=>j.id!==id);db.comments=db.comments.filter(c=>c.journalId!==id);loadManageList();renderHome();renderSidebarCalendar();showToast('Journal supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');} }
+function editFromManage(id){ currentJournalId=id; showPage('home'); openEditModal(); }
+
+// ── ANALYTICS ──
+async function loadAnalytics(){
+  document.getElementById('analytics-loading').style.display='block'; document.getElementById('analytics-content').style.display='none';
+  try{
+    const data=await api('/api/admin/analytics',undefined,'GET');
+    document.getElementById('analytics-loading').style.display='none'; document.getElementById('analytics-content').style.display='block';
+    document.getElementById('analytics-stats').innerHTML='<div class="analytics-stat"><div class="analytics-num">'+data.totalViews+'</div><div class="analytics-lbl">Vues total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalComments+'</div><div class="analytics-lbl">Avis total</div></div>'+'<div class="analytics-stat"><div class="analytics-num">'+data.totalJournals+'</div><div class="analytics-lbl">Journaux</div></div>';
+    const chartEl=document.getElementById('analytics-chart'); chartEl.innerHTML=''; const entries=Object.entries(data.daily); const maxVal=Math.max(...entries.map(([,v])=>v),1);
+    entries.forEach(([date,count],i)=>{const col=document.createElement('div');col.className='chart-bar-col';const pct=Math.round((count/maxVal)*100);const d=new Date(date+'T12:00:00');const label=i%5===0?d.toLocaleDateString('fr-FR',{day:'numeric',month:'short'}):'';col.innerHTML='<div class="chart-bar" style="height:'+Math.max(pct,2)+'%"><div class="chart-bar-tooltip">'+count+' vue'+(count>1?'s':'')+' · '+date+'</div></div><div class="chart-bar-label">'+label+'</div>';chartEl.appendChild(col);});
+    const topEl=document.getElementById('top-journals'); topEl.innerHTML='';
+    data.byJournal.slice(0,8).forEach((j,i)=>{topEl.innerHTML+='<div class="top-journal-row"><span class="top-journal-rank">#'+(i+1)+'</span><span class="top-journal-title">'+escHtml(j.title)+'</span><span class="top-journal-views">👁 '+j.views+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:.5rem;">💬 '+j.comments+'</span></div>';});
+    if(!data.byJournal.length)topEl.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucune donnée encore.</p>';
+  }catch(e){document.getElementById('analytics-loading').innerHTML='<p style="color:var(--red);font-family:var(--font-mono);">Erreur : '+escHtml(e.message)+'</p>';}
 }
 
-function switchEditTab(tab) {
-  ['content', 'media', 'meta', 'preview'].forEach(t => {
-    document.getElementById('etab-body-' + t).style.display = t === tab ? 'block' : 'none';
-    document.getElementById('etab-' + t).classList.toggle('active', t === tab);
+// ── MODÉRATION ──
+function loadModeration(){
+  const list=document.getElementById('mod-list');const all=(db.comments||[]).filter(c=>!c.isReply);list.innerHTML='';
+  if(!all.length){document.getElementById('mod-empty').style.display='block';return;}
+  document.getElementById('mod-empty').style.display='none';
+  [...all].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,30).forEach(c=>{
+    const j=db.journals.find(x=>x.id===c.journalId);
+    const replies=(db.comments||[]).filter(r=>r.parentId===c.id);
+    const li=document.createElement('li');
+    li.style.cssText='display:flex;flex-direction:column;align-items:stretch;padding:.85rem 0;border-bottom:1px solid var(--border);gap:.5rem;';
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;align-items:center;justify-content:space-between;';
+    row.innerHTML='<div style="flex:1;"><span style="font-weight:600;">'+escHtml(c.name)+'</span><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);margin-left:8px;">'+timeSince(c.date)+'</span><br><span style="font-size:.85rem;color:var(--muted);">Sur : '+(j?escHtml(j.title):'?')+'</span><br><span style="font-size:.9rem;">'+escHtml(c.text.slice(0,100))+(c.text.length>100?'...':'')+'</span>'+(replies.length?'<br><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--gold);">↩ '+replies.length+' réponse(s)</span>':'')+'</div><div class="admin-list-actions"><button class="btn-primary" style="padding:.3rem .7rem;font-size:.75rem;background:var(--gold);" onclick="toggleModReply(\''+c.id+'\')">↩</button><button class="btn-danger" onclick="deleteCommentAdmin(\''+c.id+'\')">Suppr.</button></div>';
+    const replyBox=document.createElement('div');
+    replyBox.id='mod-reply-'+c.id;
+    replyBox.style.cssText='display:none;padding:.6rem;background:var(--parchment-dark);border-radius:4px;';
+    replyBox.innerHTML='<textarea id="mod-reply-text-'+c.id+'" style="width:100%;border:1px solid var(--border-strong);border-radius:3px;padding:.5rem .75rem;font-family:var(--font-body);font-size:.9rem;resize:vertical;min-height:60px;outline:none;margin-bottom:.4rem;background:var(--bg-card);color:var(--ink);" placeholder="Votre réponse..."></textarea><div style="display:flex;gap:.4rem;"><button class="reply-submit" onclick="submitModReply(\''+c.id+'\',\''+c.journalId+'\')">Publier →</button><button class="reply-cancel" onclick="toggleModReply(\''+c.id+'\')">Annuler</button></div>';
+    li.appendChild(row);li.appendChild(replyBox);list.appendChild(li);
   });
 }
+function toggleModReply(id){const b=document.getElementById('mod-reply-'+id);if(!b)return;b.style.display=b.style.display==='none'?'block':'none';if(b.style.display==='block'){const ta=document.getElementById('mod-reply-text-'+id);if(ta)ta.focus();}}
+async function submitModReply(parentId,jid){if(!isAdmin)return;const ta=document.getElementById('mod-reply-text-'+parentId);const text=ta?ta.value.trim():'';if(!text){showToast('Veuillez écrire une réponse.','error');return;}try{const res=await api('/api/admin/reply',{parentId,journalId:jid,text});db.comments.push(res.reply);toggleModReply(parentId);loadModeration();showToast('Réponse publiée !','success');}catch(e){showToast('Erreur : '+e.message,'error');}}
+async function deleteCommentAdmin(id){if(!isAdmin)return;if(!confirm('Supprimer cet avis (et ses réponses) ?'))return;try{await api('/api/admin/delete-comment',{id});db.comments=db.comments.filter(c=>c.id!==id&&c.parentId!==id);loadModeration();if(currentJournalId)renderComments(currentJournalId,'book-comment-list',0);showToast('Avis supprimé.');}catch(e){showToast('Erreur : '+e.message,'error');}}
 
-async function saveEditJournal() {
-  if (!isAdmin) return;
-  const j = buildJournalFromEditForm();
-  j.id = currentJournalId;
-  try {
-    await api('/api/journal/update', j);
-    const idx = db.journals.findIndex(x => x.id === j.id);
-    if (idx !== -1) db.journals[idx] = { ...db.journals[idx], ...j };
-    closeEditModal();
-    renderHome();
-    renderSidebarCalendar();
-    showToast('Journal mis à jour !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
-}
-
-function buildJournalFromEditForm() {
-  const pages = getPagesFromEditor('edit-pages-editor');
-  return {
-    title: document.getElementById('edit-title')?.value || '',
-    excerpt: document.getElementById('edit-excerpt')?.value || '',
-    pages,
-    category: document.getElementById('edit-category')?.value || '',
-    mood: document.getElementById('edit-mood')?.value || '',
-    readTime: document.getElementById('edit-readtime')?.value || calcReadTime(pages),
-    author: document.getElementById('edit-author')?.value || '',
-    tags: document.getElementById('edit-tags')?.value || '',
-    date: document.getElementById('edit-date')?.value || getTodayStr(),
-    coverImg: document.getElementById('edit-cover-img')?.value || '',
-    audioUrl: document.getElementById('edit-audio-url')?.value || '',
-  };
-}
-
-function buildJournalFromNewForm() {
-  const pages = getPagesFromEditor('new-pages-editor');
-  return {
-    title: document.getElementById('new-title')?.value || '',
-    excerpt: document.getElementById('new-excerpt')?.value || '',
-    pages,
-    category: document.getElementById('new-category')?.value || '',
-    mood: document.getElementById('new-mood')?.value || '',
-    readTime: document.getElementById('new-readtime')?.value || calcReadTime(pages),
-    author: document.getElementById('new-author')?.value || '',
-    tags: document.getElementById('new-tags')?.value || '',
-    date: document.getElementById('new-date')?.value || getTodayStr(),
-    coverImg: document.getElementById('new-cover-img')?.value || '',
-    audioUrl: document.getElementById('new-audio-url')?.value || '',
-  };
-}
-
-// ── PAGES EDITOR ──
-function buildPageItem(text, idx, editorId) {
-  const item = document.createElement('div');
-  item.className = 'page-editor-item';
-  const header = document.createElement('div');
-  header.className = 'page-editor-header';
-  header.innerHTML = `<span>📄 Page ${idx + 1}</span><div style="display:flex;gap:.4rem;"><button onclick="movePageUp(this,'${editorId}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;">↑</button><button onclick="movePageDown(this,'${editorId}')" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:.9rem;">↓</button><button onclick="removePage(this)" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:.9rem;">✕</button><span style="font-size:.9rem;cursor:pointer;color:var(--muted);" onclick="this.closest('.page-editor-item').querySelector('.page-editor-body').classList.toggle('open')">▾</span></div>`;
-  header.addEventListener('click', e => { if (!e.target.closest('button')) item.querySelector('.page-editor-body').classList.toggle('open'); });
-  const body = document.createElement('div');
-  body.className = 'page-editor-body' + (idx === 0 ? ' open' : '');
-  body.style.padding = '.75rem';
-  body.appendChild(buildRichEditor(text, idx, editorId));
-  item.appendChild(header);
-  item.appendChild(body);
-  return item;
-}
-
-function getPagesFromEditor(editorId) {
-  const areas = document.querySelectorAll('#' + editorId + ' .richtext-area');
-  return Array.from(areas).map(a => a.value).filter(v => v.trim());
-}
-
-function addNewPage() {
-  const editor = document.getElementById('new-pages-editor');
-  const idx = editor.querySelectorAll('.page-editor-item').length;
-  editor.appendChild(buildPageItem('', idx, 'new-pages-editor'));
-}
-
-function addEditPage() {
-  const editor = document.getElementById('edit-pages-editor');
-  const idx = editor.querySelectorAll('.page-editor-item').length;
-  editor.appendChild(buildPageItem('', idx, 'edit-pages-editor'));
-}
-
-function removePage(btn) {
-  const item = btn.closest('.page-editor-item');
-  const editor = item.parentElement;
-  if (editor.querySelectorAll('.page-editor-item').length <= 1) { showToast('Il faut au moins une page.', 'info'); return; }
-  item.remove();
-  renumberPages(editor);
-}
-
-function movePageUp(btn, editorId) {
-  const item = btn.closest('.page-editor-item');
-  const prev = item.previousElementSibling;
-  if (prev) { item.parentElement.insertBefore(item, prev); renumberPages(item.parentElement); }
-}
-
-function movePageDown(btn, editorId) {
-  const item = btn.closest('.page-editor-item');
-  const next = item.nextElementSibling;
-  if (next) { item.parentElement.insertBefore(next, item); renumberPages(item.parentElement); }
-}
-
-function renumberPages(editor) {
-  editor.querySelectorAll('.page-editor-header span:first-child').forEach((s, i) => { s.textContent = '📄 Page ' + (i + 1); });
-}
-
-function initNewPagesEditor() {
-  const editor = document.getElementById('new-pages-editor');
-  if (!editor) return;
-  editor.innerHTML = '';
-  editor.appendChild(buildPageItem('', 0, 'new-pages-editor'));
-}
-
-// ── ADMIN ──
-async function adminLogin() {
-  const pw = document.getElementById('admin-pw-input')?.value;
-  const errEl = document.getElementById('admin-err');
-  const btn = document.getElementById('admin-login-btn');
-  if (!pw) { if (errEl) errEl.textContent = 'Mot de passe requis.'; return; }
-  if (btn) { btn.disabled = true; btn.textContent = '⏳...'; }
-  try {
-    const res = await api('/api/admin/login', { password: pw });
-    adminToken = res.token;
-    document.getElementById('admin-login-screen').style.display = 'none';
-    document.getElementById('admin-panel').style.display = 'block';
-    document.getElementById('edit-fab').classList.remove('hidden');
-    initNewPagesEditor();
-    document.getElementById('new-date').value = getTodayStr();
-    checkDraft();
-    switchAdminTab('new');
-    showToast('Connecté !', 'success');
-  } catch (e) {
-    if (errEl) errEl.textContent = '❌ ' + e.message;
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Se connecter →'; }
-  }
-}
-
-function adminLogout() {
-  adminToken = null;
-  document.getElementById('admin-login-screen').style.display = 'block';
-  document.getElementById('admin-panel').style.display = 'none';
-  document.getElementById('admin-pw-input').value = '';
-  document.getElementById('edit-fab').classList.add('hidden');
-  showToast('Déconnecté.', 'info');
-}
-
-function switchAdminTab(tab) {
-  ['new', 'manage', 'calendar', 'analytics', 'moderation', 'subscribers', 'ideas', 'settings'].forEach(t => {
-    const body = document.getElementById('atab-body-' + t);
-    const btn = document.getElementById('atab-' + t);
-    if (body) body.style.display = t === tab ? 'block' : 'none';
-    if (btn) btn.classList.toggle('active', t === tab);
-  });
-  if (tab === 'manage') renderManageList();
-  if (tab === 'calendar') renderAdminCalendar();
-  if (tab === 'analytics') renderAnalytics();
-  if (tab === 'moderation') renderModeration();
-  if (tab === 'subscribers') renderAdminSubscribers();
-  if (tab === 'ideas') loadIdeas();
-  if (tab === 'settings') applyBranding();
-}
-
-function switchNewTab(tab) {
-  ['content', 'media', 'meta', 'preview'].forEach(t => {
-    document.getElementById('ntab-body-' + t).style.display = t === tab ? 'block' : 'none';
-    document.getElementById('ntab-' + t).classList.toggle('active', t === tab);
-  });
-}
-
-async function publishJournal() {
-  if (!isAdmin) return;
-  const j = buildJournalFromNewForm();
-  if (!j.title) { showToast('Le titre est requis.', 'error'); return; }
-  if (!j.pages.length) { showToast('Ajoutez au moins une page.', 'error'); return; }
-  const btn = document.getElementById('publish-btn');
-  const statusEl = document.getElementById('publish-status');
-  if (btn) { btn.disabled = true; btn.textContent = '⏳ Enregistrement...'; }
-  try {
-    const res = await api('/api/journal/create', j);
-    db.journals.push(res.journal);
-    if (statusEl) { statusEl.textContent = '✅ Journal enregistré !'; statusEl.style.color = '#4caf50'; }
-    initNewPagesEditor();
-    ['new-title', 'new-excerpt', 'new-author', 'new-tags', 'new-readtime', 'new-cover-img', 'new-audio-url'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
-    document.getElementById('new-date').value = getTodayStr();
-    renderHome();
-    renderSidebarCalendar();
-    showToast('Journal publié !', 'success');
-    setTimeout(() => { if (statusEl) statusEl.textContent = ''; }, 3000);
-  } catch (e) {
-    if (statusEl) { statusEl.textContent = '❌ ' + e.message; statusEl.style.color = 'var(--red)'; }
-    showToast('Erreur : ' + e.message, 'error');
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = 'Enregistrer le journal →'; }
-  }
-}
-
-function renderManageList() {
-  const listEl = document.getElementById('manage-list');
-  const loadingEl = document.getElementById('manage-list-loading');
-  if (loadingEl) loadingEl.style.display = 'none';
-  if (!listEl) return;
-  const sorted = [...db.journals].sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (!sorted.length) { listEl.innerHTML = '<li><p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucun journal.</p></li>'; return; }
-  listEl.innerHTML = sorted.map(j => {
-    const pub = isPublished(j);
-    return `<li>
+// ── ADMIN ABONNÉS ──
+function renderAdminSubscribers(){
+  const el=document.getElementById('admin-subscribers-list');if(!el)return;
+  const subs=getSubscribers();
+  const countEl=document.getElementById('admin-subs-count');
+  if(countEl)countEl.textContent=subs.length+' abonné'+(subs.length>1?'s':'');
+  if(!subs.length){el.innerHTML='<p style="color:var(--muted);font-family:var(--font-mono);font-size:.85rem;">Aucun abonné pour l\'instant.</p>';return;}
+  el.innerHTML=subs.slice().sort((a,b)=>new Date(b.date)-new Date(a.date)).map(s=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:.6rem 0;border-bottom:1px solid var(--border);">
       <div>
-        <div class="admin-list-title">${escHtml(j.title)}</div>
-        <div class="admin-list-date">${formatDateFr(j.date)} · ${pub ? '<span style="color:#4caf50;">✓ Publié</span>' : '<span style="color:var(--gold);">⏳ Programmé</span>'}</div>
+        <span style="font-weight:600;font-size:.9rem;">${escHtml(s.name)}</span>
+        <span style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);margin-left:8px;">${escHtml(s.email)}</span>
+        <br><span style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">Inscrit ${timeSince(s.date)}</span>
       </div>
-      <div class="admin-list-actions">
-        <button class="btn-secondary" style="font-size:.75rem;padding:.3rem .7rem;" onclick="loadJournalForEdit('${j.id}')">✏️</button>
-        <button class="btn-danger" style="font-size:.75rem;padding:.3rem .7rem;" onclick="deleteJournal('${j.id}')">✕</button>
-      </div>
-    </li>`;
-  }).join('');
+      <button class="btn-danger" style="font-size:.72rem;padding:.3rem .6rem;" onclick="adminRemoveSub('${escHtml(s.email)}')">Retirer</button>
+    </div>
+  `).join('');
+}
+function adminRemoveSub(email){
+  if(!confirm('Retirer '+email+' des abonnés ?'))return;
+  removeSubscriberLocal(email);
+  unsubscribeViaWorker(email);
+  renderAdminSubscribers();
+  renderLeaderboard('lb-list-locked');
+  showToast('Abonné retiré.','info');
+}
+function exportSubscribers(){
+  const subs=getSubscribers();
+  if(!subs.length){showToast('Aucun abonné à exporter.','info');return;}
+  const csv='Prénom,Email,Date inscription\n'+subs.map(s=>`"${s.name}","${s.email}","${new Date(s.date).toLocaleDateString('fr-FR')}"`).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='capnews_abonnes.csv';a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV exporté !','success');
+}
+async function adminTestNotif(){
+  const email=prompt('Ton adresse email pour le test :','');
+  if(!email)return;
+  showToast('Envoi du test via le Worker...','info');
+  try{await api('/api/admin/notify-test',{email});showToast('✅ Email de test envoyé à '+email,'success');}
+  catch(e){showToast('❌ Erreur : '+e.message,'error');}
 }
 
-function loadJournalForEdit(journalId) {
-  const j = db.journals.find(x => x.id === journalId);
-  if (!j) return;
-  currentJournalId = journalId;
-  openEditModal();
+// ── SETTINGS ──
+function loadSettings(){
+  document.getElementById('setting-sitename').value=db.settings.siteName||'CapNews';
+  document.getElementById('setting-tagline').value=db.settings.tagline||'';
+  document.getElementById('setting-hour').value=db.settings.pubHour??18;
+}
+async function saveSettings(){
+  if(!isAdmin)return;
+  const siteName=document.getElementById('setting-sitename').value.trim()||'CapNews';
+  const tagline=document.getElementById('setting-tagline').value.trim();
+  const pubHour=parseInt(document.getElementById('setting-hour').value)||18;
+  try{
+    await api('/api/admin/settings',{siteName,tagline,pubHour});
+    db.settings.siteName=siteName;db.settings.tagline=tagline;db.settings.pubHour=pubHour;
+    applyBranding();showToast('Paramètres sauvegardés !','success');
+  }catch(e){showToast('Erreur : '+e.message,'error');}
 }
 
-async function deleteJournal(journalId) {
-  if (!isAdmin) return;
-  const j = db.journals.find(x => x.id === journalId);
-  if (!j || !confirm('Supprimer "' + j.title + '" ?')) return;
-  try {
-    await api('/api/journal/delete', { journalId });
-    db.journals = db.journals.filter(x => x.id !== journalId);
-    renderManageList();
-    renderHome();
-    renderSidebarCalendar();
-    showToast('Journal supprimé.', 'info');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
+// ── BRANDING ──
+function applyBranding(){
+  const name=db.settings.siteName||'CapNews',tagline=db.settings.tagline||'Réflexions du quotidien',hour=db.settings.pubHour??18,hourStr=pad(hour)+'h00';
+  document.title=name;
+  function fmt(n){n=n.trim();if(n.includes(' ')){const w=n.split(' ');return escHtml(w[0])+' <span>'+escHtml(w[1]||'')+'</span>'+(w.length>2?' '+escHtml(w.slice(2).join(' ')):'');}const p=n.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])/g);if(!p)return escHtml(n);return p.map((x,i)=>i===1?'<span>'+escHtml(x)+'</span>':escHtml(x)).join('');}
+  const logo=document.getElementById('site-logo');if(logo)logo.innerHTML=fmt(name);
+  const tgl=document.getElementById('site-tagline');if(tgl)tgl.textContent=tagline+' · Édition numérique';
+  const pm=document.getElementById('site-pub-meta');if(pm)pm.textContent='Publication quotidienne · '+hourStr;
+  const fn=document.getElementById('footer-name');if(fn)fn.textContent=name;
+  const ft=document.getElementById('footer-tagline');if(ft)ft.textContent='Publication quotidienne à '+hourStr;
+  const at=document.getElementById('about-title');if(at)at.textContent='À propos de '+name;
+  const ad=document.getElementById('about-desc');if(ad)ad.textContent=name+' est une publication numérique ouverte à tous. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
+  const aq=document.getElementById('about-tagline-quote');if(aq)aq.textContent='Chaque jour à '+hourStr+', un nouveau regard sur le monde.';
+  const ls=document.getElementById('locked-subtitle');if(ls)ls.textContent='La publication a lieu chaque jour à '+hourStr+'. Revenez plus tard !';
 }
 
-function renderAdminCalendar() {
-  const el = document.getElementById('admin-calendar-full');
-  if (!el) return;
-  const widget = buildCalendarWidget();
-  el.innerHTML = '';
-  el.appendChild(widget);
-}
-
-function renderAnalytics() {
-  const loadingEl = document.getElementById('analytics-loading');
-  const contentEl = document.getElementById('analytics-content');
-  if (loadingEl) loadingEl.style.display = 'none';
-  if (contentEl) contentEl.style.display = 'block';
-
-  const journals = db.journals.filter(j => isPublished(j));
-  const totalViews = Object.values(db.pageviews).reduce((a, b) => a + b, 0);
-  const totalComments = (db.comments || []).filter(c => !c.isReply).length;
-  const allStars = Object.values(db.reactions).flatMap(r => r.stars || []);
-  const avgStars = allStars.length ? (allStars.reduce((a, b) => a + b, 0) / allStars.length).toFixed(1) : '—';
-  const statsEl = document.getElementById('analytics-stats');
-  if (statsEl) {
-    statsEl.innerHTML = [
-      { num: journals.length, lbl: 'Journaux publiés' },
-      { num: totalViews, lbl: 'Vues totales' },
-      { num: totalComments, lbl: 'Commentaires' },
-      { num: avgStars, lbl: 'Note moyenne' },
-      { num: getSubscribers().length, lbl: 'Abonnés' },
-      { num: (Object.values(db.reactions).reduce((a, r) => a + (r.positive || 0) + (r.neutral || 0) + (r.negative || 0), 0)), lbl: 'Réactions' },
-    ].map(s => `<div class="analytics-stat"><div class="analytics-num">${s.num}</div><div class="analytics-lbl">${s.lbl}</div></div>`).join('');
+// ── COUNTDOWN ──
+function startCountdown(){updateCountdown();setInterval(updateCountdown,1000);}
+function updateCountdown(){
+  const now=new Date(),pub=new Date();pub.setHours(getPubHour(),0,0,0);if(now>=pub)pub.setDate(pub.getDate()+1);const diff=pub-now;
+  const j=getTodayJournal();
+  if(j&&isPublished(j)){
+    document.getElementById('countdown-banner').classList.add('published');
+    document.getElementById('countdown-text').textContent='✓ Le journal du jour est disponible !';
+    document.getElementById('countdown-timer').textContent='';
+    return;
   }
-
-  // Chart — 30 derniers jours
-  const chartEl = document.getElementById('analytics-chart');
-  if (chartEl) {
-    const days = Array.from({ length: 30 }, (_, i) => {
-      const d = new Date(); d.setDate(d.getDate() - (29 - i));
-      return d.toISOString().split('T')[0];
-    });
-    const maxV = Math.max(1, ...days.map(d => { const j = db.journals.find(x => x.date === d); return j ? (db.pageviews[j.id] || 0) : 0; }));
-    chartEl.innerHTML = days.map(d => {
-      const j = db.journals.find(x => x.date === d);
-      const v = j ? (db.pageviews[j.id] || 0) : 0;
-      const h = Math.max(2, Math.round((v / maxV) * 150));
-      const label = new Date(d + 'T12:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
-      return `<div class="chart-bar-col"><div class="chart-bar" style="height:${h}px;"><div class="chart-bar-tooltip">${label}<br>${v} vue${v > 1 ? 's' : ''}</div></div><div class="chart-bar-label">${label.split(' ')[0]}</div></div>`;
-    }).join('');
-  }
-
-  // Top journaux
-  const topEl = document.getElementById('top-journals');
-  if (topEl) {
-    const sorted = [...journals].sort((a, b) => (db.pageviews[b.id] || 0) - (db.pageviews[a.id] || 0)).slice(0, 5);
-    topEl.innerHTML = sorted.map((j, i) => `<div class="top-journal-row"><span class="top-journal-rank">#${i + 1}</span><span class="top-journal-title">${escHtml(j.title)}</span><span class="top-journal-views">👁 ${db.pageviews[j.id] || 0}</span></div>`).join('');
-  }
-}
-
-function renderModeration() {
-  const listEl = document.getElementById('mod-list');
-  const emptyEl = document.getElementById('mod-empty');
-  if (!listEl) return;
-  const comments = [...(db.comments || [])].sort((a, b) => new Date(b.date) - new Date(a.date));
-  if (!comments.length) { listEl.innerHTML = ''; if (emptyEl) emptyEl.style.display = 'block'; return; }
-  if (emptyEl) emptyEl.style.display = 'none';
-  listEl.innerHTML = comments.map(c => {
-    const j = db.journals.find(x => x.id === c.journalId);
-    return `<li style="flex-direction:column;align-items:flex-start;gap:.35rem;padding:.85rem 0;">
-      <div style="display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:.3rem;">
-        <div><span style="font-weight:600;color:var(--ink);">${escHtml(c.name)}</span>${c.rating ? ' · ' + '★'.repeat(c.rating) : ''}${c.isReply ? ' <span style="font-size:.7rem;color:var(--gold);">↩ Réponse</span>' : ''}</div>
-        <div style="display:flex;align-items:center;gap:.5rem;"><span style="font-family:var(--font-mono);font-size:.72rem;color:var(--muted);">${timeSince(c.date)}</span><button class="btn-danger" style="font-size:.72rem;padding:2px 7px;" onclick="deleteComment('${c.id}','${c.journalId}','mod-list-comments-${c.journalId}')">✕</button></div>
-      </div>
-      <p style="font-size:.88rem;color:var(--ink-light);">${escHtml(c.text)}</p>
-      ${j ? `<span style="font-family:var(--font-mono);font-size:.7rem;color:var(--muted);">📰 ${escHtml(j.title)}</span>` : ''}
-    </li>`;
-  }).join('');
-}
-
-function renderAdminSubscribers() {
-  const listEl = document.getElementById('admin-subscribers-list');
-  const countEl = document.getElementById('admin-subs-count');
-  const subs = getSubscribers();
-  if (countEl) countEl.textContent = subs.length + ' abonné' + (subs.length > 1 ? 's' : '');
-  if (!listEl) return;
-  if (!subs.length) { listEl.innerHTML = '<p style="font-family:var(--font-mono);font-size:.85rem;color:var(--muted);text-align:center;padding:2rem 0;">Aucun abonné pour l\'instant.</p>'; return; }
-  listEl.innerHTML = '<ul class="admin-list">' + [...subs].reverse().map(s => `<li><div><div style="font-weight:600;color:var(--ink);">${escHtml(s.name)}</div><div style="font-family:var(--font-mono);font-size:.75rem;color:var(--muted);">${escHtml(s.email)} · ${timeSince(s.date)}</div></div><button class="btn-danger" style="font-size:.72rem;padding:2px 7px;" onclick="removeSubscriberLocal('${escHtml(s.email)}');renderAdminSubscribers();renderLeaderboard('lb-list-locked');showToast('Abonné supprimé.','info')">✕</button></li>`).join('') + '</ul>';
-}
-
-function exportSubscribers() {
-  const subs = getSubscribers();
-  if (!subs.length) { showToast('Aucun abonné à exporter.', 'info'); return; }
-  const csv = 'Prénom,Email,Date\n' + subs.map(s => `"${s.name}","${s.email}","${new Date(s.date).toLocaleDateString('fr-FR')}"`).join('\n');
-  const a = document.createElement('a');
-  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
-  a.download = 'abonnes_capnews.csv';
-  a.click();
-}
-
-async function adminTestNotif() {
-  try {
-    await api('/api/admin/notify', { test: true });
-    showToast('Notification de test envoyée !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
-}
-
-async function saveSettings() {
-  if (!isAdmin) return;
-  const settings = {
-    siteName: document.getElementById('setting-sitename')?.value || 'CapNews',
-    tagline: document.getElementById('setting-tagline')?.value || 'Édition numérique',
-    pubHour: parseInt(document.getElementById('setting-hour')?.value || '18'),
-  };
-  try {
-    await api('/api/settings/save', settings);
-    db.settings = { ...db.settings, ...settings };
-    applyBranding();
-    showToast('Paramètres sauvegardés !', 'success');
-  } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
+  document.getElementById('countdown-banner').classList.remove('published');
+  const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+  document.getElementById('countdown-text').textContent='Prochain journal dans :';
+  document.getElementById('countdown-timer').textContent=pad(h)+'h '+pad(m)+'m '+pad(s)+'s';
 }
 
 // ── LIVE SIMULATION ──
-function startLiveSimulation() {
-  const badge = document.getElementById('live-badge');
-  const countEl = document.getElementById('live-count');
-  function update() {
-    liveViewCount = Math.floor(Math.random() * 8) + 1;
-    if (countEl) countEl.textContent = liveViewCount;
-    if (badge) badge.style.display = liveViewCount > 1 ? 'inline-flex' : 'none';
+function startLiveSimulation(){
+  const badge=document.getElementById('live-badge');const count=document.getElementById('live-count');if(!badge||!count)return;
+  liveViewCount=Math.floor(Math.random()*8)+1;count.textContent=liveViewCount;badge.style.display='inline-flex';
+  setInterval(()=>{liveViewCount=Math.max(1,Math.min(12,liveViewCount+(Math.random()>.5?1:-1)));count.textContent=liveViewCount;},8000);
+}
+
+// ── AUDIO ──
+function openPersistentPlayer(src,title){
+  const pp=document.getElementById('persistent-player');const audio=document.getElementById('pp-audio');const info=document.getElementById('pp-info');
+  if(!pp||!audio)return;audio.src=src;info.textContent='🔊 '+title;pp.classList.add('show');audio.play().catch(()=>{});
+}
+function closePersistentPlayer(){
+  const pp=document.getElementById('persistent-player');const audio=document.getElementById('pp-audio');
+  if(!pp||!audio)return;audio.pause();pp.classList.remove('show');
+}
+
+// ── FESTIVITÉS ──
+const BIRTHDAY_MONTH=4,BIRTHDAY_DAY=10,BIRTHDAY_YEAR=2025;
+function checkFestive(){
+  const now=new Date();const m=now.getMonth()+1;const d=now.getDate();
+  const banner=document.getElementById('festive-banner');let festive=null;
+  if(m===BIRTHDAY_MONTH&&d===BIRTHDAY_DAY){const age=now.getFullYear()-BIRTHDAY_YEAR;festive={cls:'birthday',msg:`🎂 CapNews fête son ${age} an${age>1?'s':''} d'existence ! Merci à toute la communauté ! 🎉`,particles:['🎂','🎊','🎈','✨','🥳','🎁']};}
+  else if(m===10){festive={cls:'halloween',msg:`🎃 Joyeux Halloween ! Les fantômes rôdent dans les archives... 👻`,particles:['🎃','👻','🕷️','🦇','🕸️']};}
+  else if(m===12&&(d===24||d===25)){festive={cls:'christmas',msg:`🎄 Joyeux Noël ! Que cette édition vous apporte joie et sérénité ! 🎅`,particles:['🎄','⛄','❄️','🎁','⭐','🔔']};}
+  else if(m===1&&d===1){festive={cls:'newyear',msg:`🥂 Bonne Année ! Que cette nouvelle année soit pleine de belles lectures ! 🎆`,particles:['🎆','🥂','✨','🎊','🌟']};}
+  if(festive){banner.className='';banner.classList.add(festive.cls);banner.innerHTML=`<span class="confetti-emoji">${festive.particles[0]}</span> ${festive.msg} <span class="confetti-emoji">${festive.particles[0]}</span>`;banner.style.display='block';launchParticles(festive.particles);}
+}
+function launchParticles(emojis){let count=0;const interval=setInterval(()=>{if(count>=30){clearInterval(interval);return;}count++;const el=document.createElement('div');el.className='festive-particle';el.textContent=emojis[Math.floor(Math.random()*emojis.length)];el.style.left=Math.random()*100+'vw';el.style.animationDuration=(Math.random()*3+2)+'s';el.style.animationDelay=(Math.random()*2)+'s';el.style.fontSize=(Math.random()*1.5+0.8)+'rem';document.body.appendChild(el);setTimeout(()=>el.remove(),6000);},150);}
+
+// ── KBD HELP ──
+function showKbdHelp(){document.getElementById('kbd-help').classList.add('show');}
+function closeKbdHelp(){document.getElementById('kbd-help').classList.remove('show');}
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown',e=>{
+  const inField=e.target.matches('input,textarea,select,[contenteditable]');
+  if(e.key==='Escape'){
+    hideCtxMenu();
+    closeModal();
+    closeEditModal();
+    closeImmersive();
+    document.getElementById('kbd-help').classList.remove('show');
+    document.getElementById('draft-history-modal')?.remove();
   }
-  update();
-  setInterval(update, 30000);
-}
-
-// ── AUDIO PERSISTANT ──
-function openPersistentPlayer(url, title) {
-  const player = document.getElementById('persistent-player');
-  const audio = document.getElementById('pp-audio');
-  const info = document.getElementById('pp-info');
-  if (!player || !audio) return;
-  audio.src = url;
-  if (info) info.textContent = '🔊 ' + title;
-  player.classList.add('show');
-  audio.play().catch(() => {});
-}
-
-function closePersistentPlayer() {
-  const player = document.getElementById('persistent-player');
-  const audio = document.getElementById('pp-audio');
-  if (audio) { audio.pause(); audio.src = ''; }
-  if (player) player.classList.remove('show');
-}
-
-// ── MÉDIAS PREVIEW (admin) ──
-function previewCoverImg() {
-  const url = document.getElementById('edit-cover-img')?.value;
-  const el = document.getElementById('cover-img-preview');
-  if (!url || !el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<img src="${url}" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display='none'">`;
-}
-function previewAudio() {
-  const url = document.getElementById('edit-audio-url')?.value;
-  const el = document.getElementById('audio-preview');
-  if (!url || !el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
-}
-function previewNewCoverImg() {
-  const url = document.getElementById('new-cover-img')?.value;
-  const el = document.getElementById('new-cover-img-preview');
-  if (!url || !el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<img src="${url}" style="width:100%;max-height:200px;object-fit:cover;" onerror="this.parentElement.style.display='none'">`;
-}
-function previewNewAudio() {
-  const url = document.getElementById('new-audio-url')?.value;
-  const el = document.getElementById('new-audio-preview');
-  if (!url || !el) return;
-  el.style.display = 'block';
-  el.innerHTML = `<audio controls src="${url}" style="width:100%;"></audio>`;
-}
-
-// ── FESTIF ──
-function checkFestive() {
-  const now = new Date();
-  const m = now.getMonth() + 1, d = now.getDate();
-  const banner = document.getElementById('festive-banner');
-  if (!banner) return;
-  let type = null, msg = '';
-  if (m === 12 && (d >= 24 && d <= 26)) { type = 'christmas'; msg = '🎄 Joyeux Noël ! 🎁'; }
-  else if (m === 10 && d === 31) { type = 'halloween'; msg = '🎃 Happy Halloween ! 👻'; }
-  else if (m === 1 && d === 1) { type = 'newyear'; msg = '🎆 Bonne Année ! 🥂'; }
-  if (type) {
-    banner.className = type;
-    banner.innerHTML = `<span class="confetti-emoji">✨</span> ${msg} <span class="confetti-emoji">✨</span>`;
-    banner.style.display = 'block';
-    launchParticles(type);
-  }
-}
-
-function launchParticles(type) {
-  const emojis = { christmas: ['❄', '🎄', '⭐', '🎁'], halloween: ['🎃', '👻', '🕷', '🦇'], newyear: ['🎆', '✨', '🥂', '🎉'] };
-  const set = emojis[type] || ['✨'];
-  for (let i = 0; i < 12; i++) {
-    setTimeout(() => {
-      const el = document.createElement('div');
-      el.className = 'festive-particle';
-      el.textContent = set[Math.floor(Math.random() * set.length)];
-      el.style.left = Math.random() * 100 + 'vw';
-      el.style.animationDuration = (3 + Math.random() * 4) + 's';
-      el.style.animationDelay = Math.random() * 2 + 's';
-      document.body.appendChild(el);
-      el.addEventListener('animationend', () => el.remove());
-    }, i * 300);
-  }
-}
-
-// ── CLAVIER ──
-document.addEventListener('keydown', e => {
-  if (e.target.matches('input,textarea,select,[contenteditable]')) return;
-  if (e.key === 'Escape') { closeModal(); closeEditModal(); closeImmersive(); hideCtxMenu(); closeKbdHelp(); }
-  if (e.key === 'f' || e.key === 'F') toggleImmersive();
-  if (e.key === '?') showKbdHelp();
-  if (e.key === 'h' || e.key === 'H') showPage('home');
-  if (e.key === 'a' || e.key === 'A') showPage('history');
-  if (e.key === 'd' || e.key === 'D') toggleTheme();
-  if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); showPage('history'); setTimeout(() => document.getElementById('search-input')?.focus(), 100); }
+  if(inField)return;
+  if(e.key==='ArrowRight')bookNext();
+  if(e.key==='ArrowLeft')bookPrev();
+  if(e.key==='f'||e.key==='F')toggleImmersive();
+  if(e.key==='h'||e.key==='H')showPage('home');
+  if(e.key==='a'||e.key==='A')showPage('history');
+  if(e.key==='d'||e.key==='D')toggleTheme();
+  if(e.key==='?')showKbdHelp();
+  if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();showPage('history');setTimeout(()=>{const inp=document.getElementById('search-input');if(inp){inp.focus();inp.select();}},100);}
 });
-
-function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
-function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
-document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
-document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
-function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
-function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
-document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
-document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
-
-// ← AJOUTE ICI
-window.showPage = showPage;
-window.toggleTheme = toggleTheme;
-window.toggleImmersive = toggleImmersive;
-window.refreshQuote = refreshQuote;
-window.triviaNext = triviaNext;
-window.submitBookComment = submitBookComment;
-window.submitModalComment = submitModalComment;
-window.closeModal = closeModal;
-window.closeEditModal = closeEditModal;
-window.openEditModal = openEditModal;
-window.adminLogin = adminLogin;
-window.adminLogout = adminLogout;
-window.publishJournal = publishJournal;
-window.saveSettings = saveSettings;
-window.shareJournal = shareJournal;
-window.showKbdHelp = showKbdHelp;
-window.closeKbdHelp = closeKbdHelp;
-window.submitContactIdea = submitContactIdea;
-window.handleSubscribe = handleSubscribe;
-window.handleSubscribeLocked = handleSubscribeLocked;
-window.handleUnsubHome = handleUnsubHome;
-window.handleUnsubLocked = handleUnsubLocked;
-window.castReaction = castReaction;
-window.castModalReaction = castModalReaction;
-window.openModal = openModal;
-window.deleteComment = deleteComment;
-window.toggleReplyForm = toggleReplyForm;
-window.submitReply = submitReply;
-window.setStarFilter = setStarFilter;
-window.setModalCommentRating = setModalCommentRating;
-window.setBookCommentRating = setBookCommentRating;
-window.modalBookNext = modalBookNext;
-window.modalBookPrev = modalBookPrev;
-window.switchAdminTab = switchAdminTab;
-window.switchNewTab = switchNewTab;
-window.switchEditTab = switchEditTab;
-window.addNewPage = addNewPage;
-window.addEditPage = addEditPage;
-window.saveEditJournal = saveEditJournal;
-window.deleteJournal = deleteJournal;
-window.loadJournalForEdit = loadJournalForEdit;
-window.exportSubscribers = exportSubscribers;
-window.adminTestNotif = adminTestNotif;
-window.saveDraftManual = saveDraftManual;
-window.loadLastDraft = loadLastDraft;
-window.clearCurrentDraft = clearCurrentDraft;
-window.openDraftHistory = openDraftHistory;
-window.buildNewPreview = buildNewPreview;
-window.buildPreview = buildPreview;
-window.previewCoverImg = previewCoverImg;
-window.previewAudio = previewAudio;
-window.previewNewCoverImg = previewNewCoverImg;
-window.previewNewAudio = previewNewAudio;
-window.aiCorrectAllPages = aiCorrectAllPages;
-window.filterByTag = filterByTag;
-window.setCatFilter = setCatFilter;
-window.calShift = calShift;
-window.useIdeaAsTitle = useIdeaAsTitle;
-window.deleteIdea = deleteIdea;
-window.clearAllIdeas = clearAllIdeas;
-window.rtCmd = rtCmd;
-window.editorCmd = editorCmd;
-window.movePageUp = movePageUp;
-window.movePageDown = movePageDown;
-window.removePage = removePage;
-window.triviaAnswer = triviaAnswer;
-window.shareModalJournal = shareModalJournal;
-window.closePersistentPlayer = closePersistentPlayer;
-
 </script>
 </body>
 </html>
