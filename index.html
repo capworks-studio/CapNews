@@ -1444,9 +1444,6 @@ window.onload = async () => {
   updateIdeasBadge();
   const p=new URLSearchParams(location.search).get('j'); if(p)setTimeout(()=>openModal(p),800);
 };
-
-window.showPage = showPage;
-window.toggleTheme = toggleTheme;
   
 // ── THEME ──
 function loadTheme(){ const t=localStorage.getItem('capnews_theme')||'light'; document.documentElement.setAttribute('data-theme',t); document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre'; }
@@ -2733,3 +2730,81 @@ function showKbdHelp() { document.getElementById('kbd-help').classList.add('show
 function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
 document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
 document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
+function showKbdHelp() { document.getElementById('kbd-help').classList.add('show'); }
+function closeKbdHelp() { document.getElementById('kbd-help').classList.remove('show'); }
+document.getElementById('kbd-help')?.addEventListener('click', e => { if (e.target === document.getElementById('kbd-help')) closeKbdHelp(); });
+document.getElementById('journal-modal')?.addEventListener('click', e => { if (e.target === document.getElementById('journal-modal')) closeModal(); });
+
+// ← AJOUTE ICI
+window.showPage = showPage;
+window.toggleTheme = toggleTheme;
+window.toggleImmersive = toggleImmersive;
+window.refreshQuote = refreshQuote;
+window.triviaNext = triviaNext;
+window.submitBookComment = submitBookComment;
+window.submitModalComment = submitModalComment;
+window.closeModal = closeModal;
+window.closeEditModal = closeEditModal;
+window.openEditModal = openEditModal;
+window.adminLogin = adminLogin;
+window.adminLogout = adminLogout;
+window.publishJournal = publishJournal;
+window.saveSettings = saveSettings;
+window.shareJournal = shareJournal;
+window.showKbdHelp = showKbdHelp;
+window.closeKbdHelp = closeKbdHelp;
+window.submitContactIdea = submitContactIdea;
+window.handleSubscribe = handleSubscribe;
+window.handleSubscribeLocked = handleSubscribeLocked;
+window.handleUnsubHome = handleUnsubHome;
+window.handleUnsubLocked = handleUnsubLocked;
+window.castReaction = castReaction;
+window.castModalReaction = castModalReaction;
+window.openModal = openModal;
+window.deleteComment = deleteComment;
+window.toggleReplyForm = toggleReplyForm;
+window.submitReply = submitReply;
+window.setStarFilter = setStarFilter;
+window.setModalCommentRating = setModalCommentRating;
+window.setBookCommentRating = setBookCommentRating;
+window.modalBookNext = modalBookNext;
+window.modalBookPrev = modalBookPrev;
+window.switchAdminTab = switchAdminTab;
+window.switchNewTab = switchNewTab;
+window.switchEditTab = switchEditTab;
+window.addNewPage = addNewPage;
+window.addEditPage = addEditPage;
+window.saveEditJournal = saveEditJournal;
+window.deleteJournal = deleteJournal;
+window.loadJournalForEdit = loadJournalForEdit;
+window.exportSubscribers = exportSubscribers;
+window.adminTestNotif = adminTestNotif;
+window.saveDraftManual = saveDraftManual;
+window.loadLastDraft = loadLastDraft;
+window.clearCurrentDraft = clearCurrentDraft;
+window.openDraftHistory = openDraftHistory;
+window.buildNewPreview = buildNewPreview;
+window.buildPreview = buildPreview;
+window.previewCoverImg = previewCoverImg;
+window.previewAudio = previewAudio;
+window.previewNewCoverImg = previewNewCoverImg;
+window.previewNewAudio = previewNewAudio;
+window.aiCorrectAllPages = aiCorrectAllPages;
+window.filterByTag = filterByTag;
+window.setCatFilter = setCatFilter;
+window.calShift = calShift;
+window.useIdeaAsTitle = useIdeaAsTitle;
+window.deleteIdea = deleteIdea;
+window.clearAllIdeas = clearAllIdeas;
+window.rtCmd = rtCmd;
+window.editorCmd = editorCmd;
+window.movePageUp = movePageUp;
+window.movePageDown = movePageDown;
+window.removePage = removePage;
+window.triviaAnswer = triviaAnswer;
+window.shareModalJournal = shareModalJournal;
+window.closePersistentPlayer = closePersistentPlayer;
+
+</script>
+</body>
+</html>
