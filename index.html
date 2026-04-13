@@ -1445,6 +1445,9 @@ window.onload = async () => {
   const p=new URLSearchParams(location.search).get('j'); if(p)setTimeout(()=>openModal(p),800);
 };
 
+window.showPage = showPage;
+window.toggleTheme = toggleTheme;
+  
 // ── THEME ──
 function loadTheme(){ const t=localStorage.getItem('capnews_theme')||'light'; document.documentElement.setAttribute('data-theme',t); document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre'; }
 function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme'); const next=cur==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',next); localStorage.setItem('capnews_theme',next); document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Clair':'🌙 Sombre'; }
