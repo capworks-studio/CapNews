@@ -2138,7 +2138,7 @@ function renderHistory() {
       { num: journals.length, lbl: 'Journaux' },
       { num: totalComments, lbl: 'Avis' },
       { num: avgAll, lbl: 'Note moyenne' },
-      { num: Object.values(db.pageviews).reduce((a, b) => a + b, 0), lbl: 'Vues totales' },
+      { num: Object.values(db.pageviews).reduce((a, b) => a + (parseInt(b) || 0), 0), lbl: 'Vues totales' },
     ].map(s => `<div class="stat-card"><div class="stat-num">${s.num}</div><div class="stat-lbl">${s.lbl}</div></div>`).join('');
   }
 
