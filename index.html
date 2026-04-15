@@ -2141,7 +2141,7 @@ async function adminTestNotif(){
   const email=prompt('Ton adresse email pour le test :','');
   if(!email)return;
   showToast('Envoi du test via le Worker...','info');
-  try{await api('/api/admin/notify-test',{email});showToast('✅ Email de test envoyé à '+email,'success');}
+  try{await api('/api/admin/notify',{email});showToast('✅ Email de test envoyé à '+email,'success');}
   catch(e){showToast('❌ Erreur : '+e.message,'error');}
 }
 
