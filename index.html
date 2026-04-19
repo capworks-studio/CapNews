@@ -42,6 +42,157 @@
   --border:rgba(200,160,80,.15);--border-strong:rgba(200,160,80,.28);
   --shadow:0 2px 24px rgba(0,0,0,.4);--shadow-strong:0 8px 48px rgba(0,0,0,.6);
   --bg-page:#1a1510;--bg-card:#221e18;--text-on-card:#f0e8d8;
+  --red:#e57373;--red-light:#ef5350;
+  --green:#81c784;--green-light:#a5d6a7;
+}
+[data-theme="dark"] .trivia-opt {
+  background: var(--parchment-dark);
+  color: var(--ink);
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .trivia-opt:hover:not([disabled]) {
+  background: var(--parchment-mid);
+  border-color: var(--gold);
+}
+[data-theme="dark"] .trivia-opt.correct {
+  border-color: #4caf50 !important;
+  background: rgba(76,175,80,.2) !important;
+  color: #a5d6a7 !important;
+}
+[data-theme="dark"] .trivia-opt.wrong {
+  border-color: #e57373 !important;
+  background: rgba(229,115,115,.15) !important;
+  color: #ef9a9a !important;
+}
+[data-theme="dark"] .history-card {
+  background: var(--bg-card);
+  color: var(--ink);
+}
+[data-theme="dark"] .history-card-title { color: var(--ink); }
+[data-theme="dark"] .history-card-excerpt { color: var(--muted); }
+[data-theme="dark"] .comment-card {
+  background: var(--bg-card);
+  color: var(--ink);
+}
+[data-theme="dark"] .comment-card.reply-card {
+  background: var(--parchment-dark);
+}
+[data-theme="dark"] .comment-text { color: var(--ink-light); }
+[data-theme="dark"] .comment-name { color: var(--ink); }
+[data-theme="dark"] .book-page:not(.cover-page) {
+  background: var(--bg-card);
+  color: var(--ink);
+}
+[data-theme="dark"] .page-body-text { color: var(--ink); }
+[data-theme="dark"] .admin-panel-box { background: var(--parchment-mid); }
+[data-theme="dark"] .admin-login { background: var(--parchment-mid); }
+[data-theme="dark"] .form-input,
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-textarea {
+  background: var(--parchment-dark) !important;
+  color: var(--ink) !important;
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .richtext-area {
+  background: var(--parchment-dark) !important;
+  color: var(--ink) !important;
+}
+[data-theme="dark"] .richtext-toolbar {
+  background: var(--parchment-mid);
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .sidebar-box {
+  background: var(--parchment-mid);
+}
+[data-theme="dark"] .modal-content {
+  background: var(--parchment);
+  color: var(--ink);
+}
+[data-theme="dark"] .locked-hero {
+  background: var(--bg-card);
+}
+[data-theme="dark"] .locked-cd-box {
+  background: var(--parchment-dark);
+}
+[data-theme="dark"] .contact-section {
+  background: var(--bg-card);
+}
+[data-theme="dark"] .contact-topic {
+  background: var(--parchment-dark);
+  border-color: var(--border);
+}
+[data-theme="dark"] .contact-action-item {
+  background: var(--parchment-dark);
+  border-color: var(--border);
+}
+[data-theme="dark"] .contact-idea-form input,
+[data-theme="dark"] .contact-idea-form textarea {
+  background: var(--parchment-dark) !important;
+  color: var(--ink) !important;
+  border-color: var(--border-strong) !important;
+}
+[data-theme="dark"] .reply-form {
+  background: var(--parchment-dark);
+  border-color: var(--border);
+}
+[data-theme="dark"] .reply-form textarea {
+  background: var(--parchment-mid) !important;
+  color: var(--ink) !important;
+}
+[data-theme="dark"] .page-image-caption {
+  background: var(--parchment-dark);
+  color: var(--muted);
+}
+[data-theme="dark"] .page-audio-block {
+  background: var(--parchment-dark);
+  border-color: var(--border);
+}
+[data-theme="dark"] .chip.mood-good { background: rgba(76,175,80,.2); color: #a5d6a7; border-color: rgba(76,175,80,.3); }
+[data-theme="dark"] .chip.mood-neutral { background: rgba(255,152,0,.15); color: #ffcc80; border-color: rgba(255,152,0,.3); }
+[data-theme="dark"] .chip.mood-bad { background: rgba(229,115,115,.15); color: #ef9a9a; border-color: rgba(229,115,115,.3); }
+[data-theme="dark"] .chip.mood-energetic { background: rgba(33,150,243,.15); color: #90caf9; border-color: rgba(33,150,243,.3); }
+[data-theme="dark"] .chip.mood-pensive { background: rgba(156,39,176,.15); color: #ce93d8; border-color: rgba(156,39,176,.3); }
+[data-theme="dark"] .chip.mood-excited { background: rgba(255,152,0,.15); color: #ffb74d; border-color: rgba(255,152,0,.3); }
+[data-theme="dark"] .chip.mood-grateful { background: rgba(139,195,74,.15); color: #aed581; border-color: rgba(139,195,74,.3); }
+[data-theme="dark"] .chip.mood-nostalgic { background: rgba(240,98,146,.15); color: #f48fb1; border-color: rgba(240,98,146,.3); }
+[data-theme="dark"] .kbd-help-box {
+  background: var(--parchment);
+  color: var(--ink);
+}
+[data-theme="dark"] kbd {
+  background: var(--parchment-dark);
+  color: var(--ink-light);
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .stat-card {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+[data-theme="dark"] .analytics-stat {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+[data-theme="dark"] .lb-row {
+  background: var(--bg-card);
+  border-color: var(--border);
+}
+[data-theme="dark"] .edit-modal {
+  background: var(--parchment);
+  color: var(--ink);
+}
+[data-theme="dark"] .idea-card {
+  background: var(--bg-card);
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .unsub-zone {
+  background: rgba(255,255,255,.04);
+}
+[data-theme="dark"] .comments-book-page {
+  background: var(--parchment-dark);
+}
+[data-theme="dark"] .book-nav {
+  background: var(--parchment-dark);
+  border-color: var(--border-strong);
 }
 *{color:inherit;box-sizing:border-box;margin:0;padding:0;}
 body{background:var(--bg-page);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.75;min-height:100vh;transition:background var(--transition),color var(--transition);}
@@ -1147,6 +1298,16 @@ footer strong{color:var(--ink);font-weight:500;}
           <div class="form-group"><label class="form-label">Nom du site</label><input type="text" class="form-input" id="setting-sitename" placeholder="CapNews"></div>
           <div class="form-group"><label class="form-label">Tagline / sous-titre</label><input type="text" class="form-input" id="setting-tagline"></div>
           <div class="form-group"><label class="form-label">Heure de publication (0-23)</label><input type="number" class="form-input" id="setting-hour" min="0" max="23" value="18" style="max-width:120px;"></div>
+
+          <div style="background:var(--parchment-dark);border:1px solid var(--border-strong);border-radius:4px;padding:1.2rem;margin-bottom:1rem;">
+            <p style="font-family:var(--font-mono);font-size:.82rem;color:var(--muted);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.1em;">📧 EmailJS — Notifications</p>
+            <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:.75rem;">Les clés EmailJS sont configurées comme <strong>Secrets dans Cloudflare Worker</strong> (EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, EMAILJS_PUBLIC_KEY, EMAILJS_PRIVATE_KEY). Elles ne sont jamais exposées ici.</p>
+            <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+              <button class="btn-secondary" onclick="adminTestNotif()" style="font-size:.78rem;">🧪 Envoyer un email de test</button>
+              <span id="email-test-status" style="font-family:var(--font-mono);font-size:.75rem;color:var(--gold);"></span>
+            </div>
+          </div>
+
           <p style="font-family:var(--font-mono);font-size:.78rem;color:var(--muted);margin-bottom:1rem;padding:.6rem;background:rgba(139,26,26,.05);border-radius:3px;">⚠️ Pour changer le mot de passe, modifie la variable <strong>ADMIN_PASSWORD</strong> dans les Secrets du Cloudflare Worker.</p>
           <button class="btn-primary" onclick="saveSettings()">Sauvegarder →</button>
         </div>
@@ -1608,12 +1769,38 @@ window.onload = async () => {
 // ── THEME ──
 function loadTheme(){ const t=localStorage.getItem('capnews_theme')||'light'; document.documentElement.setAttribute('data-theme',t); document.getElementById('theme-btn').textContent=t==='dark'?'☀️ Clair':'🌙 Sombre'; }
 function toggleTheme(){ const cur=document.documentElement.getAttribute('data-theme'); const next=cur==='dark'?'light':'dark'; document.documentElement.setAttribute('data-theme',next); localStorage.setItem('capnews_theme',next); document.getElementById('theme-btn').textContent=next==='dark'?'☀️ Clair':'🌙 Sombre'; }
-function setupReadingProgress(){ const reader=document.getElementById('book-reader'); if(!reader)return; reader.addEventListener('scroll',updateReadingProgress); }
-function updateReadingProgress(){ const page=document.querySelector('.book-page.active'); if(!page)return; const{scrollTop,scrollHeight,clientHeight}=page; const pct=scrollHeight<=clientHeight?100:(scrollTop/(scrollHeight-clientHeight))*100; document.getElementById('reading-progress').style.width=pct+'%'; }
 function toggleImmersive(){ isImmersive=!isImmersive; document.body.classList.toggle('immersive-mode',isImmersive); document.getElementById('immersive-btn').textContent=isImmersive?'✕ Normal':'🔍'; if(isImmersive){const j=db.journals.find(x=>x.id===currentJournalId);if(j)document.getElementById('imm-title').textContent=j.title;showToast('Mode lecture immersif — F ou Esc pour quitter','info');} }
 function closeImmersive(){ if(isImmersive)toggleImmersive(); }
-function showQuote(){ const q=QUOTES[currentQuoteIdx]; const el=document.getElementById('quote-text'); const au=document.getElementById('quote-author'); if(!el)return; el.style.opacity='0'; setTimeout(()=>{el.textContent='« '+q.text+' »';if(au)au.textContent='— '+q.author;el.style.transition='opacity .4s';el.style.opacity='1';},200); }
-function refreshQuote(){ currentQuoteIdx=(currentQuoteIdx+1)%QUOTES.length; showQuote(); }
+function showQuote() {
+  const q = QUOTES[currentQuoteIdx];
+  // Met à jour TOUS les éléments quote-text et quote-author présents
+  document.querySelectorAll('#quote-text').forEach(el => {
+    el.style.opacity = '0';
+    setTimeout(() => {
+      el.textContent = '« ' + q.text + ' »';
+      el.style.transition = 'opacity .4s';
+      el.style.opacity = '1';
+    }, 200);
+  });
+  document.querySelectorAll('#quote-author').forEach(el => {
+    setTimeout(() => { el.textContent = '— ' + q.author; }, 200);
+  });
+}
+
+function refreshQuote() {
+  currentQuoteIdx = (currentQuoteIdx + 1) % QUOTES.length;
+  showQuote();
+}
+
+function renderSidebarCalendar() {
+  // Rend dans tous les conteneurs sidebar-calendar présents
+  document.querySelectorAll('[id="sidebar-calendar"]').forEach((container, i) => {
+    // Donne un id unique à chaque instance pour la navigation
+    const uid = 'sidebar-calendar-' + i;
+    container.id = uid;
+    renderCalendarIn(container, calendarDate.getFullYear(), calendarDate.getMonth(), uid);
+  });
+}
 function updateLockedCountdown(){ const now=new Date(),pub=new Date(); pub.setHours(getPubHour(),0,0,0); if(now>=pub)pub.setDate(pub.getDate()+1); const diff=pub-now; const h=Math.floor(diff/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000); const pad2=n=>String(Math.max(0,n)).padStart(2,'0'); const setEl=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=pad2(v);}; setEl('lcd-h',h);setEl('lcd-m',m);setEl('lcd-s',s); }
 setInterval(updateLockedCountdown,1000);
 
@@ -1808,47 +1995,189 @@ function previewNewCoverImg(){ const url=document.getElementById('new-cover-img'
 function previewNewAudio(){ const url=document.getElementById('new-audio-url').value.trim(); const d=document.getElementById('new-audio-preview'); if(!url){d.style.display='none';return;} d.style.display='block'; d.innerHTML='<audio controls src="'+url+'" style="width:100%;"></audio>'; }
 
 // ── HOME ──
-function renderHome(){
-  document.getElementById('home-loading').style.display='none';
-  const j=getTodayJournal(); const fab=document.getElementById('edit-fab');
-  const lockedEl=document.getElementById('home-locked'); const contentEl=document.getElementById('home-content');
-  if(!j||!isPublished(j)){
-    lockedEl.style.display='block'; contentEl.style.display='none';
-    if(isAdmin&&j){currentJournalId=j.id;fab.classList.remove('hidden');}else fab.classList.add('hidden');
-    updateLockedCountdown(); triviaLoad(); renderLeaderboard('lb-list-locked'); return;
+// CORRECTION : renderHome appelait renderBook avant que homeBookTotal soit correct
+function renderHome() {
+  document.getElementById('home-loading').style.display = 'none';
+  const j = getTodayJournal();
+  const fab = document.getElementById('edit-fab');
+  const lockedEl = document.getElementById('home-locked');
+  const contentEl = document.getElementById('home-content');
+
+  if (!j || !isPublished(j)) {
+    lockedEl.style.display = 'block';
+    contentEl.style.display = 'none';
+    if (isAdmin && j) { currentJournalId = j.id; fab.classList.remove('hidden'); }
+    else fab.classList.add('hidden');
+    updateLockedCountdown();
+    triviaLoad();
+    renderLeaderboard('lb-list-locked');
+    renderSidebarCalendar();
+    showQuote();
+    return;
   }
-  lockedEl.style.display='none'; contentEl.style.display='block';
-  currentJournalId=j.id; bookPage=0; homeBookTotal=getPages(j).length+2;
-  if(isAdmin)fab.classList.remove('hidden');else fab.classList.add('hidden');
-  renderBook(j); renderReactions(j.id); renderRecentList(); renderTagsCloud();
-  api('/api/pageview',{journalId:j.id}).catch(()=>{});
+
+  lockedEl.style.display = 'none';
+  contentEl.style.display = 'block';
+  currentJournalId = j.id;
+  bookPage = 0;
+
+  if (isAdmin) fab.classList.remove('hidden');
+  else fab.classList.add('hidden');
+
+  renderBook(j);
+  renderReactions(j.id);
+  renderRecentList();
+  renderTagsCloud();
+  renderSidebarCalendar();
+  showQuote();
+
+  api('/api/pageview', { journalId: j.id }).catch(() => {});
+}
+
+// CORRECTION : applyBranding n'écrasait pas correctement le logo avec les accents
+function applyBranding() {
+  const name = db.settings.siteName || 'CapNews';
+  const tagline = db.settings.tagline || 'Réflexions du quotidien';
+  const hour = db.settings.pubHour ?? 18;
+  const hourStr = pad(hour) + 'h00';
+
+  document.title = name;
+
+  // Logo : met la deuxième "syllabe" en couleur dorée
+  function fmtLogo(n) {
+    n = n.trim();
+    // Cherche une majuscule à l'intérieur du mot (ex: CapNews → Cap<span>News</span>)
+    const match = n.match(/^([A-Za-zÀ-ÿ]+?)([A-Z][A-Za-zÀ-ÿ]*)$/);
+    if (match) return escHtml(match[1]) + '<span>' + escHtml(match[2]) + '</span>';
+    // Sinon split sur espace
+    const words = n.split(' ');
+    if (words.length >= 2) return escHtml(words[0]) + ' <span>' + escHtml(words.slice(1).join(' ')) + '</span>';
+    return escHtml(n);
+  }
+
+  const logo = document.getElementById('site-logo');
+  if (logo) logo.innerHTML = fmtLogo(name);
+  const tgl = document.getElementById('site-tagline');
+  if (tgl) tgl.textContent = tagline + ' · Édition numérique';
+  const pm = document.getElementById('site-pub-meta');
+  if (pm) pm.textContent = 'Publication quotidienne · ' + hourStr;
+  const fn = document.getElementById('footer-name');
+  if (fn) fn.textContent = name;
+  const ft = document.getElementById('footer-tagline');
+  if (ft) ft.textContent = 'Publication quotidienne à ' + hourStr;
+  const at = document.getElementById('about-title');
+  if (at) at.textContent = 'À propos de ' + name;
+  const ad = document.getElementById('about-desc');
+  if (ad) ad.textContent = name + ' est une publication numérique ouverte à tous. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
+  const aq = document.getElementById('about-tagline-quote');
+  if (aq) aq.textContent = 'Chaque jour à ' + hourStr + ', un nouveau regard sur le monde.';
+  const ls = document.getElementById('locked-subtitle');
+  if (ls) ls.textContent = 'La publication a lieu chaque jour à ' + hourStr + '. Revenez plus tard !';
+}
+
+// CORRECTION : handleNotify côté admin utilisait un journalId sans vérif
+// Remplace aussi dans handleNotify du Worker le paramètre optionnel email de test :
+// (voir section Worker ci-dessus)
+
+// CORRECTION : setupReadingProgress — attachait au mauvais élément
+function setupReadingProgress() {
+  // Ecoute le scroll sur la fenêtre et met à jour selon la page active
+  window.addEventListener('scroll', updateReadingProgress, { passive: true });
+  document.querySelectorAll('.book-reader').forEach(r => {
+    r.addEventListener('scroll', updateReadingProgress, { passive: true });
+  });
+}
+
+function updateReadingProgress() {
+  const bar = document.getElementById('reading-progress');
+  if (!bar) return;
+  // Essaie d'abord la page de livre active
+  const activePage = document.querySelector('.book-page.active');
+  if (activePage && activePage.scrollHeight > activePage.clientHeight) {
+    const { scrollTop, scrollHeight, clientHeight } = activePage;
+    bar.style.width = Math.min(100, (scrollTop / (scrollHeight - clientHeight)) * 100) + '%';
+    return;
+  }
+  // Sinon, scroll de la fenêtre
+  const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+  const pct = scrollHeight <= clientHeight ? 100 : (scrollTop / (scrollHeight - clientHeight)) * 100;
+  bar.style.width = Math.min(100, pct) + '%';
 }
 
 function shareJournal(){ const url=window.location.href.split('?')[0]; if(navigator.share){navigator.share({title:'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(url).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');} }
 function shareModalJournal(){ if(!modalJournalId)return; const j=db.journals.find(x=>x.id===modalJournalId); const url=window.location.href.split('?')[0]+'?j='+modalJournalId; const txt=j?('"'+j.title+'" — '+url):url; if(navigator.share){navigator.share({title:j?.title||'CapNews',url});}else if(navigator.clipboard){navigator.clipboard.writeText(txt).then(()=>showToast('Lien copié !','success'));}else{showToast('Copiez : '+url,'info');} }
 
 // ── CALENDAR ──
-function renderCalendar(containerId,year,month){
-  const container=document.getElementById(containerId); if(!container)return;
-  const days=['Lu','Ma','Me','Je','Ve','Sa','Di']; const monthNames=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  const journalsByDate={}; db.journals.forEach(j=>{journalsByDate[j.date]=j;});
-  const today=getTodayStr(); const firstDay=new Date(year,month,1); const lastDay=new Date(year,month+1,0);
-  let startDow=firstDay.getDay(); startDow=startDow===0?6:startDow-1;
-  let html=`<div class="cal-nav"><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},-1)">‹</button><span class="cal-month-label">${monthNames[month]} ${year}</span><button class="cal-nav-btn" onclick="changeCalMonth('${containerId}',${year},${month},1)">›</button></div><div class="calendar-grid">`;
-  days.forEach(d=>{html+=`<div class="cal-header">${d}</div>`;});
-  let col=0; for(let i=0;i<startDow;i++){html+='<div class="cal-day other-month"></div>';col++;}
-  for(let d=1;d<=lastDay.getDate();d++){
-    const dateStr=`${year}-${pad(month+1)}-${pad(d)}`; const j=journalsByDate[dateStr];
-    const pub=j&&isPublished(j); const sched=j&&!pub;
-    let cls='cal-day'; if(dateStr===today)cls+=' today'; if(pub)cls+=' published'; else if(sched&&isAdmin)cls+=' scheduled';
-    const canClick=pub||(sched&&isAdmin); const onclick=canClick?`onclick="openModal('${j.id}')"`:''; const titleAttr=canClick?`title="${escHtml(j.title)+(sched?' (programmé)':'')}"`:'' ;
-    html+=`<div class="${cls}" ${onclick} ${titleAttr}>${d}</div>`; col++;
+function renderCalendarIn(container, year, month, uid) {
+  const days = ['Lu','Ma','Me','Je','Ve','Sa','Di'];
+  const monthNames = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+  const journalsByDate = {};
+  db.journals.forEach(j => { journalsByDate[j.date] = j; });
+  const today = getTodayStr();
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  let startDow = firstDay.getDay();
+  startDow = startDow === 0 ? 6 : startDow - 1;
+
+  let html = `<div class="cal-nav">
+    <button class="cal-nav-btn" onclick="changeCalMonthById('${uid}',${year},${month},-1)">‹</button>
+    <span class="cal-month-label">${monthNames[month]} ${year}</span>
+    <button class="cal-nav-btn" onclick="changeCalMonthById('${uid}',${year},${month},1)">›</button>
+  </div><div class="calendar-grid">`;
+
+  days.forEach(d => { html += `<div class="cal-header">${d}</div>`; });
+
+  let col = 0;
+  for (let i = 0; i < startDow; i++) { html += '<div class="cal-day other-month"></div>'; col++; }
+
+  for (let d = 1; d <= lastDay.getDate(); d++) {
+    const dateStr = `${year}-${pad(month + 1)}-${pad(d)}`;
+    const j = journalsByDate[dateStr];
+    const pub = j && isPublished(j);
+    const sched = j && !pub;
+    let cls = 'cal-day';
+    if (dateStr === today) cls += ' today';
+    if (pub) cls += ' published';
+    else if (sched && isAdmin) cls += ' scheduled';
+    const canClick = pub || (sched && isAdmin);
+    const onclick = canClick ? `onclick="openModal('${j.id}')"` : '';
+    const titleAttr = canClick ? `title="${escHtml(j.title) + (sched ? ' (programmé)' : '')}"` : '';
+    html += `<div class="${cls}" ${onclick} ${titleAttr}>${d}</div>`;
+    col++;
   }
-  while(col%7!==0){html+='<div class="cal-day other-month"></div>';col++;} html+='</div>'; container.innerHTML=html;
+  while (col % 7 !== 0) { html += '<div class="cal-day other-month"></div>'; col++; }
+  html += '</div>';
+  container.innerHTML = html;
 }
-function changeCalMonth(containerId,year,month,delta){ let m=month+delta,y=year; if(m<0){m=11;y--;}else if(m>11){m=0;y++;} if(containerId==='sidebar-calendar'){calendarDate=new Date(y,m,1);renderSidebarCalendar();}else renderCalendar(containerId,y,m); }
-function renderSidebarCalendar(){ renderCalendar('sidebar-calendar',calendarDate.getFullYear(),calendarDate.getMonth()); }
-function renderAdminCalendar(){ const now=new Date(); renderCalendar('admin-calendar-full',now.getFullYear(),now.getMonth()); }
+
+function renderCalendar(containerId, year, month) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  renderCalendarIn(container, year, month, containerId);
+}
+
+function changeCalMonthById(uid, year, month, delta) {
+  let m = month + delta, y = year;
+  if (m < 0) { m = 11; y--; } else if (m > 11) { m = 0; y++; }
+  const container = document.getElementById(uid);
+  if (!container) return;
+  // Mettre à jour calendarDate si c'est un sidebar
+  if (uid.startsWith('sidebar-calendar')) {
+    calendarDate = new Date(y, m, 1);
+    renderSidebarCalendar();
+  } else {
+    renderCalendarIn(container, y, m, uid);
+  }
+}
+
+function changeCalMonth(containerId, year, month, delta) {
+  changeCalMonthById(containerId, year, month, delta);
+}
+
+function renderAdminCalendar() {
+  const now = new Date();
+  renderCalendar('admin-calendar-full', now.getFullYear(), now.getMonth());
+}
 
 // ── REACTIONS ──
 function renderReactionBars(jid,barsId,vcIds,vbtnIds){ const r=db.reactions[jid]||{positive:0,neutral:0,negative:0,stars:[],total:0}; const total=(r.positive||0)+(r.neutral||0)+(r.negative||0); const bars=document.getElementById(barsId); if(bars){bars.innerHTML='';[{k:'positive',e:'👍',cls:'positive'},{k:'neutral',e:'🤔',cls:'neutral'},{k:'negative',e:'👎',cls:'negative'}].forEach(item=>{const count=r[item.k]||0,pct=total>0?Math.round((count/total)*100):0;bars.innerHTML+='<div class="vote-row"><span class="vote-emoji">'+item.e+'</span><div class="vote-bar-bg"><div class="vote-bar '+item.cls+'" style="width:'+pct+'%"></div></div><span class="vote-count">'+count+'</span></div>';});}['positive','neutral','negative'].forEach(k=>{const vc=document.getElementById(vcIds[k]);if(vc)vc.textContent=r[k]||0;const btn=document.getElementById(vbtnIds[k]);if(btn)btn.classList.toggle('active',userReactions[jid]===k);}); }
@@ -2137,12 +2466,21 @@ function exportSubscribers(){
   URL.revokeObjectURL(url);
   showToast('CSV exporté !','success');
 }
-async function adminTestNotif(){
-  const email=prompt('Ton adresse email pour le test :','');
-  if(!email)return;
-  showToast('Envoi du test via le Worker...','info');
-  try{await api('/api/admin/notify',{email});showToast('✅ Email de test envoyé à '+email,'success');}
-  catch(e){showToast('❌ Erreur : '+e.message,'error');}
+async function adminTestNotif() {
+  const email = prompt('Ton adresse email pour le test :', '');
+  if (!email) return;
+  const statusEl = document.getElementById('email-test-status');
+  if (statusEl) statusEl.textContent = '⏳ Envoi en cours...';
+  showToast('Envoi du test...', 'info');
+  try {
+    // On envoie via le Worker en passant l'email de test directement
+    const res = await api('/api/admin/notify-test', { email });
+    if (statusEl) statusEl.textContent = '✅ Email envoyé à ' + email;
+    showToast('✅ Email de test envoyé à ' + email, 'success');
+  } catch(e) {
+    if (statusEl) statusEl.textContent = '❌ Erreur : ' + e.message;
+    showToast('❌ Erreur : ' + e.message, 'error');
+  }
 }
 
 // ── SETTINGS ──
@@ -2161,22 +2499,6 @@ async function saveSettings(){
     db.settings.siteName=siteName;db.settings.tagline=tagline;db.settings.pubHour=pubHour;
     applyBranding();showToast('Paramètres sauvegardés !','success');
   }catch(e){showToast('Erreur : '+e.message,'error');}
-}
-
-// ── BRANDING ──
-function applyBranding(){
-  const name=db.settings.siteName||'CapNews',tagline=db.settings.tagline||'Réflexions du quotidien',hour=db.settings.pubHour??18,hourStr=pad(hour)+'h00';
-  document.title=name;
-  function fmt(n){n=n.trim();if(n.includes(' ')){const w=n.split(' ');return escHtml(w[0])+' <span>'+escHtml(w[1]||'')+'</span>'+(w.length>2?' '+escHtml(w.slice(2).join(' ')):'');}const p=n.match(/[A-Z]?[a-z]+|[A-Z]+(?![a-z])/g);if(!p)return escHtml(n);return p.map((x,i)=>i===1?'<span>'+escHtml(x)+'</span>':escHtml(x)).join('');}
-  const logo=document.getElementById('site-logo');if(logo)logo.innerHTML=fmt(name);
-  const tgl=document.getElementById('site-tagline');if(tgl)tgl.textContent=tagline+' · Édition numérique';
-  const pm=document.getElementById('site-pub-meta');if(pm)pm.textContent='Publication quotidienne · '+hourStr;
-  const fn=document.getElementById('footer-name');if(fn)fn.textContent=name;
-  const ft=document.getElementById('footer-tagline');if(ft)ft.textContent='Publication quotidienne à '+hourStr;
-  const at=document.getElementById('about-title');if(at)at.textContent='À propos de '+name;
-  const ad=document.getElementById('about-desc');if(ad)ad.textContent=name+' est une publication numérique ouverte à tous. Notre mission : proposer chaque jour une réflexion profonde, un récit personnel, ou une analyse du monde contemporain.';
-  const aq=document.getElementById('about-tagline-quote');if(aq)aq.textContent='Chaque jour à '+hourStr+', un nouveau regard sur le monde.';
-  const ls=document.getElementById('locked-subtitle');if(ls)ls.textContent='La publication a lieu chaque jour à '+hourStr+'. Revenez plus tard !';
 }
 
 // ── COUNTDOWN ──
